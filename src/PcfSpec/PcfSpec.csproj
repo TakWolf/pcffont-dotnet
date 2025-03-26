@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>PcfFont</AssemblyName>
+
+        <Title>PcfFont</Title>
+        <Description>A library for manipulating Portable Compiled Format (PCF) Fonts</Description>
+        <Authors>TakWolf</Authors>
+        <Copyright>Copyright (c) 2025 TakWolf</Copyright>
+
+        <PackageId>PcfFont</PackageId>
+        <PackageVersion>0.0.0</PackageVersion>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>pcf font</PackageTags>
+        <PackageProjectUrl>https://github.com/TakWolf/pcffont-dotnet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/TakWolf/pcffont-dotnet</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+</Project>
