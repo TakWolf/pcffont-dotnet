@@ -29,8 +29,14 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>
 
     public static PcfFont Parse(Stream stream)
     {
-        // TODO
-        return new PcfFont();
+        var font = new PcfFont();
+        var headers = PcfHeader.Parse(stream);
+        foreach (var header in headers)
+        {
+            var table = FactoryRegistry[header.TableType].Parse(stream, font, header);
+            font[header.TableType] = table;
+        }
+        return font;
     }
 
     public static PcfFont Parse(byte[] buffer)
@@ -171,7 +177,15 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>
 
     public void Dump(Stream stream)
     {
-        // TODO
+        var headers = new List<PcfHeader>();
+        var tableOffset = (uint)(4 + 4 + 4 * 4 * Count);
+        foreach (var (tableType, table) in this)
+        {
+            var tableSize = table.Dump(stream, this, tableOffset);
+            headers.Add(new PcfHeader(tableType, table.TableFormat, tableSize, tableOffset));
+            tableOffset += tableSize;
+        }
+        PcfHeader.Dump(stream, headers);
     }
 
     public byte[] DumpToBytes()
