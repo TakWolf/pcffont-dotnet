@@ -16,13 +16,106 @@ dotnet add package PcfFont
 ### Create
 
 ```csharp
-// TODO
+using PcfSpec;
+
+var outputsDir = Path.Combine("build");
+if (Directory.Exists(outputsDir))
+{
+    Directory.Delete(outputsDir, true);
+}
+Directory.CreateDirectory(outputsDir);
+
+var builder = new PcfFontBuilder();
+builder.Config.FontAscent = 14;
+builder.Config.FontDescent = 2;
+
+builder.Glyphs.Add(new PcfGlyph(
+    name: "A",
+    encoding: 65,
+    scalableWidth: 500,
+    characterWidth: 8,
+    dimensions: (8, 16),
+    offset: (0, -2),
+    bitmap: [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0],
+        [0, 0, 1, 0, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0, 1, 0, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+    ]));
+
+builder.Properties.Foundry = "Pixel Font Studio";
+builder.Properties.FamilyName = "My Font";
+builder.Properties.WeightName = "Medium";
+builder.Properties.Slant = "R";
+builder.Properties.SetWidthName = "Normal";
+builder.Properties.AddStyleName = "Sans Serif";
+builder.Properties.PixelSize = 16;
+builder.Properties.PointSize = builder.Properties.PixelSize * 10;
+builder.Properties.ResolutionX = 75;
+builder.Properties.ResolutionY = 75;
+builder.Properties.Spacing = "P";
+builder.Properties.AverageWidth = Convert.ToInt32(Math.Round(builder.Glyphs.Sum(glyph => glyph.CharacterWidth * 10) / Convert.ToDouble(builder.Glyphs.Count)));
+builder.Properties.CharsetRegistry = "ISO10646";
+builder.Properties.CharsetEncoding = "1";
+builder.Properties.GenerateXlfd();
+
+builder.Properties.XHeight = 7;
+builder.Properties.CapHeight = 10;
+
+builder.Properties.FontVersion = "1.0.0";
+builder.Properties.Copyright = "Copyright (c) TakWolf";
+
+builder.Save(Path.Combine(outputsDir, "my-font.pcf"));
 ```
 
 ### Load
 
 ```csharp
-// TODO
+using PcfSpec;
+
+var outputsDir = Path.Combine("build");
+if (Directory.Exists(outputsDir))
+{
+    Directory.Delete(outputsDir, true);
+}
+Directory.CreateDirectory(outputsDir);
+
+var font = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.02.pcf"));
+Console.WriteLine($"name: {font.Properties!.Font}");
+Console.WriteLine($"size: {font.Properties!.PointSize}");
+Console.WriteLine($"ascent: {font.Accelerators!.FontAscent}");
+Console.WriteLine($"descent: {font.Accelerators!.FontDescent}");
+Console.WriteLine();
+foreach (var (encoding, glyphIndex) in font.BdfEncodings!)
+{
+    var glyphName = font.GlyphNames![glyphIndex];
+    var metric = font.Metrics![glyphIndex];
+    var bitmap = font.Bitmaps![glyphIndex];
+    Console.WriteLine($"char: {char.ConvertFromUtf32(encoding)} ({encoding:X4})");
+    Console.WriteLine($"glyphName: {glyphName}");
+    Console.WriteLine($"advanceWidth: {metric.CharacterWidth}");
+    Console.WriteLine($"dimensions: {metric.Dimensions}");
+    Console.WriteLine($"offset: {metric.Offset}");
+    foreach (var bitmapRow in bitmap)
+    {
+        var text = string.Join("", bitmapRow).Replace("0", "  ").Replace("1", "██");
+        Console.WriteLine($"{text}*");
+    }
+    Console.WriteLine();
+}
+font.Save(Path.Combine(outputsDir, "unifont-16.0.02.pcf"));
 ```
 
 ## Test Fonts
