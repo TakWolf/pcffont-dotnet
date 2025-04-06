@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\PcfSpec\PcfSpec.csproj" />
-        <PackageReference Include="BdfFont" Version="0.0.1" />
+        <PackageReference Include="BdfFont" Version="0.0.2" />
         <PackageReference Include="coverlet.collector" Version="6.0.4" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
         <PackageReference Include="xunit" Version="2.9.3" />
