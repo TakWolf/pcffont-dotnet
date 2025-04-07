@@ -445,7 +445,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         foreach (var (key, token) in XlfdKeysOrder.Zip(tokens))
         {
             object? value;
-            if (Equals("", token))
+            if ("".Equals(token))
             {
                 value = null;
             }
