@@ -48,7 +48,7 @@ builder.Properties.PointSize = builder.Properties.PixelSize * 10;
 builder.Properties.ResolutionX = 75;
 builder.Properties.ResolutionY = 75;
 builder.Properties.Spacing = "P";
-builder.Properties.AverageWidth = Convert.ToInt32(Math.Round(builder.Glyphs.Sum(glyph => glyph.CharacterWidth * 10) / Convert.ToDouble(builder.Glyphs.Count)));
+builder.Properties.AverageWidth = Convert.ToInt32(builder.Glyphs.Average(glyph => glyph.CharacterWidth * 10));
 builder.Properties.CharsetRegistry = "ISO10646";
 builder.Properties.CharsetEncoding = "1";
 builder.Properties.GenerateXlfd();
