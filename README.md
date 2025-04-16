@@ -118,11 +118,6 @@ foreach (var (encoding, glyphIndex) in font.BdfEncodings!)
 font.Save(Path.Combine(outputsDir, "unifont-16.0.02.pcf"));
 ```
 
-## Test Fonts
-
-- [GNU Unifont Glyphs](https://unifoundry.com/unifont/index.html)
-- [Spleen](https://github.com/fcambus/spleen)
-
 ## References
 
 - [FreeType font driver for PCF fonts](https://github.com/freetype/freetype/tree/master/src/pcf)
