@@ -114,7 +114,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
         {
             metric.Dump(stream, TableFormat.MsByteFirst, TableFormat.InkBoundsOrCompressedMetrics);
         }
-        stream.AlignToBit32WithNulls();
+        stream.AlignTo4ByteWithNulls();
 
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;

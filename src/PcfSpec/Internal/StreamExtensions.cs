@@ -346,5 +346,5 @@ internal static class StreamExtensions
 
     public static int WriteNulls(this Stream stream, long count) => stream.WriteBuffer(new byte[count]);
 
-    public static int AlignToBit32WithNulls(this Stream stream) => stream.WriteNulls(3 - (stream.Position + 3) % 4);
+    public static int AlignTo4ByteWithNulls(this Stream stream) => stream.WriteNulls(3 - (stream.Position + 3) % 4);
 }

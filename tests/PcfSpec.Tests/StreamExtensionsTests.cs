@@ -358,11 +358,11 @@ public class StreamExtensionsTests
     }
 
     [Fact]
-    public void TestAlignToBit32()
+    public void TestAlignTo4Byte()
     {
         var stream = new MemoryStream();
         stream.WriteBuffer("abc"u8);
-        Assert.Equal(1, stream.AlignToBit32WithNulls());
+        Assert.Equal(1, stream.AlignTo4ByteWithNulls());
         Assert.Equal(4, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
         Assert.Equal("abc\0"u8, stream.ReadBuffer(4));

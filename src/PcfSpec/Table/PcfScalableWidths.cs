@@ -37,7 +37,7 @@ public class PcfScalableWidths : List<int>, IPcfTable
         stream.WriteUInt32(TableFormat.Value);
         stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
         stream.WriteInt32List(this, TableFormat.MsByteFirst);
-        stream.AlignToBit32WithNulls();
+        stream.AlignTo4ByteWithNulls();
 
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;

@@ -145,7 +145,7 @@ public class PcfAccelerators : IPcfTable
         }
         else
         {
-            stream.AlignToBit32WithNulls();
+            stream.AlignTo4ByteWithNulls();
             tableSize = stream.Position - tableOffset;
         }
 

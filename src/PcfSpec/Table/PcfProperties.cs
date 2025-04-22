@@ -507,7 +507,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         stream.WriteNulls(padding);
         stream.WriteUInt32(stringsSize, TableFormat.MsByteFirst);
         stream.Seek(stringsSize, SeekOrigin.Current);
-        stream.AlignToBit32WithNulls();
+        stream.AlignTo4ByteWithNulls();
 
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;
