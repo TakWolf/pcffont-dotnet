@@ -26,7 +26,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         }
     }
 
-    public static PcfBitmaps Parse(Stream stream, PcfFont font, PcfHeader header)
+    public static PcfBitmaps Parse(Stream stream, PcfHeader header, PcfFont font)
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
@@ -84,7 +84,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         }
     }
 
-    public uint Dump(Stream stream, PcfFont font, uint tableOffset)
+    public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         var glyphPad = GlyphPadOptions[TableFormat.GlyphPadIndex];
         var scanUnit = ScanUnitOptions[TableFormat.ScanUnitIndex];

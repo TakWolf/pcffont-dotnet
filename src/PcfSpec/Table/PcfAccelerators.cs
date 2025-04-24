@@ -4,7 +4,7 @@ namespace PcfSpec.Table;
 
 public class PcfAccelerators : IPcfTable
 {
-    public static PcfAccelerators Parse(Stream stream, PcfFont font, PcfHeader header)
+    public static PcfAccelerators Parse(Stream stream, PcfHeader header, PcfFont font)
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
@@ -110,7 +110,7 @@ public class PcfAccelerators : IPcfTable
         InkMaxBounds = inkMaxBounds;
     }
 
-    public uint Dump(Stream stream, PcfFont font, uint tableOffset)
+    public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat.Value);

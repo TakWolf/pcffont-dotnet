@@ -33,7 +33,7 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>
         var headers = PcfHeader.Parse(stream);
         foreach (var header in headers)
         {
-            var table = FactoryRegistry[header.TableType].Parse(stream, font, header);
+            var table = FactoryRegistry[header.TableType].Parse(stream, header, font);
             font[header.TableType] = table;
         }
         return font;
@@ -181,7 +181,7 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>
         var tableOffset = (uint)(4 + 4 + 4 * 4 * Count);
         foreach (var (tableType, table) in this)
         {
-            var tableSize = table.Dump(stream, this, tableOffset);
+            var tableSize = table.Dump(stream, tableOffset, this);
             headers.Add(new PcfHeader(tableType, table.TableFormat, tableSize, tableOffset));
             tableOffset += tableSize;
         }

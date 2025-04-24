@@ -133,7 +133,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         }
     }
 
-    public static PcfProperties Parse(Stream stream, PcfFont font, PcfHeader header)
+    public static PcfProperties Parse(Stream stream, PcfHeader header, PcfFont font)
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
@@ -464,7 +464,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         }
     }
 
-    public uint Dump(Stream stream, PcfFont font, uint tableOffset)
+    public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         var propsCount = (uint)Count;
 

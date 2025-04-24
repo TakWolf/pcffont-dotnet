@@ -4,7 +4,7 @@ namespace PcfSpec.Table;
 
 public class PcfScalableWidths : List<int>, IPcfTable
 {
-    public static PcfScalableWidths Parse(Stream stream, PcfFont font, PcfHeader header)
+    public static PcfScalableWidths Parse(Stream stream, PcfHeader header, PcfFont font)
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
@@ -29,7 +29,7 @@ public class PcfScalableWidths : List<int>, IPcfTable
         }
     }
 
-    public uint Dump(Stream stream, PcfFont font, uint tableOffset)
+    public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         var glyphsCount = (uint)Count;
 

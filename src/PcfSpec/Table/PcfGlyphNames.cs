@@ -4,7 +4,7 @@ namespace PcfSpec.Table;
 
 public class PcfGlyphNames : List<string>, IPcfTable
 {
-    public static PcfGlyphNames Parse(Stream stream, PcfFont font, PcfHeader header)
+    public static PcfGlyphNames Parse(Stream stream, PcfHeader header, PcfFont font)
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
@@ -36,7 +36,7 @@ public class PcfGlyphNames : List<string>, IPcfTable
         }
     }
 
-    public uint Dump(Stream stream, PcfFont font, uint tableOffset)
+    public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         var glyphsCount = (uint)Count;
 

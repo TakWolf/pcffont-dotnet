@@ -2,9 +2,9 @@ namespace PcfSpec;
 
 public interface IPcfTable
 {
-    delegate IPcfTable ParseDelegate(Stream stream, PcfFont font, PcfHeader header);
+    delegate IPcfTable ParseDelegate(Stream stream, PcfHeader header, PcfFont font);
 
     PcfTableFormat TableFormat { get; set; }
 
-    uint Dump(Stream stream, PcfFont font, uint tableOffset);
+    uint Dump(Stream stream, uint tableOffset, PcfFont font);
 }
