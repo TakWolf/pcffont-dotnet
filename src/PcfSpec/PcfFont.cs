@@ -6,24 +6,11 @@ namespace PcfSpec;
 
 public class PcfFont : IDictionary<PcfTableType, IPcfTable>
 {
-    private static readonly Dictionary<PcfTableType, (Type ClassType, IPcfTable.ParseDelegate Parse)> FactoryRegistry = new()
-    {
-        { PcfTableType.Properties, (typeof(PcfProperties), PcfProperties.Parse) },
-        { PcfTableType.Accelerators, (typeof(PcfAccelerators), PcfAccelerators.Parse) },
-        { PcfTableType.Metrics, (typeof(PcfMetrics), PcfMetrics.Parse) },
-        { PcfTableType.Bitmaps, (typeof(PcfBitmaps), PcfBitmaps.Parse) },
-        { PcfTableType.InkMetrics, (typeof(PcfMetrics), PcfMetrics.Parse) },
-        { PcfTableType.BdfEncodings, (typeof(PcfBdfEncodings), PcfBdfEncodings.Parse) },
-        { PcfTableType.ScalableWidths, (typeof(PcfScalableWidths), PcfScalableWidths.Parse) },
-        { PcfTableType.GlyphNames, (typeof(PcfGlyphNames), PcfGlyphNames.Parse) },
-        { PcfTableType.BdfAccelerators, (typeof(PcfAccelerators), PcfAccelerators.Parse) }
-    };
-
     private static void CheckTableType(PcfTableType tableType, IPcfTable table)
     {
-        if (FactoryRegistry[tableType].ClassType != table.GetType())
+        if (PcfTableFactory.GetClassType(tableType) != table.GetType())
         {
-            throw new ArgumentException($"Table type mismatch: '{FactoryRegistry[tableType].ClassType}' -> '{table.GetType()}'");
+            throw new ArgumentException($"Table type mismatch: '{PcfTableFactory.GetClassType(tableType)}' -> '{table.GetType()}'");
         }
     }
 
@@ -33,7 +20,7 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>
         var headers = PcfHeader.Parse(stream);
         foreach (var header in headers)
         {
-            var table = FactoryRegistry[header.TableType].Parse(stream, header, font);
+            var table = PcfTableFactory.GetParse(header.TableType)(stream, header, font);
             font[header.TableType] = table;
         }
         return font;
