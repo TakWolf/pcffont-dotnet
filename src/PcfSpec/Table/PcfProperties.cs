@@ -2,7 +2,7 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using PcfSpec.Error;
-using PcfSpec.Internal;
+using PcfSpec.Util;
 
 namespace PcfSpec.Table;
 

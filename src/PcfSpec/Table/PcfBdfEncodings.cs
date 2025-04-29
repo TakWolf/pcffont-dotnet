@@ -1,6 +1,6 @@
 using System.Buffers.Binary;
 using System.Collections;
-using PcfSpec.Internal;
+using PcfSpec.Util;
 
 namespace PcfSpec.Table;
 
