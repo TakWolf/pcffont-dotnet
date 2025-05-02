@@ -18,13 +18,14 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
             glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
         }
 
-        var metrics = new PcfMetrics(tableFormat);
+        var metrics = new List<PcfMetric>();
         foreach (var _ in Enumerable.Range(0, (int)glyphsCount))
         {
             var metric = PcfMetric.Parse(stream, tableFormat.MsByteFirst, tableFormat.InkBoundsOrCompressedMetrics);
             metrics.Add(metric);
         }
-        return metrics;
+
+        return new PcfMetrics(tableFormat, metrics);
     }
 
     public PcfTableFormat TableFormat { get; set; }

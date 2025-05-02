@@ -31,7 +31,7 @@ public class PcfAccelerators : IPcfTable
             inkMaxBounds = PcfMetric.Parse(stream, tableFormat.MsByteFirst, false);
         }
 
-        var accelerators = new PcfAccelerators(
+        var table = new PcfAccelerators(
             tableFormat,
             noOverlap,
             constantMetrics,
@@ -53,10 +53,10 @@ public class PcfAccelerators : IPcfTable
         {
             stream.Seek(header.TableOffset, SeekOrigin.Begin);
             var rawChunk = stream.ReadBuffer(header.TableSize, throwOnEndOfStream: false);
-            accelerators.CompatInfo = (rawChunk, header.TableSize);
+            table.CompatInfo = (rawChunk, header.TableSize);
         }
 
-        return accelerators;
+        return table;
     }
 
     public PcfTableFormat TableFormat { get; set; }

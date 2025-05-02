@@ -163,7 +163,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         stream.Seek(4, SeekOrigin.Current);  // stringsSize
         var stringsStart = stream.Position;
 
-        var properties = new PcfProperties(tableFormat);
+        var properties = new Dictionary<string, object>();
         foreach (var (keyOffset, isStringProp, valueOrOffset) in propInfos)
         {
             stream.Seek(stringsStart + keyOffset, SeekOrigin.Begin);
@@ -180,7 +180,8 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
             }
             properties[key] = value;
         }
-        return properties;
+
+        return new PcfProperties(tableFormat, properties);
     }
 
     private readonly OrderedDictionary<string, object> _dictionary = new();

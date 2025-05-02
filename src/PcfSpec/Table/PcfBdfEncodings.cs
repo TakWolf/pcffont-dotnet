@@ -21,7 +21,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
         var glyphsCount = (maxByte2 - minByte2 + 1) * (maxByte1 - minByte1 + 1);
         var glyphIndices = stream.ReadUInt16List(glyphsCount, tableFormat.MsByteFirst);
 
-        var encodings = new PcfBdfEncodings(tableFormat, defaultChar);
+        var encodings = new Dictionary<ushort, ushort>();
         if (minByte1 == 0 && maxByte1 == 0)
         {
             foreach (ushort encoding in Enumerable.Range(minByte2, maxByte2 + 1 - minByte2))
@@ -42,7 +42,8 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
                 }
             }
         }
-        return encodings;
+
+        return new PcfBdfEncodings(tableFormat, defaultChar, encodings);
     }
 
     private readonly SortedDictionary<ushort, ushort> _dictionary = new();

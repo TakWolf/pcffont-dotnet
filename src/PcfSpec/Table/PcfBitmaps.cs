@@ -35,10 +35,10 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
 
         var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
         var bitmapOffsets = stream.ReadUInt32List((int)glyphsCount, tableFormat.MsByteFirst);
-        var bitmapsSizes = stream.ReadUInt32List(4, tableFormat.MsByteFirst);
+        var bitmapsSizeConfigs = stream.ReadUInt32List(4, tableFormat.MsByteFirst);
         var bitmapsStart = stream.Position;
 
-        var bitmaps = new PcfBitmaps(tableFormat);
+        var bitmaps = new List<List<List<byte>>>();
         foreach (var (bitmapOffset, metric) in bitmapOffsets.Zip(font.Metrics!))
         {
             stream.Seek(bitmapsStart + bitmapOffset, SeekOrigin.Begin);
@@ -64,10 +64,12 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
             bitmaps.Add(bitmap);
         }
 
-        // Compat
-        bitmaps.CompatInfo = bitmapsSizes;
+        var table = new PcfBitmaps(tableFormat, bitmaps);
 
-        return bitmaps;
+        // Compat
+        table.CompatInfo = bitmapsSizeConfigs;
+
+        return table;
     }
 
     public PcfTableFormat TableFormat { get; set; }
@@ -123,22 +125,22 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         }
 
         // Compat
-        var bitmapsSizes = new List<uint>();
+        var bitmapsSizeConfigs = new List<uint>();
         if (CompatInfo is not null)
         {
-            bitmapsSizes.AddRange(CompatInfo);
-            bitmapsSizes[TableFormat.GlyphPadIndex] = bitmapsSize;
+            bitmapsSizeConfigs.AddRange(CompatInfo);
+            bitmapsSizeConfigs[TableFormat.GlyphPadIndex] = bitmapsSize;
         }
         else
         {
-            bitmapsSizes.AddRange(GlyphPadOptions.Select(glyphPadOption => bitmapsSize / glyphPad * glyphPadOption));
+            bitmapsSizeConfigs.AddRange(GlyphPadOptions.Select(glyphPadOption => bitmapsSize / glyphPad * glyphPadOption));
         }
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat.Value);
         stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
         stream.WriteUInt32List(bitmapOffsets, TableFormat.MsByteFirst);
-        stream.WriteUInt32List(bitmapsSizes, TableFormat.MsByteFirst);
+        stream.WriteUInt32List(bitmapsSizeConfigs, TableFormat.MsByteFirst);
         stream.Seek(bitmapsSize, SeekOrigin.Current);
         stream.AlignTo4ByteWithNulls();
 

@@ -10,10 +10,9 @@ public class PcfScalableWidths : List<int>, IPcfTable
 
         var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
 
-        var scalableWidths = new PcfScalableWidths(
-            tableFormat,
-            stream.ReadInt32List((int)glyphsCount, tableFormat.MsByteFirst));
-        return scalableWidths;
+        var scalableWidths = stream.ReadInt32List((int)glyphsCount, tableFormat.MsByteFirst);
+
+        return new PcfScalableWidths(tableFormat, scalableWidths);
     }
 
     public PcfTableFormat TableFormat { get; set; }
