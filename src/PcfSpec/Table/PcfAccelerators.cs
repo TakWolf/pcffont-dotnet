@@ -52,7 +52,7 @@ public class PcfAccelerators : IPcfTable
         if (header.TableSize > stream.Position - header.TableOffset)
         {
             stream.Seek(header.TableOffset, SeekOrigin.Begin);
-            var rawChunk = stream.ReadBuffer(header.TableSize, throwOnEndOfStream: false);
+            var rawChunk = stream.ReadBytes(header.TableSize, throwOnEndOfStream: false);
             table.CompatInfo = (rawChunk, header.TableSize);
         }
 
@@ -141,7 +141,7 @@ public class PcfAccelerators : IPcfTable
         if (CompatInfo is not null)
         {
             (var rawChunk, tableSize) = CompatInfo.Value;
-            stream.WriteBuffer(rawChunk.AsSpan((int)(stream.Position - tableOffset)));
+            stream.WriteBytes(rawChunk.AsSpan((int)(stream.Position - tableOffset)));
         }
         else
         {

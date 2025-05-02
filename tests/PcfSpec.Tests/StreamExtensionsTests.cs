@@ -4,367 +4,172 @@ namespace PcfSpec.Tests;
 
 public class StreamExtensionsTests
 {
-    private static readonly Random Random = new();
-
     [Fact]
-    public void TestByte()
+    public void TestBytes()
     {
         var stream = new MemoryStream();
-        var count = 0;
-        count += stream.WriteBuffer("Hello World"u8);
-        count += stream.WriteNulls(4);
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(11, stream.WriteBytes("Hello World"u8));
+        Assert.Equal(11, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal("Hello World"u8, stream.ReadBuffer(11));
-        Assert.Equal(new byte[4], stream.ReadBuffer(4));
-        Assert.Equal(count, stream.Position);
+        Assert.Equal("Hello World"u8, stream.ReadBytes(11));
+        Assert.Equal(11, stream.Position);
     }
 
     [Fact]
     public void TestEof()
     {
         var stream = new MemoryStream();
-        Assert.Throws<EndOfStreamException>(() => stream.ReadBuffer(1));
-        stream.ReadBuffer(1, throwOnEndOfStream: false);
-    }
-
-    [Fact]
-    public void TestInt8()
-    {
-        var values = Enumerable.Range(0, 20).Select(_ => (sbyte)Random.Next()).ToList();
-
-        var stream = new MemoryStream();
-        var count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteInt8(value);
-        }
-        Assert.Equal(count, stream.Position);
+        stream.WriteBytes("ABC"u8);
+        Assert.Throws<EndOfStreamException>(() => stream.ReadBytes(4));
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadInt8List(values.Count));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteInt8List(values);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadInt8());
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal("ABC"u8, stream.ReadBytes(4, throwOnEndOfStream: false));
     }
 
     [Fact]
     public void TestUInt8()
     {
-        var values = Enumerable.Range(0, 20).Select(_ => (byte)Random.Next()).ToList();
-
         var stream = new MemoryStream();
-        var count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteUInt8(value);
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(1, stream.WriteUInt8(0x00));
+        Assert.Equal(1, stream.WriteUInt8(0xFF));
+        Assert.Equal(2, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadUInt8List(values.Count));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteUInt8List(values);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadUInt8());
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(0x00, stream.ReadUInt8());
+        Assert.Equal(0xFF, stream.ReadUInt8());
+        Assert.Equal(2, stream.Position);
     }
 
     [Fact]
-    public void TestInt16()
+    public void TestInt8()
     {
-        var values = Enumerable.Range(0, 20).Select(_ => (short)Random.Next()).ToList();
-
         var stream = new MemoryStream();
-        var count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteInt16(value, true);
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(1, stream.WriteInt8(-0x80));
+        Assert.Equal(1, stream.WriteInt8(0x7F));
+        Assert.Equal(2, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadInt16List(values.Count, true));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteInt16List(values, true);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadInt16(true));
-        }
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteInt16(value, false);
-        }
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadInt16List(values.Count, false));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteInt16List(values, false);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadInt16(false));
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(-0x80, stream.ReadInt8());
+        Assert.Equal(0x7F, stream.ReadInt8());
+        Assert.Equal(2, stream.Position);
     }
 
     [Fact]
     public void TestUInt16()
     {
-        var values = Enumerable.Range(0, 20).Select(_ => (ushort)Random.Next()).ToList();
-
         var stream = new MemoryStream();
-        var count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteUInt16(value, true);
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(2, stream.WriteUInt16(0x0000, false));
+        Assert.Equal(2, stream.WriteUInt16(0xFFFF, false));
+        Assert.Equal(2, stream.WriteUInt16(0x0000, true));
+        Assert.Equal(2, stream.WriteUInt16(0xFFFF, true));
+        Assert.Equal(8, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadUInt16List(values.Count, true));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteUInt16List(values, true);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadUInt16(true));
-        }
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteUInt16(value, false);
-        }
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadUInt16List(values.Count, false));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteUInt16List(values, false);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadUInt16(false));
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(0x0000, stream.ReadUInt16(false));
+        Assert.Equal(0xFFFF, stream.ReadUInt16(false));
+        Assert.Equal(0x0000, stream.ReadUInt16(true));
+        Assert.Equal(0xFFFF, stream.ReadUInt16(true));
+        Assert.Equal(8, stream.Position);
     }
 
     [Fact]
-    public void TestInt32()
+    public void TestInt16()
     {
-        var values = Enumerable.Range(0, 20).Select(_ => Random.Next()).ToList();
-
         var stream = new MemoryStream();
-        var count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteInt32(value, true);
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(2, stream.WriteInt16(-0x8000, false));
+        Assert.Equal(2, stream.WriteInt16(0x7FFF, false));
+        Assert.Equal(2, stream.WriteInt16(-0x8000, true));
+        Assert.Equal(2, stream.WriteInt16(0x7FFF, true));
+        Assert.Equal(8, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadInt32List(values.Count, true));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteInt32List(values, true);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadInt32(true));
-        }
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteInt32(value, false);
-        }
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadInt32List(values.Count, false));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteInt32List(values, false);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadInt32(false));
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(-0x8000, stream.ReadInt16(false));
+        Assert.Equal(0x7FFF, stream.ReadInt16(false));
+        Assert.Equal(-0x8000, stream.ReadInt16(true));
+        Assert.Equal(0x7FFF, stream.ReadInt16(true));
+        Assert.Equal(8, stream.Position);
     }
 
     [Fact]
     public void TestUInt32()
     {
-        var values = Enumerable.Range(0, 20).Select(_ => (uint)Random.Next()).ToList();
-
         var stream = new MemoryStream();
-        var count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteUInt32(value, true);
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(4, stream.WriteUInt32(0x00000000u, false));
+        Assert.Equal(4, stream.WriteUInt32(0xFFFFFFFFu, false));
+        Assert.Equal(4, stream.WriteUInt32(0x00000000u, true));
+        Assert.Equal(4, stream.WriteUInt32(0xFFFFFFFFu, true));
+        Assert.Equal(16, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadUInt32List(values.Count, true));
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(0x00000000u, stream.ReadUInt32(false));
+        Assert.Equal(0xFFFFFFFFu, stream.ReadUInt32(false));
+        Assert.Equal(0x00000000u, stream.ReadUInt32(true));
+        Assert.Equal(0xFFFFFFFFu, stream.ReadUInt32(true));
+        Assert.Equal(16, stream.Position);
+    }
 
-        stream = new MemoryStream();
-        count = stream.WriteUInt32List(values, true);
-        Assert.Equal(count, stream.Position);
+    [Fact]
+    public void TestInt32()
+    {
+        var stream = new MemoryStream();
+        Assert.Equal(4, stream.WriteInt32(-0x80000000, false));
+        Assert.Equal(4, stream.WriteInt32(0x7FFFFFFF, false));
+        Assert.Equal(4, stream.WriteInt32(-0x80000000, true));
+        Assert.Equal(4, stream.WriteInt32(0x7FFFFFFF, true));
+        Assert.Equal(16, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadUInt32(true));
-        }
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteUInt32(value, false);
-        }
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadUInt32List(values.Count, false));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteUInt32List(values, false);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadUInt32(false));
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(-0x80000000, stream.ReadInt32(false));
+        Assert.Equal(0x7FFFFFFF, stream.ReadInt32(false));
+        Assert.Equal(-0x80000000, stream.ReadInt32(true));
+        Assert.Equal(0x7FFFFFFF, stream.ReadInt32(true));
+        Assert.Equal(16, stream.Position);
     }
 
     [Fact]
     public void TestBinary()
     {
         var stream = new MemoryStream();
-        var count = 0;
-        count += stream.WriteBinary([1, 1, 1, 1, 0, 0, 0, 0], true);
-        count += stream.WriteBinary([1, 1, 1, 1, 0, 0, 0, 0], false);
-        count += stream.WriteBinaryList([
-            [1, 1, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 1, 1]
-        ], true);
-        count += stream.WriteBinaryList([
-            [1, 1, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 1, 1]
-        ], false);
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(1, stream.WriteBinary([1, 1, 1, 1, 0, 0, 0, 0], false));
+        Assert.Equal(1, stream.WriteBinary([1, 1, 1, 1, 0, 0, 0, 0], true));
+        Assert.Equal(2, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal([1, 1, 1, 1, 0, 0, 0, 0], stream.ReadBinary(true));
         Assert.Equal([1, 1, 1, 1, 0, 0, 0, 0], stream.ReadBinary(false));
-        Assert.Equal([
-            [1, 1, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 1, 1]
-        ], stream.ReadBinaryList(2, true));
-        Assert.Equal([
-            [1, 1, 1, 1, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 1, 1]
-        ], stream.ReadBinaryList(2, false));
-        Assert.Equal(count, stream.Position);
+        Assert.Equal([1, 1, 1, 1, 0, 0, 0, 0], stream.ReadBinary(true));
+        Assert.Equal(2, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal([0, 0, 0, 0, 1, 1, 1, 1], stream.ReadBinary(false));
         Assert.Equal([0, 0, 0, 0, 1, 1, 1, 1], stream.ReadBinary(true));
-        Assert.Equal([
-            [0, 0, 0, 0, 1, 1, 1, 1],
-            [1, 1, 1, 1, 0, 0, 0, 0]
-        ], stream.ReadBinaryList(2, false));
-        Assert.Equal([
-            [0, 0, 0, 0, 1, 1, 1, 1],
-            [1, 1, 1, 1, 0, 0, 0, 0]
-        ], stream.ReadBinaryList(2, true));
-        Assert.Equal(count, stream.Position);
+        Assert.Equal([0, 0, 0, 0, 1, 1, 1, 1], stream.ReadBinary(false));
+        Assert.Equal(2, stream.Position);
     }
 
     [Fact]
     public void TestString()
     {
-        List<string> values = ["ABC", "DEF", "12345", "67890"];
-
         var stream = new MemoryStream();
-        var count = 0;
-        foreach (var value in values)
-        {
-            count += stream.WriteString(value);
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(4, stream.WriteString("ABC"));
+        Assert.Equal(6, stream.WriteString("12345"));
+        Assert.Equal(10, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal(values, stream.ReadStringList(values.Count));
-        Assert.Equal(count, stream.Position);
-
-        stream = new MemoryStream();
-        count = stream.WriteStringList(values);
-        Assert.Equal(count, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        foreach (var value in values)
-        {
-            Assert.Equal(value, stream.ReadString());
-        }
-        Assert.Equal(count, stream.Position);
+        Assert.Equal("ABC", stream.ReadString());
+        Assert.Equal("12345", stream.ReadString());
+        Assert.Equal(10, stream.Position);
     }
 
     [Fact]
     public void TestBool()
     {
         var stream = new MemoryStream();
-        var count = 0;
-        count += stream.WriteBool(true);
-        count += stream.WriteBool(false);
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(1, stream.WriteBool(true));
+        Assert.Equal(1, stream.WriteBool(false));
+        Assert.Equal(2, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
         Assert.True(stream.ReadBool());
         Assert.False(stream.ReadBool());
-        Assert.Equal(count, stream.Position);
+        Assert.Equal(2, stream.Position);
     }
 
     [Fact]
     public void TestAlignTo4Byte()
     {
         var stream = new MemoryStream();
-        stream.WriteBuffer("abc"u8);
+        stream.WriteBytes("abc"u8);
         Assert.Equal(1, stream.AlignTo4ByteWithNulls());
         Assert.Equal(4, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal("abc\0"u8, stream.ReadBuffer(4));
+        Assert.Equal("abc\0"u8, stream.ReadBytes(4));
     }
 }

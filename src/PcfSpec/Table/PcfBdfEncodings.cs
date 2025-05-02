@@ -19,7 +19,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
         var defaultChar = stream.ReadUInt16(tableFormat.MsByteFirst);
 
         var glyphsCount = (maxByte2 - minByte2 + 1) * (maxByte1 - minByte1 + 1);
-        var glyphIndices = stream.ReadUInt16List(glyphsCount, tableFormat.MsByteFirst);
+        var glyphIndices = Enumerable.Range(0, glyphsCount).Select(_ => stream.ReadUInt16(tableFormat.MsByteFirst)).ToList();
 
         var encodings = new Dictionary<ushort, ushort>();
         if (minByte1 == 0 && maxByte1 == 0)

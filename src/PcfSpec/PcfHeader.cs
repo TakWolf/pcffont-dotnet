@@ -10,7 +10,7 @@ public class PcfHeader : IComparable<PcfHeader>
     public static List<PcfHeader> Parse(Stream stream)
     {
         stream.Seek(0, SeekOrigin.Begin);
-        if (!FileVersion.SequenceEqual(stream.ReadBuffer(4)))
+        if (!FileVersion.SequenceEqual(stream.ReadBytes(4)))
         {
             throw new PcfParseException("Data format not support.");
         }
@@ -37,7 +37,7 @@ public class PcfHeader : IComparable<PcfHeader>
     public static void Dump(Stream stream, List<PcfHeader> headers)
     {
         stream.Seek(0, SeekOrigin.Begin);
-        stream.WriteBuffer(FileVersion);
+        stream.WriteBytes(FileVersion);
 
         stream.WriteUInt32((uint)headers.Count);
         foreach (var header in headers)
