@@ -74,8 +74,8 @@ public class ValidityTests
     [Fact]
     public void TestUnifont()
     {
-        var font1 = BdfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.02.bdf"));
-        var font2 = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.02.pcf"));
+        var font1 = BdfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.03.bdf"));
+        var font2 = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.03.pcf"));
 
         foreach (var glyphIndex in Enumerable.Range(0, font1.Glyphs.Count))
         {

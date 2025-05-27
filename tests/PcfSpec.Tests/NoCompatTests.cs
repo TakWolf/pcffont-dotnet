@@ -7,8 +7,8 @@ public class NoCompatTests
     [Fact]
     public void TestNoCompat()
     {
-        var loadPath = Path.Combine("assets", "unifont", "unifont-16.0.02.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "unifont-16.0.02.pcf");
+        var loadPath = Path.Combine("assets", "unifont", "unifont-16.0.03.pcf");
+        var savePath = Path.Combine(PathUtils.CreateTempDir(), "unifont-16.0.03.pcf");
 
         var font1 = PcfFont.Load(loadPath);
         font1.Accelerators!.CompatInfo = null;

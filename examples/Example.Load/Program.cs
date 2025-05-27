@@ -7,7 +7,7 @@ if (Directory.Exists(outputsDir))
 }
 Directory.CreateDirectory(outputsDir);
 
-var font = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.02.pcf"));
+var font = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.03.pcf"));
 Console.WriteLine($"name: {font.Properties!.Font}");
 Console.WriteLine($"size: {font.Properties!.PointSize}");
 Console.WriteLine($"ascent: {font.Accelerators!.FontAscent}");
@@ -30,4 +30,4 @@ foreach (var (encoding, glyphIndex) in font.BdfEncodings!)
     }
     Console.WriteLine();
 }
-font.Save(Path.Combine(outputsDir, "unifont-16.0.02.pcf"));
+font.Save(Path.Combine(outputsDir, "unifont-16.0.03.pcf"));
