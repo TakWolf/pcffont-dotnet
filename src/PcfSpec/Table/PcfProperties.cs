@@ -23,8 +23,10 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
     private const string KeyCharsetRegistry = "CHARSET_REGISTRY";
     private const string KeyCharsetEncoding = "CHARSET_ENCODING";
 
-    private const string KeyCapHeight = "CAP_HEIGHT";
     private const string KeyXHeight = "X_HEIGHT";
+    private const string KeyCapHeight = "CAP_HEIGHT";
+    private const string KeyUnderlinePosition = "UNDERLINE_POSITION";
+    private const string KeyUnderlineThickness = "UNDERLINE_THICKNESS";
 
     private const string KeyFont = "FONT";
     private const string KeyFontVersion = "FONT_VERSION";
@@ -53,8 +55,10 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         KeyResolutionX,
         KeyResolutionY,
         KeyAverageWidth,
+        KeyXHeight,
         KeyCapHeight,
-        KeyXHeight
+        KeyUnderlinePosition,
+        KeyUnderlineThickness
     ];
 
     private static readonly string[] XlfdStringValueKeys = [
@@ -394,6 +398,18 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
     {
         get => GetIntValue(KeyCapHeight);
         set => SetValue(KeyCapHeight, value);
+    }
+
+    public int? UnderlinePosition
+    {
+        get => GetIntValue(KeyUnderlinePosition);
+        set => SetValue(KeyUnderlinePosition, value);
+    }
+
+    public int? UnderlineThickness
+    {
+        get => GetIntValue(KeyUnderlineThickness);
+        set => SetValue(KeyUnderlineThickness, value);
     }
 
     public string? Font

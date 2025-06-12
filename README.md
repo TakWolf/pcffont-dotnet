@@ -73,6 +73,8 @@ builder.Properties.GenerateXlfd();
 
 builder.Properties.XHeight = 7;
 builder.Properties.CapHeight = 10;
+builder.Properties.UnderlinePosition = -2;
+builder.Properties.UnderlineThickness = 1;
 
 builder.Properties.FontVersion = "1.0.0";
 builder.Properties.Copyright = "Copyright (c) TakWolf";
