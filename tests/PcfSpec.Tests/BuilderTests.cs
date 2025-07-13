@@ -44,11 +44,11 @@ public class BuilderTests
     [Fact]
     public void TestUnifont()
     {
-        var font1 = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-16.0.03.pcf"));
+        var font1 = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.03.pcf"));
         font1.Accelerators!.CompatInfo = null;
         font1.BdfAccelerators!.CompatInfo = null;
         font1.Bitmaps!.CompatInfo = null;
-        var font2 = LoadPcfByBdf(Path.Combine("assets", "unifont", "unifont-16.0.03.bdf"));
+        var font2 = LoadPcfByBdf(Path.Combine("assets", "unifont", "unifont-17.0.03.bdf"));
 
         Assert.True(PcfBdfEncodings.Equals(font1.BdfEncodings, font2.BdfEncodings));
         Assert.True(PcfGlyphNames.Equals(font1.GlyphNames, font2.GlyphNames));

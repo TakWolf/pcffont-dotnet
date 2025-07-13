@@ -5,8 +5,8 @@ public class LoadSaveTests
     [Fact]
     public void TestUnifont()
     {
-        var loadPath = Path.Combine("assets", "unifont", "unifont-16.0.03.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "unifont-16.0.03.pcf");
+        var loadPath = Path.Combine("assets", "unifont", "unifont-17.0.03.pcf");
+        var savePath = Path.Combine(PathUtils.CreateTempDir(), "unifont-17.0.03.pcf");
         var font = PcfFont.Load(loadPath);
         font.Save(savePath);
         Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
