@@ -1,0 +1,6 @@
+<Solution>
+    <Project Path="src/PcfSpec/PcfSpec.csproj" />
+    <Project Path="tests/PcfSpec.Tests/PcfSpec.Tests.csproj" />
+    <Project Path="examples/Example.Create/Example.Create.csproj" />
+    <Project Path="examples/Example.Load/Example.Load.csproj" />
+</Solution>
