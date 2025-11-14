@@ -454,7 +454,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         {
             throw new PcfXlfdException("Not starts with '-'.");
         }
-        var tokens = font[1..font.Length].Split('-');
+        var tokens = font[1..].Split('-');
         if (tokens.Length != 14)
         {
             throw new PcfXlfdException("Must be 14 '-'.");
