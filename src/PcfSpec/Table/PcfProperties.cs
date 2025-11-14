@@ -127,13 +127,13 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
                 throw new PcfValueException($"Expected type 'string' or 'int', got '{value.GetType()}' instead.");
             }
         }
+    }
 
-        if (XlfdStringValueKeys.Contains(key))
+    private static void CheckXlfdStringValue(string key, string value)
+    {
+        if (RegexXlfdValue().IsMatch(value))
         {
-            if (RegexXlfdValue().IsMatch((string)value))
-            {
-                throw new PcfValueException("Contains illegal characters.");
-            }
+            throw new PcfValueException($"Value of '{key}' Contains illegal characters.");
         }
     }
 
@@ -439,7 +439,15 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
     public void GenerateXlfd()
     {
         List<string> tokens = [""];
-        tokens.AddRange(XlfdKeysOrder.Select(key => GetValue(key)?.ToString() ?? ""));
+        foreach (var key in XlfdKeysOrder)
+        {
+            var value = GetValue(key)?.ToString() ?? "";
+            if (XlfdStringValueKeys.Contains(key))
+            {
+                CheckXlfdStringValue(key, value);
+            }
+            tokens.Add(value);
+        }
         Font = string.Join("-", tokens);
     }
 
@@ -470,6 +478,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
             {
                 if (XlfdStringValueKeys.Contains(key))
                 {
+                    CheckXlfdStringValue(key, token);
                     value = token;
                 }
                 else
