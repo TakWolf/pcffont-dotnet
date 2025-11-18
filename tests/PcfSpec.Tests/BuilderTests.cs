@@ -1,5 +1,5 @@
 using BdfSpec;
-using PcfSpec.Table;
+using PcfSpec.Tables;
 
 namespace PcfSpec.Tests;
 

@@ -1,8 +1,8 @@
 using System.Buffers.Binary;
 using System.Collections;
-using PcfSpec.Util;
+using PcfSpec.Utils;
 
-namespace PcfSpec.Table;
+namespace PcfSpec.Tables;
 
 public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
 {

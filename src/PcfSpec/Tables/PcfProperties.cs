@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using PcfSpec.Error;
-using PcfSpec.Util;
+using PcfSpec.Errors;
+using PcfSpec.Utils;
 
-namespace PcfSpec.Table;
+namespace PcfSpec.Tables;
 
 public partial class PcfProperties : IDictionary<string, object>, IList<KeyValuePair<string, object>>, IPcfTable
 {

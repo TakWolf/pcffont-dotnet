@@ -1,4 +1,4 @@
-using PcfSpec.Util;
+using PcfSpec.Utils;
 
 namespace PcfSpec.Tests;
 

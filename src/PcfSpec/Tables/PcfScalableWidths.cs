@@ -1,6 +1,6 @@
-using PcfSpec.Util;
+using PcfSpec.Utils;
 
-namespace PcfSpec.Table;
+namespace PcfSpec.Tables;
 
 public class PcfScalableWidths : List<int>, IPcfTable
 {

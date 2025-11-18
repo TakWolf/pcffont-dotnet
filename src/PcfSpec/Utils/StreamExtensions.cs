@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 
 [assembly: InternalsVisibleTo("PcfSpec.Tests")]
-namespace PcfSpec.Util;
+namespace PcfSpec.Utils;
 
 internal static class StreamExtensions
 {

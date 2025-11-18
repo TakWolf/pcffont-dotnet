@@ -1,4 +1,4 @@
-namespace PcfSpec.Error;
+namespace PcfSpec.Errors;
 
 public class PcfException : Exception
 {

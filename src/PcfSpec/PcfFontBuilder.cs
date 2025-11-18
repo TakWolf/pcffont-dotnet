@@ -1,4 +1,4 @@
-using PcfSpec.Table;
+using PcfSpec.Tables;
 
 namespace PcfSpec;
 

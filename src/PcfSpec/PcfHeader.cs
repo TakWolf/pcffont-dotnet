@@ -1,5 +1,5 @@
-using PcfSpec.Error;
-using PcfSpec.Util;
+using PcfSpec.Errors;
+using PcfSpec.Utils;
 
 namespace PcfSpec;
 

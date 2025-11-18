@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using PcfSpec.Table;
+using PcfSpec.Tables;
 
 namespace PcfSpec;
 
