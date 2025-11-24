@@ -9,17 +9,24 @@ jobs:
     environment:
       name: nuget
       url: https://www.nuget.org/packages/PcfFont
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6.0.2
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v5.2.0
         with:
           dotnet-version: "8.0.x"
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
         run: dotnet pack
+      - name: NuGet login
+        uses: NuGet/login@v1.1.0
+        id: login
+        with:
+          user: TakWolf
       - name: Publish
-        run: dotnet nuget push ./src/PcfSpec/bin/Release/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./src/PcfSpec/bin/Release/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
