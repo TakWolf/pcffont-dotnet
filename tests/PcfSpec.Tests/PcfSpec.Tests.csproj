@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\PcfSpec\PcfSpec.csproj" />
+        <ProjectReference Include="../../src/PcfSpec/PcfSpec.csproj" />
         <PackageReference Include="BdfFont" />
         <PackageReference Include="coverlet.collector" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -20,6 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\..\assets\**" LinkBase="assets" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="../../assets/**" LinkBase="assets" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>

@@ -8,6 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\PcfSpec\PcfSpec.csproj" />
+        <ProjectReference Include="../../src/PcfSpec/PcfSpec.csproj" />
     </ItemGroup>
 </Project>

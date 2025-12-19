@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\PcfSpec\PcfSpec.csproj" />
+        <ProjectReference Include="../../src/PcfSpec/PcfSpec.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="..\..\assets\unifont\*.pcf" LinkBase="assets\unifont" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="../../assets/unifont/*.pcf" LinkBase="assets/unifont" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>
