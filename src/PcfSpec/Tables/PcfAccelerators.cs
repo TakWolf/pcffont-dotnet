@@ -25,7 +25,7 @@ public class PcfAccelerators : IPcfTable
 
         PcfMetric? inkMinBounds = null;
         PcfMetric? inkMaxBounds = null;
-        if (tableFormat.InkBoundsOrCompressedMetrics)
+        if (tableFormat.InkBounds)
         {
             inkMinBounds = PcfMetric.Parse(stream, tableFormat.MsByteFirst, false);
             inkMaxBounds = PcfMetric.Parse(stream, tableFormat.MsByteFirst, false);
@@ -129,7 +129,7 @@ public class PcfAccelerators : IPcfTable
         MinBounds!.Dump(stream, TableFormat.MsByteFirst, false);
         MaxBounds!.Dump(stream, TableFormat.MsByteFirst, false);
 
-        if (TableFormat.InkBoundsOrCompressedMetrics)
+        if (TableFormat.InkBounds)
         {
             InkMinBounds!.Dump(stream, TableFormat.MsByteFirst, false);
             InkMaxBounds!.Dump(stream, TableFormat.MsByteFirst, false);

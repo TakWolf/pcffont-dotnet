@@ -9,7 +9,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
         uint glyphsCount;
-        if (tableFormat.InkBoundsOrCompressedMetrics)
+        if (tableFormat.CompressedMetrics)
         {
             glyphsCount = stream.ReadUInt16(tableFormat.MsByteFirst);
         }
@@ -21,7 +21,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
         var metrics = new List<PcfMetric>();
         foreach (var _ in Enumerable.Range(0, (int)glyphsCount))
         {
-            var metric = PcfMetric.Parse(stream, tableFormat.MsByteFirst, tableFormat.InkBoundsOrCompressedMetrics);
+            var metric = PcfMetric.Parse(stream, tableFormat.MsByteFirst, tableFormat.CompressedMetrics);
             metrics.Add(metric);
         }
 
@@ -103,7 +103,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat.Value);
-        if (TableFormat.InkBoundsOrCompressedMetrics)
+        if (TableFormat.CompressedMetrics)
         {
             stream.WriteUInt16((ushort)glyphsCount, TableFormat.MsByteFirst);
         }
@@ -113,7 +113,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
         }
         foreach (var metric in this)
         {
-            metric.Dump(stream, TableFormat.MsByteFirst, TableFormat.InkBoundsOrCompressedMetrics);
+            metric.Dump(stream, TableFormat.MsByteFirst, TableFormat.CompressedMetrics);
         }
         stream.AlignTo4ByteWithNulls();
 

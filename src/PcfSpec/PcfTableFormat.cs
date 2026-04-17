@@ -45,6 +45,18 @@ public class PcfTableFormat
         ScanUnitIndex = scanUnitIndex;
     }
 
+    public bool InkBounds
+    {
+        get => InkBoundsOrCompressedMetrics;
+        set => InkBoundsOrCompressedMetrics = value;
+    }
+
+    public bool CompressedMetrics
+    {
+        get => InkBoundsOrCompressedMetrics;
+        set => InkBoundsOrCompressedMetrics = value;
+    }
+
     public uint Value
     {
         get

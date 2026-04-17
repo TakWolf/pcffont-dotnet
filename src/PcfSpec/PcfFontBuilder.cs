@@ -81,21 +81,21 @@ public class PcfFontBuilder
 
             accelerators.InkMinBounds = inkMetrics.CalculateMinBounds();
             accelerators.InkMaxBounds = inkMetrics.CalculateMaxBounds();
-            accelerators.TableFormat.InkBoundsOrCompressedMetrics = true;
+            accelerators.TableFormat.InkBounds = true;
             accelerators.InkMetrics = true;
         }
         else
         {
             inkMetrics = null;
 
-            accelerators.TableFormat.InkBoundsOrCompressedMetrics = false;
+            accelerators.TableFormat.InkBounds = false;
             accelerators.InkMetrics = false;
         }
 
-        metrics.TableFormat.InkBoundsOrCompressedMetrics = metrics.CalculateCompressible();
+        metrics.TableFormat.CompressedMetrics = metrics.CalculateCompressible();
         if (inkMetrics is not null)
         {
-            inkMetrics.TableFormat.InkBoundsOrCompressedMetrics = inkMetrics.CalculateCompressible();
+            inkMetrics.TableFormat.CompressedMetrics = inkMetrics.CalculateCompressible();
         }
 
         var font = new PcfFont

@@ -20,6 +20,8 @@ public class TableFormatTests
         Assert.True(tableFormat.MsByteFirst);
         Assert.True(tableFormat.MsBitFirst);
         Assert.True(tableFormat.InkBoundsOrCompressedMetrics);
+        Assert.True(tableFormat.InkBounds);
+        Assert.True(tableFormat.CompressedMetrics);
         Assert.Equal(2, tableFormat.GlyphPadIndex);
         Assert.Equal(0, tableFormat.ScanUnitIndex);
     }
