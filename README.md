@@ -17,6 +17,7 @@ dotnet add package PcfFont
 
 ```csharp
 using PcfSpec;
+using PcfSpec.Tables;
 
 var outputsDir = Path.Combine("build");
 if (Directory.Exists(outputsDir))
@@ -30,7 +31,33 @@ builder.Config.FontAscent = 14;
 builder.Config.FontDescent = 2;
 
 builder.Glyphs.Add(new PcfGlyph(
-    name: "A",
+    name: ".notdef",
+    encoding: PcfBdfEncodings.NoEncoding,
+    scalableWidth: 500,
+    characterWidth: 8,
+    dimensions: (8, 16),
+    offset: (0, -2),
+    bitmap: [
+        [1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1]
+    ]));
+
+builder.Glyphs.Add(new PcfGlyph(
+    name: "CAP_LETTER_A",
     encoding: 65,
     scalableWidth: 500,
     characterWidth: 8,
