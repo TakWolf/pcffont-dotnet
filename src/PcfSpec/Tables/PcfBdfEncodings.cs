@@ -6,7 +6,8 @@ namespace PcfSpec.Tables;
 
 public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
 {
-    public const ushort NoGlyphIndex = 0xFFFF;
+    public const ushort NoEncoding = ushort.MaxValue;
+    public const ushort NoGlyphIndex = ushort.MaxValue;
 
     public static PcfBdfEncodings Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -53,7 +54,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
 
     public PcfBdfEncodings(
         PcfTableFormat? tableFormat = null,
-        ushort defaultChar = NoGlyphIndex,
+        ushort defaultChar = NoEncoding,
         IDictionary<ushort, ushort>? encodings = null)
     {
         TableFormat = tableFormat ?? new PcfTableFormat();

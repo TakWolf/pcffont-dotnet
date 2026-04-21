@@ -16,7 +16,7 @@ public class PcfFontConfig
     public PcfFontConfig(
         int fontAscent = 0,
         int fontDescent = 0,
-        ushort defaultChar = PcfBdfEncodings.NoGlyphIndex,
+        ushort defaultChar = PcfBdfEncodings.NoEncoding,
         bool drawRightToLeft = false,
         bool msByteFirst = false,
         bool msBitFirst = false,
