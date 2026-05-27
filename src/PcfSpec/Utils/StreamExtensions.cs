@@ -47,25 +47,29 @@ internal static class StreamExtensions
 
     public static ushort ReadUInt16(this Stream stream, bool msByteFirst = false)
     {
-        var buffer = stream.ReadBytes(2);
+        Span<byte> buffer = stackalloc byte[2];
+        stream.ReadExactly(buffer);
         return msByteFirst ? BinaryPrimitives.ReadUInt16BigEndian(buffer) : BinaryPrimitives.ReadUInt16LittleEndian(buffer);
     }
 
     public static short ReadInt16(this Stream stream, bool msByteFirst = false)
     {
-        var buffer = stream.ReadBytes(2);
+        Span<byte> buffer = stackalloc byte[2];
+        stream.ReadExactly(buffer);
         return msByteFirst ? BinaryPrimitives.ReadInt16BigEndian(buffer) : BinaryPrimitives.ReadInt16LittleEndian(buffer);
     }
 
     public static uint ReadUInt32(this Stream stream, bool msByteFirst = false)
     {
-        var buffer = stream.ReadBytes(4);
+        Span<byte> buffer = stackalloc byte[4];
+        stream.ReadExactly(buffer);
         return msByteFirst ? BinaryPrimitives.ReadUInt32BigEndian(buffer) : BinaryPrimitives.ReadUInt32LittleEndian(buffer);
     }
 
     public static int ReadInt32(this Stream stream, bool msByteFirst = false)
     {
-        var buffer = stream.ReadBytes(4);
+        Span<byte> buffer = stackalloc byte[4];
+        stream.ReadExactly(buffer);
         return msByteFirst ? BinaryPrimitives.ReadInt32BigEndian(buffer) : BinaryPrimitives.ReadInt32LittleEndian(buffer);
     }
 
@@ -116,7 +120,7 @@ internal static class StreamExtensions
 
     public static int WriteUInt16(this Stream stream, ushort value, bool msByteFirst = false)
     {
-        var buffer = new byte[2];
+        Span<byte> buffer = stackalloc byte[2];
         if (msByteFirst)
         {
             BinaryPrimitives.WriteUInt16BigEndian(buffer, value);
@@ -130,7 +134,7 @@ internal static class StreamExtensions
 
     public static int WriteInt16(this Stream stream, short value, bool msByteFirst = false)
     {
-        var buffer = new byte[2];
+        Span<byte> buffer = stackalloc byte[2];
         if (msByteFirst)
         {
             BinaryPrimitives.WriteInt16BigEndian(buffer, value);
@@ -144,7 +148,7 @@ internal static class StreamExtensions
 
     public static int WriteUInt32(this Stream stream, uint value, bool msByteFirst = false)
     {
-        var buffer = new byte[4];
+        Span<byte> buffer = stackalloc byte[4];
         if (msByteFirst)
         {
             BinaryPrimitives.WriteUInt32BigEndian(buffer, value);
@@ -158,7 +162,7 @@ internal static class StreamExtensions
 
     public static int WriteInt32(this Stream stream, int value, bool msByteFirst = false)
     {
-        var buffer = new byte[4];
+        Span<byte> buffer = stackalloc byte[4];
         if (msByteFirst)
         {
             BinaryPrimitives.WriteInt32BigEndian(buffer, value);
