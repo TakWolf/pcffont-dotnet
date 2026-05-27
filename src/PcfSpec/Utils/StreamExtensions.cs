@@ -194,7 +194,14 @@ internal static class StreamExtensions
 
     public static int WriteBool(this Stream stream, bool value) => stream.WriteUInt8(value ? (byte)1 : (byte)0);
 
-    public static int WriteNulls(this Stream stream, long count) => stream.WriteBytes(new byte[count]);
+    public static int WriteNulls(this Stream stream, int count)
+    {
+        for (var i = 0; i < count; i++)
+        {
+            stream.WriteByte(0);
+        }
+        return count;
+    }
 
-    public static int AlignTo4ByteWithNulls(this Stream stream) => stream.WriteNulls(3 - (stream.Position + 3) % 4);
+    public static int AlignTo4ByteWithNulls(this Stream stream) => stream.WriteNulls((int)(3 - (stream.Position + 3) % 4));
 }
