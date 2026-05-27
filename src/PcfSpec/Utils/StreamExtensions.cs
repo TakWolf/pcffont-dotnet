@@ -75,10 +75,11 @@ internal static class StreamExtensions
 
     public static List<byte> ReadBinary(this Stream stream, bool msBitFirst = false)
     {
-        var binary = new List<byte>($"{stream.ReadUInt8():b8}".Select(bit => byte.Parse(bit.ToString())));
-        if (!msBitFirst)
+        var b = stream.ReadUInt8();
+        var binary = new List<byte>(8);
+        for (var i = 0; i < 8; i++)
         {
-            binary.Reverse();
+            binary.Add((byte)((b >> (msBitFirst ? 7 - i : i)) & 1));
         }
         return binary;
     }
@@ -176,12 +177,17 @@ internal static class StreamExtensions
 
     public static int WriteBinary(this Stream stream, List<byte> value, bool msBitFirst = false)
     {
-        if (!msBitFirst)
+        if (value.Count != 8)
         {
-            value = new List<byte>(value);
-            value.Reverse();
+            throw new ArgumentException("Binary length must be 8.", nameof(value));
         }
-        return stream.WriteUInt8(Convert.ToByte(string.Join("", value), 2));
+
+        byte b = 0;
+        for (var i = 0; i < 8; i++)
+        {
+            b = (byte)((b << 1) | (value[msBitFirst ? i : 7 - i] & 1));
+        }
+        return stream.WriteUInt8(b);
     }
 
     public static int WriteString(this Stream stream, string value) => stream.WriteBytes(Encoding.UTF8.GetBytes(value)) + stream.WriteNulls(1);
