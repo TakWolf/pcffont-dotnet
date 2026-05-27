@@ -438,7 +438,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
 
     public void GenerateXlfd()
     {
-        List<string> tokens = [""];
+        List<string> parts = [""];
         foreach (var key in XlfdKeysOrder)
         {
             var value = GetValue(key)?.ToString() ?? "";
@@ -446,9 +446,9 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
             {
                 CheckXlfdStringValue(key, value);
             }
-            tokens.Add(value);
+            parts.Add(value);
         }
-        Font = string.Join("-", tokens);
+        Font = string.Join("-", parts);
     }
 
     public void UpdateByXlfd()
@@ -462,15 +462,15 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         {
             throw new PcfXlfdException("Not starts with '-'.");
         }
-        var tokens = font[1..].Split('-');
-        if (tokens.Length != 14)
+        var parts = font[1..].Split('-');
+        if (parts.Length != 14)
         {
             throw new PcfXlfdException("Must be 14 '-'.");
         }
-        foreach (var (key, token) in XlfdKeysOrder.Zip(tokens))
+        foreach (var (key, part) in XlfdKeysOrder.Zip(parts))
         {
             object? value;
-            if ("".Equals(token))
+            if ("".Equals(part))
             {
                 value = null;
             }
@@ -478,12 +478,12 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
             {
                 if (XlfdStringValueKeys.Contains(key))
                 {
-                    CheckXlfdStringValue(key, token);
-                    value = token;
+                    CheckXlfdStringValue(key, part);
+                    value = part;
                 }
                 else
                 {
-                    value = Convert.ToInt32(token);
+                    value = Convert.ToInt32(part);
                 }
             }
             SetValue(key, value);
