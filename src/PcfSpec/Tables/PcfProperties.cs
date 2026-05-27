@@ -483,7 +483,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
                 }
                 else
                 {
-                    value = Convert.ToInt32(part);
+                    value = int.Parse(part);
                 }
             }
             SetValue(key, value);

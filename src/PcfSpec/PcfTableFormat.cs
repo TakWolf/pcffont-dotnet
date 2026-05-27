@@ -15,8 +15,8 @@ public class PcfTableFormat
         var msByteFirst = (value & MaskByteOrder) > 0;
         var msBitFirst = (value & MaskBitOrder) > 0;
         var inkBoundsOrCompressedMetrics = (value & FlagInkBoundsOrCompressedMetrics) > 0;
-        var glyphPadIndex = Convert.ToInt32(value & MaskGlyphPad);
-        var scanUnitIndex = Convert.ToInt32((value & MaskScanUnit) >> 4);
+        var glyphPadIndex = (int)(value & MaskGlyphPad);
+        var scanUnitIndex = (int)((value & MaskScanUnit) >> 4);
         return new PcfTableFormat(
             msByteFirst,
             msBitFirst,
@@ -74,8 +74,8 @@ public class PcfTableFormat
             {
                 value |= FlagInkBoundsOrCompressedMetrics;
             }
-            value |= Convert.ToUInt32(GlyphPadIndex);
-            value |= Convert.ToUInt32(ScanUnitIndex) << 4;
+            value |= (uint)GlyphPadIndex;
+            value |= (uint)ScanUnitIndex << 4;
             return value;
         }
     }
