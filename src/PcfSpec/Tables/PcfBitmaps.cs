@@ -42,7 +42,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         foreach (var (bitmapOffset, metric) in bitmapOffsets.Zip(font.Metrics!))
         {
             stream.Seek(bitmapsStart + bitmapOffset, SeekOrigin.Begin);
-            var glyphRowPad = (int)(Math.Ceiling(metric.Width / (double)(glyphPad * 8)) * glyphPad);
+            var glyphRowPad = (int)((metric.Width + glyphPad * 8 - 1) / (glyphPad * 8) * glyphPad);
 
             var fragments = Enumerable.Range(0, glyphRowPad * metric.Height).Select(_ => stream.ReadBinary(tableFormat.MsBitFirst)).ToList();
             if (tableFormat.MsByteFirst != tableFormat.MsBitFirst)
@@ -100,7 +100,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         foreach (var (bitmap, metric) in this.Zip(font.Metrics!))
         {
             bitmapOffsets.Add(bitmapsSize);
-            var bitmapRowWidth = (int)(Math.Ceiling(metric.Width / (double)(glyphPad * 8)) * glyphPad * 8);
+            var bitmapRowWidth = (int)((metric.Width + glyphPad * 8 - 1) / (glyphPad * 8) * (glyphPad * 8));
 
             var fragments = new List<List<byte>>();
             foreach (var bitmapRow in bitmap)
