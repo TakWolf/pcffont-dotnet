@@ -58,7 +58,10 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
                 {
                     bitmapRow.AddRange(fragments[glyphRowPad * y + i]);
                 }
-                bitmapRow = bitmapRow[..metric.Width];
+                if (bitmapRow.Count > metric.Width)
+                {
+                    bitmapRow.RemoveRange(metric.Width, bitmapRow.Count - metric.Width);
+                }
                 bitmap.Add(bitmapRow);
             }
             bitmaps.Add(bitmap);
@@ -105,14 +108,20 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
             var fragments = new List<List<byte>>();
             foreach (var bitmapRow in bitmap)
             {
-                var bitmapRowAligned = new List<byte>(bitmapRow.Take(bitmapRowWidth));
-                if (bitmapRowAligned.Count < bitmapRowWidth)
-                {
-                    bitmapRowAligned.AddRange(Enumerable.Repeat((byte)0, bitmapRowWidth - bitmapRowAligned.Count));
-                }
                 for (var i = 0; i < bitmapRowWidth; i += 8)
                 {
-                    fragments.Add(bitmapRowAligned[i..(i + 8)]);
+                    if (i >= bitmapRow.Count)
+                    {
+                        fragments.Add([.. new byte[8]]);
+                        continue;
+                    }
+
+                    var fragment = bitmapRow.GetRange(i, Math.Min(8, bitmapRow.Count - i));
+                    while (fragment.Count < 8)
+                    {
+                        fragment.Add(0);
+                    }
+                    fragments.Add(fragment);
                 }
             }
 
