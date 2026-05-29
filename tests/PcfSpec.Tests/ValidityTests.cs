@@ -1,72 +1,49 @@
+using System.Text.RegularExpressions;
 using BdfSpec;
 
 namespace PcfSpec.Tests;
 
-public class ValidityTests
+public partial class ValidityTests
 {
+    [GeneratedRegex(@"^demo-(lsbyte|msbyte)-(lsbit|msbit)-p([1248])-u([124])\.pcf$")]
+    private static partial Regex RegexDemoFontName();
+
     [Fact]
     public void TestDemo()
     {
         var bdfFont = BdfFont.Load(Path.Combine("assets", "demo", "demo.bdf"));
-        var pcfFont1 = PcfFont.Load(Path.Combine("assets", "demo", "demo-lsbyte-lsbit-p4-u2.pcf"));
-        var pcfFont2 = PcfFont.Load(Path.Combine("assets", "demo", "demo-lsbyte-msbit-p4-u2.pcf"));
-        var pcfFont3 = PcfFont.Load(Path.Combine("assets", "demo", "demo-msbyte-lsbit-p4-u2.pcf"));
-        var pcfFont4 = PcfFont.Load(Path.Combine("assets", "demo", "demo-msbyte-msbit-p4-u2.pcf"));
-        var pcfFont5 = PcfFont.Load(Path.Combine("assets", "demo", "demo-lsbyte-lsbit-p2-u4.pcf"));
-        var pcfFont6 = PcfFont.Load(Path.Combine("assets", "demo", "demo-lsbyte-msbit-p2-u4.pcf"));
-        var pcfFont7 = PcfFont.Load(Path.Combine("assets", "demo", "demo-msbyte-lsbit-p2-u4.pcf"));
-        var pcfFont8 = PcfFont.Load(Path.Combine("assets", "demo", "demo-msbyte-msbit-p2-u4.pcf"));
+        var pcfFont0 = PcfFont.Load(Path.Combine("assets", "demo", "demo.pcf"));
 
-        foreach (var glyphIndex in Enumerable.Range(0, bdfFont.Glyphs.Count))
+        var pcfFilePaths = Directory.GetFiles(Path.Combine("assets", "demo"))
+            .Where(path => RegexDemoFontName().IsMatch(Path.GetFileName(path)))
+            .Order()
+            .ToList();
+        Assert.Equal(36, pcfFilePaths.Count);
+
+        foreach (var path in pcfFilePaths)
         {
-            var glyph = bdfFont.Glyphs[glyphIndex];
+            var pcfFontX = PcfFont.Load(path);
 
-            string[] glyphNames = [
-                pcfFont1.GlyphNames![glyphIndex],
-                pcfFont2.GlyphNames![glyphIndex],
-                pcfFont3.GlyphNames![glyphIndex],
-                pcfFont4.GlyphNames![glyphIndex],
-                pcfFont5.GlyphNames![glyphIndex],
-                pcfFont6.GlyphNames![glyphIndex],
-                pcfFont7.GlyphNames![glyphIndex],
-                pcfFont8.GlyphNames![glyphIndex]
-            ];
-            foreach (var glyphName in glyphNames)
+            foreach (var glyphIndex in Enumerable.Range(0, bdfFont.Glyphs.Count))
             {
-                Assert.Equal(glyph.Name, glyphName);
-            }
+                var glyph = bdfFont.Glyphs[glyphIndex];
 
-            PcfMetric[] metrics = [
-                pcfFont1.Metrics![glyphIndex],
-                pcfFont2.Metrics![glyphIndex],
-                pcfFont3.Metrics![glyphIndex],
-                pcfFont4.Metrics![glyphIndex],
-                pcfFont5.Metrics![glyphIndex],
-                pcfFont6.Metrics![glyphIndex],
-                pcfFont7.Metrics![glyphIndex],
-                pcfFont8.Metrics![glyphIndex]
-            ];
-            foreach (var metric in metrics)
-            {
-                Assert.True(PcfMetric.Equals(metrics[0], metric));
-                Assert.Equal(glyph.DeviceWidthX, metric.CharacterWidth);
-                Assert.Equal(glyph.Dimensions, metric.Dimensions);
-                Assert.Equal(glyph.Offset, metric.Offset);
-            }
+                var glyphName0 = pcfFont0.GlyphNames![glyphIndex];
+                var glyphNameX = pcfFontX.GlyphNames![glyphIndex];
+                Assert.Equal(glyphNameX, glyph.Name);
+                Assert.Equal(glyphNameX, glyphName0);
 
-            List<List<List<byte>>> bitmaps = [
-                pcfFont1.Bitmaps![glyphIndex],
-                pcfFont2.Bitmaps![glyphIndex],
-                pcfFont3.Bitmaps![glyphIndex],
-                pcfFont4.Bitmaps![glyphIndex],
-                pcfFont5.Bitmaps![glyphIndex],
-                pcfFont6.Bitmaps![glyphIndex],
-                pcfFont7.Bitmaps![glyphIndex],
-                pcfFont8.Bitmaps![glyphIndex]
-            ];
-            foreach (var bitmap in bitmaps)
-            {
-                Assert.Equal(glyph.Bitmap, bitmap);
+                var metric0 = pcfFont0.Metrics![glyphIndex];
+                var metricX = pcfFontX.Metrics![glyphIndex];
+                Assert.Equal(metricX.CharacterWidth, glyph.DeviceWidthX);
+                Assert.Equal(metricX.Dimensions, glyph.Dimensions);
+                Assert.Equal(metricX.Offset, glyph.Offset);
+                Assert.True(PcfMetric.Equals(metricX, metric0));
+
+                var bitmap0 = pcfFont0.Bitmaps![glyphIndex];
+                var bitmapX = pcfFontX.Bitmaps![glyphIndex];
+                Assert.Equal(bitmapX, glyph.Bitmap);
+                Assert.Equal(bitmapX, bitmap0);
             }
         }
     }

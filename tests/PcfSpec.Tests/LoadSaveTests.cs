@@ -1,6 +1,8 @@
+using System.Text.RegularExpressions;
+
 namespace PcfSpec.Tests;
 
-public class LoadSaveTests
+public partial class LoadSaveTests
 {
     [Fact]
     public void TestUnifont()
@@ -12,163 +14,45 @@ public class LoadSaveTests
         Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
     }
 
-    [Fact]
-    public void TestSpleen_5_8()
-    {
-        var loadPath = Path.Combine("assets", "spleen", "spleen-5x8.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "spleen-5x8.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
+    [GeneratedRegex(@"^spleen-.*\.pcf$")]
+    private static partial Regex RegexSpleenFontName();
 
     [Fact]
-    public void TestSpleen_6_12()
+    public void TestSpleen()
     {
-        var loadPath = Path.Combine("assets", "spleen", "spleen-6x12.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "spleen-6x12.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
+        var loadPaths = Directory.GetFiles(Path.Combine("assets", "spleen"))
+            .Where(path => RegexSpleenFontName().IsMatch(Path.GetFileName(path)))
+            .Order()
+            .ToList();
+        Assert.Equal(6, loadPaths.Count);
+
+        foreach (var loadPath in loadPaths)
+        {
+            var savePath = Path.Combine(PathUtils.CreateTempDir(), Path.GetFileName(loadPath));
+            var font = PcfFont.Load(loadPath);
+            font.Save(savePath);
+            Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
+        }
     }
 
-    [Fact]
-    public void TestSpleen_8_16()
-    {
-        var loadPath = Path.Combine("assets", "spleen", "spleen-8x16.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "spleen-8x16.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestSpleen_12_24()
-    {
-        var loadPath = Path.Combine("assets", "spleen", "spleen-12x24.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "spleen-12x24.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestSpleen_16_32()
-    {
-        var loadPath = Path.Combine("assets", "spleen", "spleen-16x32.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "spleen-16x32.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestSpleen_32_64()
-    {
-        var loadPath = Path.Combine("assets", "spleen", "spleen-32x64.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "spleen-32x64.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestDemoLsbyteLsbitP4U2()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-lsbyte-lsbit-p4-u2.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-lsbyte-lsbit-p4-u2.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestDemoLsbyteMsbitP4U2()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-lsbyte-msbit-p4-u2.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-lsbyte-msbit-p4-u2.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestDemoMsbyteLsbitP4U2()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-msbyte-lsbit-p4-u2.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-msbyte-lsbit-p4-u2.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestDemoMsbyteMsbitP4U2()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-msbyte-msbit-p4-u2.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-msbyte-msbit-p4-u2.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestDemoLsbyteLsbitP2U4()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-lsbyte-lsbit-p2-u4.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-lsbyte-lsbit-p2-u4.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestDemoLsbyteMsbitP2U4()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-lsbyte-msbit-p2-u4.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-lsbyte-msbit-p2-u4.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestDemoMsbyteLsbitP2U4()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-msbyte-lsbit-p2-u4.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-msbyte-lsbit-p2-u4.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
-
-    [Fact]
-    public void TestDemoMsbyteMsbitP2U4()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-msbyte-msbit-p2-u4.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-msbyte-msbit-p2-u4.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
+    [GeneratedRegex(@"^demo.*\.pcf$")]
+    private static partial Regex RegexDemoFontName();
 
     [Fact]
     public void TestDemo()
     {
-        var loadPath = Path.Combine("assets", "demo", "demo.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
-    }
+        var loadPaths = Directory.GetFiles(Path.Combine("assets", "demo"))
+            .Where(path => RegexDemoFontName().IsMatch(Path.GetFileName(path)))
+            .Order()
+            .ToList();
+        Assert.Equal(38, loadPaths.Count);
 
-    [Fact]
-    public void TestDemo2()
-    {
-        var loadPath = Path.Combine("assets", "demo", "demo-2.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "demo-2.pcf");
-        var font = PcfFont.Load(loadPath);
-        font.Save(savePath);
-        Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
+        foreach (var loadPath in loadPaths)
+        {
+            var savePath = Path.Combine(PathUtils.CreateTempDir(), Path.GetFileName(loadPath));
+            var font = PcfFont.Load(loadPath);
+            font.Save(savePath);
+            Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
+        }
     }
 }
