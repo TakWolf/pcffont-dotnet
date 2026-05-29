@@ -5,7 +5,7 @@ namespace PcfSpec.Tables;
 public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
 {
     private static readonly uint[] GlyphPadOptions = [1, 2, 4, 8];
-    private static readonly uint[] ScanUnitOptions = [1, 2, 4, 8];
+    private static readonly uint[] ScanUnitOptions = [1, 2, 4];
 
     private static void SwapFragments(List<List<byte>> fragments, uint scanUnit)
     {
