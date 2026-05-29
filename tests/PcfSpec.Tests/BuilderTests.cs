@@ -44,60 +44,60 @@ public class BuilderTests
     [Fact]
     public void TestUnifont()
     {
-        var font1 = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.04.pcf"));
-        font1.Accelerators!.CompatInfo = null;
-        font1.BdfAccelerators!.CompatInfo = null;
-        font1.Bitmaps!.CompatInfo = null;
-        var font2 = LoadPcfByBdf(Path.Combine("assets", "unifont", "unifont-17.0.04.bdf"));
+        var pcfFont = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.04.pcf"));
+        pcfFont.Accelerators!.CompatInfo = null;
+        pcfFont.BdfAccelerators!.CompatInfo = null;
+        pcfFont.Bitmaps!.CompatInfo = null;
+        var bdfFont = LoadPcfByBdf(Path.Combine("assets", "unifont", "unifont-17.0.04.bdf"));
 
-        Assert.True(PcfBdfEncodings.Equals(font1.BdfEncodings, font2.BdfEncodings));
-        Assert.True(PcfGlyphNames.Equals(font1.GlyphNames, font2.GlyphNames));
-        Assert.True(PcfScalableWidths.Equals(font1.ScalableWidths, font2.ScalableWidths));
-        Assert.True(PcfMetrics.Equals(font1.Metrics, font2.Metrics));
-        Assert.True(PcfMetrics.Equals(font1.InkMetrics, font2.InkMetrics));
-        Assert.True(PcfBitmaps.Equals(font1.Bitmaps, font2.Bitmaps));
-        Assert.True(PcfAccelerators.Equals(font1.Accelerators, font2.Accelerators));
-        Assert.True(PcfAccelerators.Equals(font1.BdfAccelerators, font2.BdfAccelerators));
-        Assert.Equal(font1.Properties!.Font!.ToUpper(), font2.Properties!.Font!.ToUpper().Replace("-SANS SERIF", "-SANS"));
+        Assert.True(PcfBdfEncodings.Equals(pcfFont.BdfEncodings, bdfFont.BdfEncodings));
+        Assert.True(PcfGlyphNames.Equals(pcfFont.GlyphNames, bdfFont.GlyphNames));
+        Assert.True(PcfScalableWidths.Equals(pcfFont.ScalableWidths, bdfFont.ScalableWidths));
+        Assert.True(PcfMetrics.Equals(pcfFont.Metrics, bdfFont.Metrics));
+        Assert.True(PcfMetrics.Equals(pcfFont.InkMetrics, bdfFont.InkMetrics));
+        Assert.True(PcfBitmaps.Equals(pcfFont.Bitmaps, bdfFont.Bitmaps));
+        Assert.True(PcfAccelerators.Equals(pcfFont.Accelerators, bdfFont.Accelerators));
+        Assert.True(PcfAccelerators.Equals(pcfFont.BdfAccelerators, bdfFont.BdfAccelerators));
+        Assert.Equal(pcfFont.Properties!.Font!.ToUpper(), bdfFont.Properties!.Font!.ToUpper().Replace("-SANS SERIF", "-SANS"));
     }
 
     [Fact]
     public void TestDemo()
     {
-        var font1 = PcfFont.Load(Path.Combine("assets", "demo", "demo.pcf"));
-        font1.Accelerators!.CompatInfo = null;
-        font1.BdfAccelerators!.CompatInfo = null;
-        font1.Bitmaps!.CompatInfo = null;
-        var font2 = LoadPcfByBdf(Path.Combine("assets", "demo", "demo.bdf"));
+        var pcfFont = PcfFont.Load(Path.Combine("assets", "demo", "demo.pcf"));
+        pcfFont.Accelerators!.CompatInfo = null;
+        pcfFont.BdfAccelerators!.CompatInfo = null;
+        pcfFont.Bitmaps!.CompatInfo = null;
+        var bdfFont = LoadPcfByBdf(Path.Combine("assets", "demo", "demo.bdf"));
 
-        Assert.True(PcfBdfEncodings.Equals(font1.BdfEncodings, font2.BdfEncodings));
-        Assert.True(PcfGlyphNames.Equals(font1.GlyphNames, font2.GlyphNames));
-        Assert.True(PcfScalableWidths.Equals(font1.ScalableWidths, font2.ScalableWidths));
-        Assert.True(PcfMetrics.Equals(font1.Metrics, font2.Metrics));
-        Assert.True(PcfMetrics.Equals(font1.InkMetrics, font2.InkMetrics));
-        Assert.True(PcfBitmaps.Equals(font1.Bitmaps, font2.Bitmaps));
-        Assert.True(PcfAccelerators.Equals(font1.Accelerators, font2.Accelerators));
-        Assert.True(PcfAccelerators.Equals(font1.BdfAccelerators, font2.BdfAccelerators));
-        Assert.Equal(font1.Properties!.Font, font2.Properties!.Font);
+        Assert.True(PcfBdfEncodings.Equals(pcfFont.BdfEncodings, bdfFont.BdfEncodings));
+        Assert.True(PcfGlyphNames.Equals(pcfFont.GlyphNames, bdfFont.GlyphNames));
+        Assert.True(PcfScalableWidths.Equals(pcfFont.ScalableWidths, bdfFont.ScalableWidths));
+        Assert.True(PcfMetrics.Equals(pcfFont.Metrics, bdfFont.Metrics));
+        Assert.True(PcfMetrics.Equals(pcfFont.InkMetrics, bdfFont.InkMetrics));
+        Assert.True(PcfBitmaps.Equals(pcfFont.Bitmaps, bdfFont.Bitmaps));
+        Assert.True(PcfAccelerators.Equals(pcfFont.Accelerators, bdfFont.Accelerators));
+        Assert.True(PcfAccelerators.Equals(pcfFont.BdfAccelerators, bdfFont.BdfAccelerators));
+        Assert.Equal(pcfFont.Properties!.Font, bdfFont.Properties!.Font);
     }
 
     [Fact]
     public void TestDemo2()
     {
-        var font1 = PcfFont.Load(Path.Combine("assets", "demo", "demo-2.pcf"));
-        font1.Accelerators!.CompatInfo = null;
-        font1.BdfAccelerators!.CompatInfo = null;
-        font1.Bitmaps!.CompatInfo = null;
-        var font2 = LoadPcfByBdf(Path.Combine("assets", "demo", "demo-2.bdf"));
+        var pcfFont = PcfFont.Load(Path.Combine("assets", "demo", "demo-2.pcf"));
+        pcfFont.Accelerators!.CompatInfo = null;
+        pcfFont.BdfAccelerators!.CompatInfo = null;
+        pcfFont.Bitmaps!.CompatInfo = null;
+        var bdfFont = LoadPcfByBdf(Path.Combine("assets", "demo", "demo-2.bdf"));
 
-        Assert.True(PcfBdfEncodings.Equals(font1.BdfEncodings, font2.BdfEncodings));
-        Assert.True(PcfGlyphNames.Equals(font1.GlyphNames, font2.GlyphNames));
-        Assert.True(PcfScalableWidths.Equals(font1.ScalableWidths, font2.ScalableWidths));
-        Assert.True(PcfMetrics.Equals(font1.Metrics, font2.Metrics));
-        Assert.True(PcfMetrics.Equals(font1.InkMetrics, font2.InkMetrics));
-        Assert.True(PcfBitmaps.Equals(font1.Bitmaps, font2.Bitmaps));
-        Assert.True(PcfAccelerators.Equals(font1.Accelerators, font2.Accelerators));
-        Assert.True(PcfAccelerators.Equals(font1.BdfAccelerators, font2.BdfAccelerators));
-        Assert.Equal(font1.Properties!.Font, font2.Properties!.Font);
+        Assert.True(PcfBdfEncodings.Equals(pcfFont.BdfEncodings, bdfFont.BdfEncodings));
+        Assert.True(PcfGlyphNames.Equals(pcfFont.GlyphNames, bdfFont.GlyphNames));
+        Assert.True(PcfScalableWidths.Equals(pcfFont.ScalableWidths, bdfFont.ScalableWidths));
+        Assert.True(PcfMetrics.Equals(pcfFont.Metrics, bdfFont.Metrics));
+        Assert.True(PcfMetrics.Equals(pcfFont.InkMetrics, bdfFont.InkMetrics));
+        Assert.True(PcfBitmaps.Equals(pcfFont.Bitmaps, bdfFont.Bitmaps));
+        Assert.True(PcfAccelerators.Equals(pcfFont.Accelerators, bdfFont.Accelerators));
+        Assert.True(PcfAccelerators.Equals(pcfFont.BdfAccelerators, bdfFont.BdfAccelerators));
+        Assert.Equal(pcfFont.Properties!.Font, bdfFont.Properties!.Font);
     }
 }
