@@ -73,17 +73,6 @@ internal static class StreamExtensions
         return msByteFirst ? BinaryPrimitives.ReadInt32BigEndian(buffer) : BinaryPrimitives.ReadInt32LittleEndian(buffer);
     }
 
-    public static List<byte> ReadBinary(this Stream stream, bool msBitFirst = false)
-    {
-        var b = stream.ReadUInt8();
-        var binary = new List<byte>(8);
-        for (var i = 0; i < 8; i++)
-        {
-            binary.Add((byte)((b >> (msBitFirst ? 7 - i : i)) & 1));
-        }
-        return binary;
-    }
-
     public static string ReadString(this Stream stream)
     {
         var buffer = new List<byte>();
@@ -173,21 +162,6 @@ internal static class StreamExtensions
             BinaryPrimitives.WriteInt32LittleEndian(buffer, value);
         }
         return stream.WriteBytes(buffer);
-    }
-
-    public static int WriteBinary(this Stream stream, List<byte> value, bool msBitFirst = false)
-    {
-        if (value.Count != 8)
-        {
-            throw new ArgumentException("Binary length must be 8.", nameof(value));
-        }
-
-        byte b = 0;
-        for (var i = 0; i < 8; i++)
-        {
-            b = (byte)((b << 1) | (value[msBitFirst ? i : 7 - i] & 1));
-        }
-        return stream.WriteUInt8(b);
     }
 
     public static int WriteString(this Stream stream, string value) => stream.WriteBytes(Encoding.UTF8.GetBytes(value)) + stream.WriteNulls(1);

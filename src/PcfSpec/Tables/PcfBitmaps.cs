@@ -4,22 +4,21 @@ namespace PcfSpec.Tables;
 
 public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
 {
-    private static void SwapFragments(List<List<byte>> fragments, uint scanUnit)
+    private static void SwapBytes(byte[] data, uint scanUnit)
     {
-        switch (scanUnit)
+        if (scanUnit <= 1)
         {
-            case 2:
-                for (var i = 0; i < fragments.Count; i += 2)
-                {
-                    (fragments[i], fragments[i + 1]) = (fragments[i + 1], fragments[i]);
-                }
-                break;
-            case 4:
-                for (var i = 0; i < fragments.Count; i += 4)
-                {
-                    (fragments[i], fragments[i + 1], fragments[i + 2], fragments[i + 3]) = (fragments[i + 3], fragments[i + 2], fragments[i + 1], fragments[i]);
-                }
-                break;
+            return;
+        }
+
+        for (var i = 0; i < data.Length / scanUnit * scanUnit; i += (int)scanUnit)
+        {
+            for (var j = 0; j < scanUnit / 2; j++)
+            {
+                var left = i + j;
+                var right = i + scanUnit - 1 - j;
+                (data[left], data[right]) = (data[right], data[left]);
+            }
         }
     }
 
@@ -35,22 +34,37 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         var bitmaps = new List<List<List<byte>>>();
         foreach (var (bitmapOffset, metric) in bitmapOffsets.Zip(font.Metrics!))
         {
-            stream.Seek(bitmapsStart + bitmapOffset, SeekOrigin.Begin);
-            var glyphRowPad = (int)((metric.Width + tableFormat.GlyphPad * 8 - 1) / (tableFormat.GlyphPad * 8) * tableFormat.GlyphPad);
+            var bitmapRowSize = (int)((metric.Width + tableFormat.GlyphPad * 8 - 1) / (tableFormat.GlyphPad * 8) * tableFormat.GlyphPad);
 
-            var fragments = Enumerable.Range(0, glyphRowPad * metric.Height).Select(_ => stream.ReadBinary(tableFormat.MsBitFirst)).ToList();
+            stream.Seek(bitmapsStart + bitmapOffset, SeekOrigin.Begin);
+            var bitmapData = stream.ReadBytes(bitmapRowSize * metric.Height);
+
             if (tableFormat.MsByteFirst != tableFormat.MsBitFirst)
             {
-                SwapFragments(fragments, tableFormat.ScanUnit);
+                SwapBytes(bitmapData, tableFormat.ScanUnit);
             }
 
             var bitmap = new List<List<byte>>();
-            foreach (var y in Enumerable.Range(0, metric.Height))
+            for (var y = 0; y < metric.Height; y++)
             {
                 var bitmapRow = new List<byte>();
-                foreach (var i in Enumerable.Range(0, glyphRowPad))
+                for (var i = 0; i < bitmapRowSize; i++)
                 {
-                    bitmapRow.AddRange(fragments[glyphRowPad * y + i]);
+                    var b = bitmapData[y * bitmapRowSize + i];
+                    if (tableFormat.MsBitFirst)
+                    {
+                        for (var shift = 7; shift >= 0; shift--)
+                        {
+                            bitmapRow.Add((byte)((b >> shift) & 1));
+                        }
+                    }
+                    else
+                    {
+                        for (var shift = 0; shift < 8; shift++)
+                        {
+                            bitmapRow.Add((byte)((b >> shift) & 1));
+                        }
+                    }
                 }
                 if (bitmapRow.Count > metric.Width)
                 {
@@ -93,38 +107,50 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         stream.Seek(bitmapsStart, SeekOrigin.Begin);
         foreach (var (bitmap, metric) in this.Zip(font.Metrics!))
         {
-            bitmapOffsets.Add(bitmapsSize);
-            var bitmapRowWidth = (int)((metric.Width + TableFormat.GlyphPad * 8 - 1) / (TableFormat.GlyphPad * 8) * (TableFormat.GlyphPad * 8));
+            var bitmapRowSize = (int)((metric.Width + TableFormat.GlyphPad * 8 - 1) / (TableFormat.GlyphPad * 8) * TableFormat.GlyphPad);
 
-            var fragments = new List<List<byte>>();
-            foreach (var bitmapRow in bitmap)
+            var bitmapData = new byte[bitmapRowSize * metric.Height];
+            for (var y = 0; y < metric.Height; y++)
             {
-                for (var i = 0; i < bitmapRowWidth; i += 8)
+                if (y >= bitmap.Count)
                 {
-                    if (i >= bitmapRow.Count)
-                    {
-                        fragments.Add([.. new byte[8]]);
-                        continue;
-                    }
+                    Array.Fill(bitmapData, (byte)0, y * bitmapRowSize, bitmapRowSize);
+                    continue;
+                }
 
-                    var fragment = bitmapRow.GetRange(i, Math.Min(8, bitmapRow.Count - i));
-                    while (fragment.Count < 8)
+                var bitmapRow = bitmap[y];
+                for (var i = 0; i < bitmapRowSize; i++)
+                {
+                    byte b = 0;
+                    if (TableFormat.MsBitFirst)
                     {
-                        fragment.Add(0);
+                        for (var shift = 0; shift < 8; shift++)
+                        {
+                            var pixelIndex = i * 8 + shift;
+                            var pixel = pixelIndex < Math.Min(bitmapRow.Count, metric.Width) && bitmapRow[pixelIndex] != 0 ? 1 : 0;
+                            b = (byte)((b << 1) | pixel);
+                        }
                     }
-                    fragments.Add(fragment);
+                    else
+                    {
+                        for (var shift = 7; shift >= 0; shift--)
+                        {
+                            var pixelIndex = i * 8 + shift;
+                            var pixel = pixelIndex < Math.Min(bitmapRow.Count, metric.Width) && bitmapRow[pixelIndex] != 0 ? 1 : 0;
+                            b = (byte)((b << 1) | pixel);
+                        }
+                    }
+                    bitmapData[y * bitmapRowSize + i] = b;
                 }
             }
 
             if (TableFormat.MsByteFirst != TableFormat.MsBitFirst)
             {
-                SwapFragments(fragments, TableFormat.ScanUnit);
+                SwapBytes(bitmapData, TableFormat.ScanUnit);
             }
 
-            foreach (var fragment in fragments)
-            {
-                bitmapsSize += (uint)stream.WriteBinary(fragment, TableFormat.MsBitFirst);
-            }
+            bitmapOffsets.Add(bitmapsSize);
+            bitmapsSize += (uint)stream.WriteBytes(bitmapData.AsSpan());
         }
 
         // Compat

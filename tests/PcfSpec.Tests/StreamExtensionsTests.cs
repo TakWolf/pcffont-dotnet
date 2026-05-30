@@ -120,23 +120,6 @@ public class StreamExtensionsTests
     }
 
     [Fact]
-    public void TestBinary()
-    {
-        var stream = new MemoryStream();
-        Assert.Equal(1, stream.WriteBinary([1, 1, 1, 1, 0, 0, 0, 0], false));
-        Assert.Equal(1, stream.WriteBinary([1, 1, 1, 1, 0, 0, 0, 0], true));
-        Assert.Equal(2, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal([1, 1, 1, 1, 0, 0, 0, 0], stream.ReadBinary(false));
-        Assert.Equal([1, 1, 1, 1, 0, 0, 0, 0], stream.ReadBinary(true));
-        Assert.Equal(2, stream.Position);
-        stream.Seek(0, SeekOrigin.Begin);
-        Assert.Equal([0, 0, 0, 0, 1, 1, 1, 1], stream.ReadBinary(true));
-        Assert.Equal([0, 0, 0, 0, 1, 1, 1, 1], stream.ReadBinary(false));
-        Assert.Equal(2, stream.Position);
-    }
-
-    [Fact]
     public void TestString()
     {
         var stream = new MemoryStream();
