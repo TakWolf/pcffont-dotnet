@@ -1,4 +1,3 @@
-using System.Buffers.Binary;
 using System.Collections;
 using PcfSpec.Utils;
 
@@ -37,7 +36,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
             {
                 foreach (byte byte2 in Enumerable.Range(minByte2, maxByte2 + 1 - minByte2))
                 {
-                    var encoding = BinaryPrimitives.ReadUInt16BigEndian([byte1, byte2]);
+                    var encoding = (ushort)((byte1 << 8) | byte2);
                     var glyphIndex = glyphIndices[(byte1 - minByte1) * (maxByte2 - minByte2 + 1) + byte2 - minByte2];
                     encodings[encoding] = glyphIndex;
                 }
@@ -144,10 +143,8 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
         byte maxByte1 = 0;
         foreach (var encoding in Keys)
         {
-            var bs = new byte[2];
-            BinaryPrimitives.WriteUInt16BigEndian(bs, encoding);
-            var byte1 = bs[0];
-            var byte2 = bs[1];
+            var byte1 = (byte)(encoding >> 8);
+            var byte2 = (byte)encoding;
             if (byte1 < minByte1)
             {
                 minByte1 = byte1;
@@ -188,7 +185,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
             {
                 foreach (byte byte2 in Enumerable.Range(minByte2, maxByte2 + 1 - minByte2))
                 {
-                    var encoding = BinaryPrimitives.ReadUInt16BigEndian([byte1, byte2]);
+                    var encoding = (ushort)((byte1 << 8) | byte2);
                     TryGetValue(encoding, out var glyphIndex);
                     stream.WriteUInt16(glyphIndex, TableFormat.MsByteFirst);
                 }
