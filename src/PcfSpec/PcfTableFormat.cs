@@ -10,6 +10,9 @@ public class PcfTableFormat
     private const uint MaskBitOrder = 0b_00_10_00;
     private const uint MaskScanUnit = 0b_11_00_00;
 
+    private static readonly uint[] GlyphPadOptions = [1, 2, 4, 8];
+    private static readonly uint[] ScanUnitOptions = [1, 2, 4];
+
     public static PcfTableFormat Parse(uint value)
     {
         var msByteFirst = (value & MaskByteOrder) > 0;
@@ -57,6 +60,34 @@ public class PcfTableFormat
         set => InkBoundsOrCompressedMetrics = value;
     }
 
+    public uint GlyphPad
+    {
+        get => GlyphPadOptions[GlyphPadIndex];
+        set
+        {
+            var index = Array.IndexOf(GlyphPadOptions, value);
+            if (index < 0)
+            {
+                throw new ArgumentException($"{nameof(GlyphPad)} must be one of [{string.Join(", ", GlyphPadOptions)}].", nameof(GlyphPad));
+            }
+            GlyphPadIndex = index;
+        }
+    }
+
+    public uint ScanUnit
+    {
+        get => ScanUnitOptions[ScanUnitIndex];
+        set
+        {
+            var index = Array.IndexOf(ScanUnitOptions, value);
+            if (index < 0)
+            {
+                throw new ArgumentException($"{nameof(ScanUnit)} must be one of [{string.Join(", ", ScanUnitOptions)}].", nameof(ScanUnit));
+            }
+            ScanUnitIndex = index;
+        }
+    }
+
     public uint Value
     {
         get
@@ -78,5 +109,15 @@ public class PcfTableFormat
             value |= (uint)ScanUnitIndex << 4;
             return value;
         }
+    }
+
+    public List<uint> BitmapsSizeConfigs(uint bitmapsSize)
+    {
+        var configs = new List<uint>(GlyphPadOptions.Length);
+        foreach (var glyphPadOption in GlyphPadOptions)
+        {
+            configs.Add(bitmapsSize / GlyphPad * glyphPadOption);
+        }
+        return configs;
     }
 }

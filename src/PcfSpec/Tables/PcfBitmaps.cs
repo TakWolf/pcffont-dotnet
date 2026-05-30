@@ -4,9 +4,6 @@ namespace PcfSpec.Tables;
 
 public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
 {
-    private static readonly uint[] GlyphPadOptions = [1, 2, 4, 8];
-    private static readonly uint[] ScanUnitOptions = [1, 2, 4];
-
     private static void SwapFragments(List<List<byte>> fragments, uint scanUnit)
     {
         switch (scanUnit)
@@ -30,9 +27,6 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
-        var glyphPad = GlyphPadOptions[tableFormat.GlyphPadIndex];
-        var scanUnit = ScanUnitOptions[tableFormat.ScanUnitIndex];
-
         var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
         var bitmapOffsets = Enumerable.Range(0, (int)glyphsCount).Select(_ => stream.ReadUInt32(tableFormat.MsByteFirst)).ToList();
         var bitmapsSizeConfigs = Enumerable.Range(0, 4).Select(_ => stream.ReadUInt32(tableFormat.MsByteFirst)).ToList();
@@ -42,12 +36,12 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         foreach (var (bitmapOffset, metric) in bitmapOffsets.Zip(font.Metrics!))
         {
             stream.Seek(bitmapsStart + bitmapOffset, SeekOrigin.Begin);
-            var glyphRowPad = (int)((metric.Width + glyphPad * 8 - 1) / (glyphPad * 8) * glyphPad);
+            var glyphRowPad = (int)((metric.Width + tableFormat.GlyphPad * 8 - 1) / (tableFormat.GlyphPad * 8) * tableFormat.GlyphPad);
 
             var fragments = Enumerable.Range(0, glyphRowPad * metric.Height).Select(_ => stream.ReadBinary(tableFormat.MsBitFirst)).ToList();
             if (tableFormat.MsByteFirst != tableFormat.MsBitFirst)
             {
-                SwapFragments(fragments, scanUnit);
+                SwapFragments(fragments, tableFormat.ScanUnit);
             }
 
             var bitmap = new List<List<byte>>();
@@ -91,9 +85,6 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
-        var glyphPad = GlyphPadOptions[TableFormat.GlyphPadIndex];
-        var scanUnit = ScanUnitOptions[TableFormat.ScanUnitIndex];
-
         var glyphsCount = (uint)Count;
 
         var bitmapsStart = tableOffset + 4 + 4 + 4 * glyphsCount + 4 * 4;
@@ -103,7 +94,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         foreach (var (bitmap, metric) in this.Zip(font.Metrics!))
         {
             bitmapOffsets.Add(bitmapsSize);
-            var bitmapRowWidth = (int)((metric.Width + glyphPad * 8 - 1) / (glyphPad * 8) * (glyphPad * 8));
+            var bitmapRowWidth = (int)((metric.Width + TableFormat.GlyphPad * 8 - 1) / (TableFormat.GlyphPad * 8) * (TableFormat.GlyphPad * 8));
 
             var fragments = new List<List<byte>>();
             foreach (var bitmapRow in bitmap)
@@ -127,7 +118,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
 
             if (TableFormat.MsByteFirst != TableFormat.MsBitFirst)
             {
-                SwapFragments(fragments, scanUnit);
+                SwapFragments(fragments, TableFormat.ScanUnit);
             }
 
             foreach (var fragment in fragments)
@@ -137,15 +128,15 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         }
 
         // Compat
-        var bitmapsSizeConfigs = new List<uint>();
+        List<uint> bitmapsSizeConfigs;
         if (CompatInfo is not null)
         {
-            bitmapsSizeConfigs.AddRange(CompatInfo);
+            bitmapsSizeConfigs = new List<uint>(CompatInfo);
             bitmapsSizeConfigs[TableFormat.GlyphPadIndex] = bitmapsSize;
         }
         else
         {
-            bitmapsSizeConfigs.AddRange(GlyphPadOptions.Select(glyphPadOption => bitmapsSize / glyphPad * glyphPadOption));
+            bitmapsSizeConfigs = TableFormat.BitmapsSizeConfigs(bitmapsSize);
         }
 
         stream.Seek(tableOffset, SeekOrigin.Begin);

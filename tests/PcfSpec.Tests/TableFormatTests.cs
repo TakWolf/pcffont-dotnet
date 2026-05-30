@@ -35,4 +35,52 @@ public class TableFormatTests
         Assert.Equal(tableFormat1.Value, tableFormat2.Value);
         Assert.NotEqual(tableFormat1.Value, tableFormat3.Value);
     }
+
+    [Fact]
+    public void TestGlyphPad()
+    {
+        var tableFormat = new PcfTableFormat(glyphPadIndex: -1);
+        tableFormat.GlyphPad = 1;
+        Assert.Equal(0, tableFormat.GlyphPadIndex);
+        tableFormat.GlyphPad = 2;
+        Assert.Equal(1, tableFormat.GlyphPadIndex);
+        tableFormat.GlyphPad = 4;
+        Assert.Equal(2, tableFormat.GlyphPadIndex);
+        tableFormat.GlyphPad = 8;
+        Assert.Equal(3, tableFormat.GlyphPadIndex);
+
+        var e = Assert.Throws<ArgumentException>(() => tableFormat.GlyphPad = 16);
+        Assert.Equal(nameof(PcfTableFormat.GlyphPad), e.ParamName);
+        Assert.Equal($"{nameof(PcfTableFormat.GlyphPad)} must be one of [1, 2, 4, 8]. (Parameter '{nameof(PcfTableFormat.GlyphPad)}')", e.Message);
+    }
+
+    [Fact]
+    public void TestScanUnit()
+    {
+        var tableFormat = new PcfTableFormat(scanUnitIndex: -1);
+        tableFormat.ScanUnit = 1;
+        Assert.Equal(0, tableFormat.ScanUnitIndex);
+        tableFormat.ScanUnit = 2;
+        Assert.Equal(1, tableFormat.ScanUnitIndex);
+        tableFormat.ScanUnit = 4;
+        Assert.Equal(2, tableFormat.ScanUnitIndex);
+
+        var e = Assert.Throws<ArgumentException>(() => tableFormat.ScanUnit = 8);
+        Assert.Equal(nameof(PcfTableFormat.ScanUnit), e.ParamName);
+        Assert.Equal($"{nameof(PcfTableFormat.ScanUnit)} must be one of [1, 2, 4]. (Parameter '{nameof(PcfTableFormat.ScanUnit)}')", e.Message);
+    }
+
+    [Fact]
+    public void TestBitmapsSizeConfigs()
+    {
+        var tableFormat = new PcfTableFormat();
+        tableFormat.GlyphPad = 1;
+        Assert.Equal([16, 32, 64, 128], tableFormat.BitmapsSizeConfigs(16));
+        tableFormat.GlyphPad = 2;
+        Assert.Equal([8, 16, 32, 64], tableFormat.BitmapsSizeConfigs(16));
+        tableFormat.GlyphPad = 4;
+        Assert.Equal([4, 8, 16, 32], tableFormat.BitmapsSizeConfigs(16));
+        tableFormat.GlyphPad = 8;
+        Assert.Equal([2, 4, 8, 16], tableFormat.BitmapsSizeConfigs(16));
+    }
 }
