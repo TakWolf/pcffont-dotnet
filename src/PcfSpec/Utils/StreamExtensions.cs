@@ -7,14 +7,14 @@ namespace PcfSpec.Utils;
 
 internal static class StreamExtensions
 {
-    public static byte[] ReadBytes(this Stream stream, long count, bool throwOnEndOfStream = true)
+    public static byte[] ReadBytes(this Stream stream, int size, bool throwOnEndOfStream = true)
     {
-        ArgumentOutOfRangeException.ThrowIfNegative(count);
-        if (count == 0)
+        ArgumentOutOfRangeException.ThrowIfNegative(size);
+        if (size == 0)
         {
             return [];
         }
-        var buffer = new byte[count];
+        var buffer = new byte[size];
         var numRead = stream.ReadAtLeast(buffer, buffer.Length, throwOnEndOfStream);
         if (numRead != buffer.Length)
         {
@@ -168,13 +168,13 @@ internal static class StreamExtensions
 
     public static int WriteBool(this Stream stream, bool value) => stream.WriteUInt8(value ? (byte)1 : (byte)0);
 
-    public static int WriteNulls(this Stream stream, int count)
+    public static int WriteNulls(this Stream stream, int size)
     {
-        for (var i = 0; i < count; i++)
+        for (var i = 0; i < size; i++)
         {
             stream.WriteByte(0);
         }
-        return count;
+        return size;
     }
 
     public static int AlignTo4ByteWithNulls(this Stream stream) => stream.WriteNulls((int)(3 - (stream.Position + 3) % 4));

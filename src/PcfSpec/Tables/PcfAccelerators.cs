@@ -52,7 +52,7 @@ public class PcfAccelerators : IPcfTable
         if (header.TableSize > stream.Position - header.TableOffset)
         {
             stream.Seek(header.TableOffset, SeekOrigin.Begin);
-            var rawChunk = stream.ReadBytes(header.TableSize, throwOnEndOfStream: false);
+            var rawChunk = stream.ReadBytes((int)header.TableSize, throwOnEndOfStream: false);
             table.CompatInfo = (rawChunk, header.TableSize);
         }
 
