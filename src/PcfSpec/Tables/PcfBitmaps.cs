@@ -27,8 +27,8 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
         var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
-        var bitmapOffsets = Enumerable.Range(0, (int)glyphsCount).Select(_ => stream.ReadUInt32(tableFormat.MsByteFirst)).ToList();
-        var bitmapsSizeConfigs = Enumerable.Range(0, 4).Select(_ => stream.ReadUInt32(tableFormat.MsByteFirst)).ToList();
+        var bitmapOffsets = stream.ReadUInt32List((int)glyphsCount, tableFormat.MsByteFirst);
+        var bitmapsSizeConfigs = stream.ReadUInt32List(4, tableFormat.MsByteFirst);
         var bitmapsStart = stream.Position;
 
         var bitmaps = new List<List<List<byte>>>();
@@ -168,14 +168,8 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat.Value);
         stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
-        foreach (var bitmapOffset in bitmapOffsets)
-        {
-            stream.WriteUInt32(bitmapOffset, TableFormat.MsByteFirst);
-        }
-        foreach (var bitmapsSizeConfig in bitmapsSizeConfigs)
-        {
-            stream.WriteUInt32(bitmapsSizeConfig, TableFormat.MsByteFirst);
-        }
+        stream.WriteUInt32List(bitmapOffsets, TableFormat.MsByteFirst);
+        stream.WriteUInt32List(bitmapsSizeConfigs, TableFormat.MsByteFirst);
         stream.Seek(bitmapsSize, SeekOrigin.Current);
         stream.AlignTo4ByteWithNulls();
 
