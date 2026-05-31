@@ -39,6 +39,17 @@ public class StreamExtensionsTests
     }
 
     [Fact]
+    public void TestUInt8List()
+    {
+        var stream = new MemoryStream();
+        Assert.Equal(2, stream.WriteUInt8List([0x00, 0xFF]));
+        Assert.Equal(2, stream.Position);
+        stream.Seek(0, SeekOrigin.Begin);
+        Assert.Equal([0x00, 0xFF], stream.ReadUInt8List(2));
+        Assert.Equal(2, stream.Position);
+    }
+
+    [Fact]
     public void TestInt8()
     {
         var stream = new MemoryStream();
@@ -48,6 +59,17 @@ public class StreamExtensionsTests
         stream.Seek(0, SeekOrigin.Begin);
         Assert.Equal(-0x80, stream.ReadInt8());
         Assert.Equal(0x7F, stream.ReadInt8());
+        Assert.Equal(2, stream.Position);
+    }
+
+    [Fact]
+    public void TestInt8List()
+    {
+        var stream = new MemoryStream();
+        Assert.Equal(2, stream.WriteInt8List([-0x80, 0x7F]));
+        Assert.Equal(2, stream.Position);
+        stream.Seek(0, SeekOrigin.Begin);
+        Assert.Equal([-0x80, 0x7F], stream.ReadInt8List(2));
         Assert.Equal(2, stream.Position);
     }
 
@@ -69,6 +91,19 @@ public class StreamExtensionsTests
     }
 
     [Fact]
+    public void TestUInt16List()
+    {
+        var stream = new MemoryStream();
+        Assert.Equal(4, stream.WriteUInt16List([0x0000, 0xFFFF], false));
+        Assert.Equal(4, stream.WriteUInt16List([0x0000, 0xFFFF], true));
+        Assert.Equal(8, stream.Position);
+        stream.Seek(0, SeekOrigin.Begin);
+        Assert.Equal([0x0000, 0xFFFF], stream.ReadUInt16List(2, false));
+        Assert.Equal([0x0000, 0xFFFF], stream.ReadUInt16List(2, true));
+        Assert.Equal(8, stream.Position);
+    }
+
+    [Fact]
     public void TestInt16()
     {
         var stream = new MemoryStream();
@@ -82,6 +117,19 @@ public class StreamExtensionsTests
         Assert.Equal(0x7FFF, stream.ReadInt16(false));
         Assert.Equal(-0x8000, stream.ReadInt16(true));
         Assert.Equal(0x7FFF, stream.ReadInt16(true));
+        Assert.Equal(8, stream.Position);
+    }
+
+    [Fact]
+    public void TestInt16List()
+    {
+        var stream = new MemoryStream();
+        Assert.Equal(4, stream.WriteInt16List([-0x8000, 0x7FFF], false));
+        Assert.Equal(4, stream.WriteInt16List([-0x8000, 0x7FFF], true));
+        Assert.Equal(8, stream.Position);
+        stream.Seek(0, SeekOrigin.Begin);
+        Assert.Equal([-0x8000, 0x7FFF], stream.ReadInt16List(2, false));
+        Assert.Equal([-0x8000, 0x7FFF], stream.ReadInt16List(2, true));
         Assert.Equal(8, stream.Position);
     }
 
@@ -103,6 +151,19 @@ public class StreamExtensionsTests
     }
 
     [Fact]
+    public void TestUInt32List()
+    {
+        var stream = new MemoryStream();
+        Assert.Equal(8, stream.WriteUInt32List([0x00000000u, 0xFFFFFFFFu], false));
+        Assert.Equal(8, stream.WriteUInt32List([0x00000000u, 0xFFFFFFFFu], true));
+        Assert.Equal(16, stream.Position);
+        stream.Seek(0, SeekOrigin.Begin);
+        Assert.Equal([0x00000000u, 0xFFFFFFFFu], stream.ReadUInt32List(2, false));
+        Assert.Equal([0x00000000u, 0xFFFFFFFFu], stream.ReadUInt32List(2, true));
+        Assert.Equal(16, stream.Position);
+    }
+
+    [Fact]
     public void TestInt32()
     {
         var stream = new MemoryStream();
@@ -116,6 +177,19 @@ public class StreamExtensionsTests
         Assert.Equal(0x7FFFFFFF, stream.ReadInt32(false));
         Assert.Equal(-0x80000000, stream.ReadInt32(true));
         Assert.Equal(0x7FFFFFFF, stream.ReadInt32(true));
+        Assert.Equal(16, stream.Position);
+    }
+
+    [Fact]
+    public void TestInt32List()
+    {
+        var stream = new MemoryStream();
+        Assert.Equal(8, stream.WriteInt32List([-0x80000000, 0x7FFFFFFF], false));
+        Assert.Equal(8, stream.WriteInt32List([-0x80000000, 0x7FFFFFFF], true));
+        Assert.Equal(16, stream.Position);
+        stream.Seek(0, SeekOrigin.Begin);
+        Assert.Equal([-0x80000000, 0x7FFFFFFF], stream.ReadInt32List(2, false));
+        Assert.Equal([-0x80000000, 0x7FFFFFFF], stream.ReadInt32List(2, true));
         Assert.Equal(16, stream.Position);
     }
 
