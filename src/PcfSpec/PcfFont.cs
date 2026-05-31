@@ -164,7 +164,7 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>
 
     public void Dump(Stream stream)
     {
-        var headers = new List<PcfHeader>();
+        var headers = new List<PcfHeader>(Count);
         var tableOffset = (uint)(4 + 4 + 4 * 4 * Count);
         foreach (var (tableType, table) in this)
         {

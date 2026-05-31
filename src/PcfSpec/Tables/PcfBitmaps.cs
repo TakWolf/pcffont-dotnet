@@ -31,7 +31,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         var bitmapsSizeConfigs = stream.ReadUInt32List(4, tableFormat.MsByteFirst);
         var bitmapsStart = stream.Position;
 
-        var bitmaps = new List<List<List<byte>>>();
+        var bitmaps = new List<List<List<byte>>>((int)glyphsCount);
         foreach (var (bitmapOffset, metric) in bitmapOffsets.Zip(font.Metrics!))
         {
             var bitmapRowSize = (int)((metric.Width + tableFormat.GlyphPad * 8 - 1) / (tableFormat.GlyphPad * 8) * tableFormat.GlyphPad);
@@ -44,10 +44,10 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
                 SwapBytes(bitmapData, tableFormat.ScanUnit);
             }
 
-            var bitmap = new List<List<byte>>();
+            var bitmap = new List<List<byte>>(metric.Height);
             for (var y = 0; y < metric.Height; y++)
             {
-                var bitmapRow = new List<byte>();
+                var bitmapRow = new List<byte>(bitmapRowSize * 8);
                 for (var i = 0; i < bitmapRowSize; i++)
                 {
                     var b = bitmapData[y * bitmapRowSize + i];
@@ -103,7 +103,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
 
         var bitmapsStart = tableOffset + 4 + 4 + 4 * glyphsCount + 4 * 4;
         var bitmapsSize = 0u;
-        var bitmapOffsets = new List<uint>();
+        var bitmapOffsets = new List<uint>((int)glyphsCount);
         stream.Seek(bitmapsStart, SeekOrigin.Begin);
         foreach (var (bitmap, metric) in this.Zip(font.Metrics!))
         {

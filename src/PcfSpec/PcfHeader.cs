@@ -15,9 +15,9 @@ public class PcfHeader : IComparable<PcfHeader>
             throw new PcfParseException("Data format not support.");
         }
 
-        var headers = new List<PcfHeader>();
-        var tableTypes = new HashSet<PcfTableType>();
         var tablesCount = stream.ReadUInt32();
+        var tableTypes = new HashSet<PcfTableType>((int)tablesCount);
+        var headers = new List<PcfHeader>((int)tablesCount);
         foreach (var _ in Enumerable.Range(0, (int)tablesCount))
         {
             var tableType = (PcfTableType)stream.ReadUInt32();

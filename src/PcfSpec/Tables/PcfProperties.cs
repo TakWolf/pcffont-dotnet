@@ -143,7 +143,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
 
         var propsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
 
-        var propInfos = new List<(uint, bool, long)>();
+        var propInfos = new List<(uint, bool, long)>((int)propsCount);
         foreach (var _ in Enumerable.Range(0, (int)propsCount))
         {
             var keyOffset = stream.ReadUInt32(tableFormat.MsByteFirst);
@@ -167,7 +167,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         stream.Seek(4, SeekOrigin.Current);  // stringsSize
         var stringsStart = stream.Position;
 
-        var properties = new Dictionary<string, object>();
+        var properties = new Dictionary<string, object>((int)propsCount);
         foreach (var (keyOffset, isStringProp, valueOrOffset) in propInfos)
         {
             stream.Seek(stringsStart + keyOffset, SeekOrigin.Begin);
@@ -499,7 +499,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
 
         var stringsStart = tableOffset + 4 + 4 + (4 + 1 + 4) * propsCount + padding + 4;
         var stringsSize = 0u;
-        var propInfos = new List<(uint, object, uint)>();
+        var propInfos = new List<(uint, object, uint)>((int)propsCount);
         stream.Seek(stringsStart, SeekOrigin.Begin);
         foreach (var (key, value) in this)
         {

@@ -13,7 +13,7 @@ public class PcfGlyphNames : List<string>, IPcfTable
         stream.Seek(4, SeekOrigin.Current);  // stringsSize
         var stringsStart = stream.Position;
 
-        var names = new List<string>();
+        var names = new List<string>((int)glyphsCount);
         foreach (var nameOffset in nameOffsets)
         {
             stream.Seek(stringsStart + nameOffset, SeekOrigin.Begin);
@@ -43,7 +43,7 @@ public class PcfGlyphNames : List<string>, IPcfTable
 
         var stringsStart = tableOffset + 4 + 4 + 4 * glyphsCount + 4;
         var stringsSize = 0;
-        var nameOffsets = new List<uint>();
+        var nameOffsets = new List<uint>((int)glyphsCount);
         stream.Seek(stringsStart, SeekOrigin.Begin);
         foreach (var name in this)
         {
