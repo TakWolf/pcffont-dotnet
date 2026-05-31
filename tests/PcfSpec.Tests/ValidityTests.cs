@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using BdfSpec;
+using FreeTypeSharp;
 
 namespace PcfSpec.Tests;
 
@@ -68,6 +69,104 @@ public partial class ValidityTests
 
             var bitmap = pcfFont.Bitmaps![glyphIndex];
             Assert.Equal(glyph.Bitmap, bitmap);
+        }
+    }
+
+    [Fact]
+    public unsafe void TestWithFreetype()
+    {
+        var bdfFont = BdfFont.Load(Path.Combine("assets", "demo", "demo.bdf"));
+        bdfFont.Glyphs.RemoveRange(10, bdfFont.Glyphs.Count - 10);
+
+        var builder = new PcfFontBuilder();
+        builder.Config.FontAscent = bdfFont.Properties.FontAscent!.Value;
+        builder.Config.FontDescent = bdfFont.Properties.FontDescent!.Value;
+
+        foreach (var bdfGlyph in bdfFont.Glyphs)
+        {
+            builder.Glyphs.Add(new PcfGlyph(
+                name: bdfGlyph.Name,
+                encoding: (ushort)bdfGlyph.Encoding,
+                scalableWidth: bdfGlyph.ScalableWidthX,
+                characterWidth: (short)bdfGlyph.DeviceWidthX,
+                dimensions: ((short, short))bdfGlyph.Dimensions,
+                offset: ((short, short))bdfGlyph.Offset,
+                bitmap: bdfGlyph.Bitmap));
+        }
+
+        foreach (var (key, value) in bdfFont.Properties)
+        {
+            builder.Properties[key] = value;
+        }
+        builder.Properties.GenerateXlfd();
+
+        using var freeTypeLibrary = new FreeTypeLibrary();
+        foreach (var msByteFirst in new[] { false, true })
+        {
+            foreach (var msBitFirst in new[] { false, true })
+            {
+                foreach (var (glyphPadIndex, glyphPad) in new[] { (0, 1), (1, 2), (2, 4), (3, 8) })
+                {
+                    foreach (var (scanUnitIndex, scanUnit) in new[] { (0, 1), (1, 2), (2, 4) })
+                    {
+                        builder.Config.MsByteFirst = msByteFirst;
+                        builder.Config.MsBitFirst = msBitFirst;
+                        builder.Config.GlyphPadIndex = glyphPadIndex;
+                        builder.Config.ScanUnitIndex = scanUnitIndex;
+
+                        var pcfFont = builder.Build();
+                        var fontBytes = pcfFont.DumpToBytes();
+                        fixed (byte* fontBytesPtr = fontBytes)
+                        {
+                            var ftFont = new FreeTypeFaceFacade(freeTypeLibrary, (IntPtr)fontBytesPtr, fontBytes.Length);
+
+                            var pcfGlyphIndexToEncoding = new Dictionary<int, ushort>();
+                            foreach (var (encoding, glyphIndex) in pcfFont.BdfEncodings!)
+                            {
+                                pcfGlyphIndexToEncoding[glyphIndex] = encoding;
+                            }
+
+                            for (var pcfGlyphIndex = 0; pcfGlyphIndex < pcfFont.GlyphNames!.Count; pcfGlyphIndex++)
+                            {
+                                var encoding = pcfGlyphIndexToEncoding[pcfGlyphIndex];
+                                var ftGlyphIndex = ftFont.GetCharIndex(encoding);
+                                Assert.Equal((uint)(pcfGlyphIndex + 1), ftGlyphIndex);
+
+                                var loadGlyphError = FT.FT_Load_Glyph(ftFont.FaceRec, ftGlyphIndex, 0);
+                                if (loadGlyphError != FT_Error.FT_Err_Ok)
+                                {
+                                    throw new FreeTypeException(loadGlyphError);
+                                }
+                                var ftBitmap = ftFont.GlyphBitmap;
+
+                                var pcfBitmap = pcfFont.Bitmaps![pcfGlyphIndex];
+                                var pcfMetric = pcfFont.Metrics![pcfGlyphIndex];
+
+                                Assert.Equal((uint)pcfBitmap[0].Count, ftBitmap.width);
+                                Assert.Equal((uint)pcfMetric.Width, ftBitmap.width);
+                                Assert.Equal((uint)pcfBitmap.Count, ftBitmap.rows);
+                                Assert.Equal((uint)pcfMetric.Height, ftBitmap.rows);
+
+                                for (var y = 0; y < ftBitmap.rows; y++)
+                                {
+                                    var ftBitmapRow = new List<byte>((int)ftBitmap.width);
+                                    for (var x = 0; x < ftBitmap.width; x++)
+                                    {
+                                        ftBitmapRow.Add((byte)((ftBitmap.buffer[y * ftBitmap.pitch + x / 8] >> (7 - x % 8)) & 1));
+                                    }
+                                    var pcfBitmapRow = pcfBitmap[y];
+                                    Assert.Equal(pcfBitmapRow, ftBitmapRow);
+                                }
+
+                                var pcfBitmapRowSize = (pcfMetric.Width + glyphPad * 8 - 1) / (glyphPad * 8) * glyphPad;
+                                Assert.Equal(pcfBitmapRowSize, ftBitmap.pitch);
+                                var pcfBitmapSize = pcfBitmapRowSize * pcfMetric.Height;
+                                Assert.Equal(pcfBitmapSize, ftBitmap.pitch * ftBitmap.rows);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
