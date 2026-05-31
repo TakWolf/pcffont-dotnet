@@ -18,7 +18,7 @@ public class PcfHeader : IComparable<PcfHeader>
         var tablesCount = stream.ReadUInt32();
         var tableTypes = new HashSet<PcfTableType>((int)tablesCount);
         var headers = new List<PcfHeader>((int)tablesCount);
-        foreach (var _ in Enumerable.Range(0, (int)tablesCount))
+        for (var i = 0; i < tablesCount; i++)
         {
             var tableType = (PcfTableType)stream.ReadUInt32();
             if (!tableTypes.Add(tableType))

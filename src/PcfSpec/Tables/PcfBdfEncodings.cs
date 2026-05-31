@@ -24,17 +24,17 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
         var encodings = new Dictionary<ushort, ushort>();
         if (minByte1 == 0 && maxByte1 == 0)
         {
-            foreach (ushort encoding in Enumerable.Range(minByte2, maxByte2 + 1 - minByte2))
+            for (var encoding = (int)minByte2; encoding <= maxByte2; encoding++)
             {
                 var glyphIndex = glyphIndices[encoding - minByte2];
-                encodings[encoding] = glyphIndex;
+                encodings[(ushort)encoding] = glyphIndex;
             }
         }
         else
         {
-            foreach (byte byte1 in Enumerable.Range(minByte1, maxByte1 + 1 - minByte1))
+            for (var byte1 = (int)minByte1; byte1 <= maxByte1; byte1++)
             {
-                foreach (byte byte2 in Enumerable.Range(minByte2, maxByte2 + 1 - minByte2))
+                for (var byte2 = (int)minByte2; byte2 <= maxByte2; byte2++)
                 {
                     var encoding = (ushort)((byte1 << 8) | byte2);
                     var glyphIndex = glyphIndices[(byte1 - minByte1) * (maxByte2 - minByte2 + 1) + byte2 - minByte2];
@@ -173,17 +173,17 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
 
         if (minByte1 == 0 && maxByte1 == 0)
         {
-            foreach (ushort encoding in Enumerable.Range(minByte2, maxByte2 + 1 - minByte2))
+            for (int encoding = minByte2; encoding <= maxByte2; encoding++)
             {
-                TryGetValue(encoding, out var glyphIndex);
+                TryGetValue((ushort)encoding, out var glyphIndex);
                 stream.WriteUInt16(glyphIndex, TableFormat.MsByteFirst);
             }
         }
         else
         {
-            foreach (byte byte1 in Enumerable.Range(minByte1, maxByte1 + 1 - minByte1))
+            for (int byte1 = minByte1; byte1 <= maxByte1; byte1++)
             {
-                foreach (byte byte2 in Enumerable.Range(minByte2, maxByte2 + 1 - minByte2))
+                for (int byte2 = minByte2; byte2 <= maxByte2; byte2++)
                 {
                     var encoding = (ushort)((byte1 << 8) | byte2);
                     TryGetValue(encoding, out var glyphIndex);

@@ -144,7 +144,7 @@ public partial class PcfProperties : IDictionary<string, object>, IList<KeyValue
         var propsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
 
         var propInfos = new List<(uint, bool, long)>((int)propsCount);
-        foreach (var _ in Enumerable.Range(0, (int)propsCount))
+        for (var i = 0; i < propsCount; i++)
         {
             var keyOffset = stream.ReadUInt32(tableFormat.MsByteFirst);
             var isStringProp = stream.ReadBool();

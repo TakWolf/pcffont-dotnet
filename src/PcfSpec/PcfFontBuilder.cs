@@ -36,10 +36,10 @@ public class PcfFontBuilder
             Config.ToTableFormat(),
             Properties);
 
-        foreach (ushort glyphIndex in Enumerable.Range(0, Glyphs.Count))
+        for (var glyphIndex = 0; glyphIndex < Glyphs.Count; glyphIndex++)
         {
             var glyph = Glyphs[glyphIndex];
-            bdfEncodings[glyph.Encoding] = glyphIndex;
+            bdfEncodings[glyph.Encoding] = (ushort)glyphIndex;
             glyphNames.Add(glyph.Name);
             scalableWidths.Add(glyph.ScalableWidth);
             metrics.Add(glyph.CreateMetric(false));

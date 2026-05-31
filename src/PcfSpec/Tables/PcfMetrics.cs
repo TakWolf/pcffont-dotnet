@@ -19,7 +19,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
         }
 
         var metrics = new List<PcfMetric>((int)glyphsCount);
-        foreach (var _ in Enumerable.Range(0, (int)glyphsCount))
+        for (var i = 0; i < glyphsCount; i++)
         {
             var metric = PcfMetric.Parse(stream, tableFormat.MsByteFirst, tableFormat.CompressedMetrics);
             metrics.Add(metric);

@@ -24,7 +24,7 @@ public partial class ValidityTests
         {
             var pcfFontX = PcfFont.Load(path);
 
-            foreach (var glyphIndex in Enumerable.Range(0, bdfFont.Glyphs.Count))
+            for (var glyphIndex = 0; glyphIndex < bdfFont.Glyphs.Count; glyphIndex++)
             {
                 var glyph = bdfFont.Glyphs[glyphIndex];
 
@@ -54,7 +54,7 @@ public partial class ValidityTests
         var bdfFont = BdfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.04.bdf"));
         var pcfFont = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.04.pcf"));
 
-        foreach (var glyphIndex in Enumerable.Range(0, bdfFont.Glyphs.Count))
+        for (var glyphIndex = 0; glyphIndex < bdfFont.Glyphs.Count; glyphIndex++)
         {
             var glyph = bdfFont.Glyphs[glyphIndex];
 

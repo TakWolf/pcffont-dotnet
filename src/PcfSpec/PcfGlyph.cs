@@ -76,8 +76,9 @@ public class PcfGlyph
         }
 
         // Bottom
-        foreach (var bitmapRow in Enumerable.Reverse(Bitmap))
+        for (var i = Bitmap.Count - 1; i >= 0; i--)
         {
+            var bitmapRow = Bitmap[i];
             if (bitmapRow.Any(color => color != 0))
             {
                 break;
@@ -86,7 +87,7 @@ public class PcfGlyph
         }
 
         // Left
-        foreach (var i in Enumerable.Range(0, Width))
+        for (var i = 0; i < Width; i++)
         {
             if (Bitmap.Any(bitmapRow => bitmapRow[i] != 0))
             {
@@ -96,7 +97,7 @@ public class PcfGlyph
         }
 
         // Right
-        foreach (var i in Enumerable.Range(0, Width))
+        for (var i = 0; i < Width; i++)
         {
             if (Bitmap.Any(bitmapRow => bitmapRow[Width - 1 - i] != 0))
             {
