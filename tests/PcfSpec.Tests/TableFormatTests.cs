@@ -69,18 +69,4 @@ public class TableFormatTests
         Assert.Equal(nameof(PcfTableFormat.ScanUnit), e.ParamName);
         Assert.Equal($"{nameof(PcfTableFormat.ScanUnit)} must be one of [1, 2, 4]. (Parameter '{nameof(PcfTableFormat.ScanUnit)}')", e.Message);
     }
-
-    [Fact]
-    public void TestBitmapsSizeConfigs()
-    {
-        var tableFormat = new PcfTableFormat();
-        tableFormat.GlyphPad = 1;
-        Assert.Equal([16, 32, 64, 128], tableFormat.BitmapsSizeConfigs(16));
-        tableFormat.GlyphPad = 2;
-        Assert.Equal([8, 16, 32, 64], tableFormat.BitmapsSizeConfigs(16));
-        tableFormat.GlyphPad = 4;
-        Assert.Equal([4, 8, 16, 32], tableFormat.BitmapsSizeConfigs(16));
-        tableFormat.GlyphPad = 8;
-        Assert.Equal([2, 4, 8, 16], tableFormat.BitmapsSizeConfigs(16));
-    }
 }

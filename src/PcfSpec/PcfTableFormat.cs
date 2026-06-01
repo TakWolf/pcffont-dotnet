@@ -110,14 +110,4 @@ public class PcfTableFormat
             return value;
         }
     }
-
-    public List<uint> BitmapsSizeConfigs(uint bitmapsSize)
-    {
-        var configs = new List<uint>(GlyphPadOptions.Length);
-        foreach (var glyphPadOption in GlyphPadOptions)
-        {
-            configs.Add(bitmapsSize / GlyphPad * glyphPadOption);
-        }
-        return configs;
-    }
 }

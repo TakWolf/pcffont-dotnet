@@ -162,7 +162,11 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         }
         else
         {
-            bitmapsSizeConfigs = TableFormat.BitmapsSizeConfigs(bitmapsSize);
+            bitmapsSizeConfigs = new List<uint>(PcfTableFormat.GlyphPadOptions.Length);
+            foreach (var glyphPadOption in PcfTableFormat.GlyphPadOptions)
+            {
+                bitmapsSizeConfigs.Add(bitmapsSize / TableFormat.GlyphPad * glyphPadOption);
+            }
         }
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
