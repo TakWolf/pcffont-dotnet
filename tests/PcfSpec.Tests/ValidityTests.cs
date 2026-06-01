@@ -130,7 +130,7 @@ public partial class ValidityTests
                             {
                                 var encoding = pcfGlyphIndexToEncoding[pcfGlyphIndex];
                                 var ftGlyphIndex = ftFont.GetCharIndex(encoding);
-                                Assert.Equal((uint)(pcfGlyphIndex + 1), ftGlyphIndex);
+                                Assert.Equal(pcfGlyphIndex + 1u, ftGlyphIndex);
 
                                 var loadGlyphError = FT.FT_Load_Glyph(ftFont.FaceRec, ftGlyphIndex, 0);
                                 if (loadGlyphError != FT_Error.FT_Err_Ok)
