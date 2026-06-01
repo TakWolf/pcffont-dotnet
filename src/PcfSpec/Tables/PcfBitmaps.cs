@@ -175,7 +175,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         stream.WriteUInt32List(bitmapOffsets, TableFormat.MsByteFirst);
         stream.WriteUInt32List(bitmapsSizeConfigs, TableFormat.MsByteFirst);
         stream.Seek(bitmapsSize, SeekOrigin.Current);
-        stream.AlignTo4ByteWithNulls();
+        stream.AlignTo4Bytes();
 
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;

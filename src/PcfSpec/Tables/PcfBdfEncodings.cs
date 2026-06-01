@@ -192,7 +192,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
             }
         }
 
-        stream.AlignTo4ByteWithNulls();
+        stream.AlignTo4Bytes();
 
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;

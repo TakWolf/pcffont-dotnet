@@ -220,11 +220,11 @@ public class StreamExtensionsTests
     }
 
     [Fact]
-    public void TestAlignTo4Byte()
+    public void TestAlignTo4Bytes()
     {
         using var stream = new MemoryStream();
         stream.WriteBytes("abc"u8);
-        Assert.Equal(1, stream.AlignTo4ByteWithNulls());
+        Assert.Equal(1, stream.AlignTo4Bytes());
         Assert.Equal(4, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
         Assert.Equal("abc\0"u8, stream.ReadBytes(4));

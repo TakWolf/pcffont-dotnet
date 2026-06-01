@@ -297,5 +297,5 @@ internal static class StreamExtensions
         return size;
     }
 
-    public static int AlignTo4ByteWithNulls(this Stream stream) => stream.WriteNulls((int)(3 - (stream.Position + 3) % 4));
+    public static int AlignTo4Bytes(this Stream stream) => stream.WriteNulls((int)(3 - (stream.Position + 3) % 4));
 }

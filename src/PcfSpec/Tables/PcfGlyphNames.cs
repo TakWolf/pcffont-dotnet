@@ -57,7 +57,7 @@ public class PcfGlyphNames : List<string>, IPcfTable
         stream.WriteUInt32List(nameOffsets, TableFormat.MsByteFirst);
         stream.WriteUInt32((uint)stringsSize, TableFormat.MsByteFirst);
         stream.Seek(stringsSize, SeekOrigin.Current);
-        stream.AlignTo4ByteWithNulls();
+        stream.AlignTo4Bytes();
 
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;
