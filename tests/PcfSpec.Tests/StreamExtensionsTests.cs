@@ -7,7 +7,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestBytes()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(11, stream.WriteBytes("Hello World"u8));
         Assert.Equal(11, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
@@ -18,7 +18,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestEof()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         stream.WriteBytes("ABC"u8);
         Assert.Throws<EndOfStreamException>(() => stream.ReadBytes(4));
         stream.Seek(0, SeekOrigin.Begin);
@@ -28,7 +28,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestUInt8()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(1, stream.WriteUInt8(0x00));
         Assert.Equal(1, stream.WriteUInt8(0xFF));
         Assert.Equal(2, stream.Position);
@@ -41,7 +41,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestUInt8List()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(2, stream.WriteUInt8List([0x00, 0xFF]));
         Assert.Equal(2, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
@@ -52,7 +52,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestInt8()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(1, stream.WriteInt8(-0x80));
         Assert.Equal(1, stream.WriteInt8(0x7F));
         Assert.Equal(2, stream.Position);
@@ -65,7 +65,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestInt8List()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(2, stream.WriteInt8List([-0x80, 0x7F]));
         Assert.Equal(2, stream.Position);
         stream.Seek(0, SeekOrigin.Begin);
@@ -76,7 +76,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestUInt16()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(2, stream.WriteUInt16(0x0000, false));
         Assert.Equal(2, stream.WriteUInt16(0xFFFF, false));
         Assert.Equal(2, stream.WriteUInt16(0x0000, true));
@@ -93,7 +93,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestUInt16List()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(4, stream.WriteUInt16List([0x0000, 0xFFFF], false));
         Assert.Equal(4, stream.WriteUInt16List([0x0000, 0xFFFF], true));
         Assert.Equal(8, stream.Position);
@@ -106,7 +106,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestInt16()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(2, stream.WriteInt16(-0x8000, false));
         Assert.Equal(2, stream.WriteInt16(0x7FFF, false));
         Assert.Equal(2, stream.WriteInt16(-0x8000, true));
@@ -123,7 +123,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestInt16List()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(4, stream.WriteInt16List([-0x8000, 0x7FFF], false));
         Assert.Equal(4, stream.WriteInt16List([-0x8000, 0x7FFF], true));
         Assert.Equal(8, stream.Position);
@@ -136,7 +136,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestUInt32()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(4, stream.WriteUInt32(0x00000000u, false));
         Assert.Equal(4, stream.WriteUInt32(0xFFFFFFFFu, false));
         Assert.Equal(4, stream.WriteUInt32(0x00000000u, true));
@@ -153,7 +153,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestUInt32List()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(8, stream.WriteUInt32List([0x00000000u, 0xFFFFFFFFu], false));
         Assert.Equal(8, stream.WriteUInt32List([0x00000000u, 0xFFFFFFFFu], true));
         Assert.Equal(16, stream.Position);
@@ -166,7 +166,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestInt32()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(4, stream.WriteInt32(-0x80000000, false));
         Assert.Equal(4, stream.WriteInt32(0x7FFFFFFF, false));
         Assert.Equal(4, stream.WriteInt32(-0x80000000, true));
@@ -183,7 +183,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestInt32List()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(8, stream.WriteInt32List([-0x80000000, 0x7FFFFFFF], false));
         Assert.Equal(8, stream.WriteInt32List([-0x80000000, 0x7FFFFFFF], true));
         Assert.Equal(16, stream.Position);
@@ -196,7 +196,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestString()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(4, stream.WriteString("ABC"));
         Assert.Equal(6, stream.WriteString("12345"));
         Assert.Equal(10, stream.Position);
@@ -209,7 +209,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestBool()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         Assert.Equal(1, stream.WriteBool(true));
         Assert.Equal(1, stream.WriteBool(false));
         Assert.Equal(2, stream.Position);
@@ -222,7 +222,7 @@ public class StreamExtensionsTests
     [Fact]
     public void TestAlignTo4Byte()
     {
-        var stream = new MemoryStream();
+        using var stream = new MemoryStream();
         stream.WriteBytes("abc"u8);
         Assert.Equal(1, stream.AlignTo4ByteWithNulls());
         Assert.Equal(4, stream.Position);
