@@ -131,39 +131,50 @@ public class MetricTests
                 rightSideBearing: 8,
                 characterWidth: 4,
                 ascent: 9,
-                descent: -5),
+                descent: -5,
+                attributes: 0b_00000001),
             new PcfMetric(
                 leftSideBearing: 7,
                 rightSideBearing: 3,
                 characterWidth: 1,
                 ascent: -6,
-                descent: 0),
+                descent: 0,
+                attributes: 0b_00010001),
             new PcfMetric(
                 leftSideBearing: 1,
                 rightSideBearing: 0,
                 characterWidth: 2,
                 ascent: 5,
-                descent: 4),
+                descent: 4,
+                attributes: 0b_10000001),
             new PcfMetric(
                 leftSideBearing: -5,
                 rightSideBearing: -1,
                 characterWidth: 7,
                 ascent: -3,
-                descent: -9)
+                descent: -9,
+                attributes: 0b_01100001)
         ]);
         Assert.True(PcfMetric.Equals(new PcfMetric(
             leftSideBearing: -5,
             rightSideBearing: -1,
             characterWidth: 1,
             ascent: -6,
-            descent: -9), metrics.CalculateMinBounds()));
+            descent: -9,
+            attributes: 0b_00000001), metrics.CalculateMinBounds()));
         Assert.True(PcfMetric.Equals(new PcfMetric(
             leftSideBearing: 7,
             rightSideBearing: 8,
             characterWidth: 7,
             ascent: 9,
-            descent: 4), metrics.CalculateMaxBounds()));
+            descent: 4,
+            attributes: 0b_11110001), metrics.CalculateMaxBounds()));
         Assert.Equal(4, metrics.CalculateMaxOverlap());
+        Assert.False(metrics.CalculateCompressible());
+        foreach (var metric in metrics)
+        {
+            metric.Attributes = 0;
+        }
         Assert.True(metrics.CalculateCompressible());
         metrics[0].LeftSideBearing = 128;
         Assert.False(metrics.CalculateCompressible());
