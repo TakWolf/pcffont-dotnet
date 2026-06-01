@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
@@ -9,7 +10,7 @@ public class PcfScalableWidths : List<int>, IPcfTable
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
         var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
-        var scalableWidths = stream.ReadInt32List((int)glyphsCount, tableFormat.MsByteFirst);
+        var scalableWidths = stream.ReadInt32Array((int)glyphsCount, tableFormat.MsByteFirst);
 
         return new PcfScalableWidths(tableFormat, scalableWidths);
     }
@@ -34,7 +35,7 @@ public class PcfScalableWidths : List<int>, IPcfTable
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat.Value);
         stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
-        stream.WriteInt32List(this, TableFormat.MsByteFirst);
+        stream.WriteInt32Array(CollectionsMarshal.AsSpan(this), TableFormat.MsByteFirst);
         stream.AlignTo4Bytes();
 
         var tableSize = stream.Position - tableOffset;

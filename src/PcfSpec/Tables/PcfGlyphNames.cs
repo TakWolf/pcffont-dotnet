@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
@@ -9,7 +10,7 @@ public class PcfGlyphNames : List<string>, IPcfTable
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
         var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
-        var nameOffsets = stream.ReadUInt32List((int)glyphsCount, tableFormat.MsByteFirst);
+        var nameOffsets = stream.ReadUInt32Array((int)glyphsCount, tableFormat.MsByteFirst);
         stream.Seek(4, SeekOrigin.Current);  // stringsSize
         var stringsStart = stream.Position;
 
@@ -54,7 +55,7 @@ public class PcfGlyphNames : List<string>, IPcfTable
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat.Value);
         stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
-        stream.WriteUInt32List(nameOffsets, TableFormat.MsByteFirst);
+        stream.WriteUInt32Array(CollectionsMarshal.AsSpan(nameOffsets), TableFormat.MsByteFirst);
         stream.WriteUInt32((uint)stringsSize, TableFormat.MsByteFirst);
         stream.Seek(stringsSize, SeekOrigin.Current);
         stream.AlignTo4Bytes();
