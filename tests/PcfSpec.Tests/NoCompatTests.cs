@@ -13,13 +13,11 @@ public class NoCompatTests
         var font1 = PcfFont.Load(loadPath);
         font1.Accelerators!.CompatInfo = null;
         font1.BdfAccelerators!.CompatInfo = null;
-        font1.Bitmaps!.CompatInfo = null;
         font1.Save(savePath);
 
         var font2 = PcfFont.Load(savePath);
         Assert.Null(font2.Accelerators!.CompatInfo);
         Assert.Null(font2.BdfAccelerators!.CompatInfo);
-        font2.Bitmaps!.CompatInfo = null;
 
         Assert.True(PcfBdfEncodings.Equals(font1.BdfEncodings, font2.BdfEncodings));
         Assert.True(PcfGlyphNames.Equals(font1.GlyphNames, font2.GlyphNames));

@@ -47,7 +47,6 @@ public class BuilderTests
         var pcfFont = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.04.pcf"));
         pcfFont.Accelerators!.CompatInfo = null;
         pcfFont.BdfAccelerators!.CompatInfo = null;
-        pcfFont.Bitmaps!.CompatInfo = null;
         var bdfFont = LoadPcfByBdf(Path.Combine("assets", "unifont", "unifont-17.0.04.bdf"));
 
         Assert.True(PcfBdfEncodings.Equals(pcfFont.BdfEncodings, bdfFont.BdfEncodings));
@@ -67,7 +66,6 @@ public class BuilderTests
         var pcfFont = PcfFont.Load(Path.Combine("assets", "demo", "demo.pcf"));
         pcfFont.Accelerators!.CompatInfo = null;
         pcfFont.BdfAccelerators!.CompatInfo = null;
-        pcfFont.Bitmaps!.CompatInfo = null;
         var bdfFont = LoadPcfByBdf(Path.Combine("assets", "demo", "demo.bdf"));
 
         Assert.True(PcfBdfEncodings.Equals(pcfFont.BdfEncodings, bdfFont.BdfEncodings));
@@ -87,7 +85,6 @@ public class BuilderTests
         var pcfFont = PcfFont.Load(Path.Combine("assets", "demo", "demo-2.pcf"));
         pcfFont.Accelerators!.CompatInfo = null;
         pcfFont.BdfAccelerators!.CompatInfo = null;
-        pcfFont.Bitmaps!.CompatInfo = null;
         var bdfFont = LoadPcfByBdf(Path.Combine("assets", "demo", "demo-2.bdf"));
 
         Assert.True(PcfBdfEncodings.Equals(pcfFont.BdfEncodings, bdfFont.BdfEncodings));

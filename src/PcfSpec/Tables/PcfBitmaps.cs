@@ -28,7 +28,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
 
         var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
         var bitmapOffsets = stream.ReadUInt32List((int)glyphsCount, tableFormat.MsByteFirst);
-        var bitmapsSizeConfigs = stream.ReadUInt32List(4, tableFormat.MsByteFirst);
+        stream.Seek(16, SeekOrigin.Current);  // bitmapsSizeConfigs
         var bitmapsStart = stream.Position;
 
         var bitmaps = new List<List<List<byte>>>((int)glyphsCount);
@@ -75,16 +75,10 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
             bitmaps.Add(bitmap);
         }
 
-        var table = new PcfBitmaps(tableFormat, bitmaps);
-
-        // Compat
-        table.CompatInfo = bitmapsSizeConfigs;
-
-        return table;
+        return new PcfBitmaps(tableFormat, bitmaps);
     }
 
     public PcfTableFormat TableFormat { get; set; }
-    public List<uint>? CompatInfo;
 
     public PcfBitmaps(
         PcfTableFormat? tableFormat = null,
@@ -104,9 +98,16 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         var bitmapsStart = tableOffset + 4 + 4 + 4 * glyphsCount + 4 * 4;
         var bitmapsSize = 0u;
         var bitmapOffsets = new List<uint>((int)glyphsCount);
+        var bitmapsSizeConfigs = new List<uint> { 0, 0, 0, 0 };
         stream.Seek(bitmapsStart, SeekOrigin.Begin);
         foreach (var (bitmap, metric) in this.Zip(font.Metrics!))
         {
+            for (var glyphPadIndex = 0; glyphPadIndex < PcfTableFormat.GlyphPadOptions.Length; glyphPadIndex++)
+            {
+                var glyphPad = PcfTableFormat.GlyphPadOptions[glyphPadIndex];
+                bitmapsSizeConfigs[glyphPadIndex] += (uint)((metric.Width + glyphPad * 8 - 1) / (glyphPad * 8) * glyphPad * metric.Height);
+            }
+
             var bitmapRowSize = (int)((metric.Width + TableFormat.GlyphPad * 8 - 1) / (TableFormat.GlyphPad * 8) * TableFormat.GlyphPad);
 
             var bitmapData = new byte[bitmapRowSize * metric.Height];
@@ -153,22 +154,6 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
             bitmapsSize += (uint)stream.WriteBytes(bitmapData);
         }
 
-        // Compat
-        List<uint> bitmapsSizeConfigs;
-        if (CompatInfo is not null)
-        {
-            bitmapsSizeConfigs = new List<uint>(CompatInfo);
-            bitmapsSizeConfigs[TableFormat.GlyphPadIndex] = bitmapsSize;
-        }
-        else
-        {
-            bitmapsSizeConfigs = new List<uint>(PcfTableFormat.GlyphPadOptions.Length);
-            foreach (var glyphPadOption in PcfTableFormat.GlyphPadOptions)
-            {
-                bitmapsSizeConfigs.Add(bitmapsSize / TableFormat.GlyphPad * glyphPadOption);
-            }
-        }
-
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat.Value);
         stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
@@ -196,19 +181,6 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         return true;
     }
 
-    private static bool CompatInfoEquals(List<uint>? objA, List<uint>? objB)
-    {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
-        {
-            return false;
-        }
-        return objA.SequenceEqual(objB);
-    }
-
     public static bool Equals(PcfBitmaps? objA, PcfBitmaps? objB)
     {
         if (objA == objB)
@@ -220,7 +192,6 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
             return false;
         }
         return objA.TableFormat.Value == objB.TableFormat.Value &&
-               BitmapListEquals(objA, objB) &&
-               CompatInfoEquals(objA.CompatInfo, objB.CompatInfo);
+               BitmapListEquals(objA, objB);
     }
 }
