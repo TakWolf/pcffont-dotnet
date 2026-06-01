@@ -105,14 +105,14 @@ public partial class ValidityTests
         {
             foreach (var msBitFirst in new[] { false, true })
             {
-                foreach (var (glyphPadIndex, glyphPad) in new[] { (0, 1), (1, 2), (2, 4), (3, 8) })
+                foreach (var glyphPad in PcfTableFormat.GlyphPadOptions)
                 {
-                    foreach (var (scanUnitIndex, scanUnit) in new[] { (0, 1), (1, 2), (2, 4) })
+                    foreach (var scanUnit in PcfTableFormat.ScanUnitOptions)
                     {
                         builder.Config.MsByteFirst = msByteFirst;
                         builder.Config.MsBitFirst = msBitFirst;
-                        builder.Config.GlyphPadIndex = glyphPadIndex;
-                        builder.Config.ScanUnitIndex = scanUnitIndex;
+                        builder.Config.GlyphPad = glyphPad;
+                        builder.Config.ScanUnit = scanUnit;
 
                         var pcfFont = builder.Build();
                         var fontBytes = pcfFont.DumpToBytes();

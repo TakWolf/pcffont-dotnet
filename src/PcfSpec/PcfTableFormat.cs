@@ -10,8 +10,8 @@ public class PcfTableFormat
     private const uint MaskBitOrder = 0b_00_10_00;
     private const uint MaskScanUnit = 0b_11_00_00;
 
-    private static readonly uint[] GlyphPadOptions = [1, 2, 4, 8];
-    private static readonly uint[] ScanUnitOptions = [1, 2, 4];
+    public static readonly uint[] GlyphPadOptions = [1, 2, 4, 8];
+    public static readonly uint[] ScanUnitOptions = [1, 2, 4];
 
     public static PcfTableFormat Parse(uint value)
     {

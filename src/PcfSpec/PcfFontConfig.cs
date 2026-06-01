@@ -33,6 +33,34 @@ public class PcfFontConfig
         ScanUnitIndex = scanUnitIndex;
     }
 
+    public uint GlyphPad
+    {
+        get => PcfTableFormat.GlyphPadOptions[GlyphPadIndex];
+        set
+        {
+            var index = Array.IndexOf(PcfTableFormat.GlyphPadOptions, value);
+            if (index < 0)
+            {
+                throw new ArgumentException($"{nameof(GlyphPad)} must be one of [{string.Join(", ", PcfTableFormat.GlyphPadOptions)}].", nameof(GlyphPad));
+            }
+            GlyphPadIndex = index;
+        }
+    }
+
+    public uint ScanUnit
+    {
+        get => PcfTableFormat.ScanUnitOptions[ScanUnitIndex];
+        set
+        {
+            var index = Array.IndexOf(PcfTableFormat.ScanUnitOptions, value);
+            if (index < 0)
+            {
+                throw new ArgumentException($"{nameof(ScanUnit)} must be one of [{string.Join(", ", PcfTableFormat.ScanUnitOptions)}].", nameof(ScanUnit));
+            }
+            ScanUnitIndex = index;
+        }
+    }
+
     public PcfTableFormat ToTableFormat() => new(
         msByteFirst: MsByteFirst,
         msBitFirst: MsBitFirst,
