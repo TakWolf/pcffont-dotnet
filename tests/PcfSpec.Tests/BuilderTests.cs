@@ -18,7 +18,7 @@ public class BuilderTests
         }
         builder.Config.MsByteFirst = true;
         builder.Config.MsBitFirst = true;
-        builder.Config.GlyphPadIndex = 2;
+        builder.Config.GlyphPad = 4;
 
         foreach (var bdfGlyph in bdfFont.Glyphs)
         {
