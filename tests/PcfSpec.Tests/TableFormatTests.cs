@@ -37,7 +37,24 @@ public class TableFormatTests
     }
 
     [Fact]
-    public void TestGlyphPad()
+    public void TestGlyphPad1()
+    {
+        var tableFormat = new PcfTableFormat(glyphPadIndex: -1);
+        tableFormat.GlyphPadIndex = 0;
+        Assert.Equal(1u, tableFormat.GlyphPad);
+        tableFormat.GlyphPadIndex = 1;
+        Assert.Equal(2u, tableFormat.GlyphPad);
+        tableFormat.GlyphPadIndex = 2;
+        Assert.Equal(4u, tableFormat.GlyphPad);
+        tableFormat.GlyphPadIndex = 3;
+        Assert.Equal(8u, tableFormat.GlyphPad);
+
+        tableFormat.GlyphPadIndex = 4;
+        Assert.Throws<IndexOutOfRangeException>(() => tableFormat.GlyphPad);
+    }
+
+    [Fact]
+    public void TestGlyphPad2()
     {
         var tableFormat = new PcfTableFormat(glyphPadIndex: -1);
         tableFormat.GlyphPad = 1;
@@ -54,7 +71,22 @@ public class TableFormatTests
     }
 
     [Fact]
-    public void TestScanUnit()
+    public void TestScanUnit1()
+    {
+        var tableFormat = new PcfTableFormat(scanUnitIndex: -1);
+        tableFormat.ScanUnitIndex = 0;
+        Assert.Equal(1u, tableFormat.ScanUnit);
+        tableFormat.ScanUnitIndex = 1;
+        Assert.Equal(2u, tableFormat.ScanUnit);
+        tableFormat.ScanUnitIndex = 2;
+        Assert.Equal(4u, tableFormat.ScanUnit);
+
+        tableFormat.ScanUnitIndex = 3;
+        Assert.Throws<IndexOutOfRangeException>(() => tableFormat.ScanUnit);
+    }
+
+    [Fact]
+    public void TestScanUnit2()
     {
         var tableFormat = new PcfTableFormat(scanUnitIndex: -1);
         tableFormat.ScanUnit = 1;
