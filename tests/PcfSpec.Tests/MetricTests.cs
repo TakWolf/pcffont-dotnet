@@ -170,14 +170,6 @@ public class MetricTests
             descent: 4,
             attributes: 0b_11110001), metrics.CalculateMaxBounds()));
         Assert.Equal(4, metrics.CalculateMaxOverlap());
-        Assert.False(metrics.CalculateCompressible());
-        foreach (var metric in metrics)
-        {
-            metric.Attributes = 0;
-        }
-        Assert.True(metrics.CalculateCompressible());
-        metrics[0].LeftSideBearing = 128;
-        Assert.False(metrics.CalculateCompressible());
     }
 
     [Fact]
@@ -187,6 +179,5 @@ public class MetricTests
         Assert.True(PcfMetric.Equals(new PcfMetric(), metrics.CalculateMinBounds()));
         Assert.True(PcfMetric.Equals(new PcfMetric(), metrics.CalculateMaxBounds()));
         Assert.Equal(0, metrics.CalculateMaxOverlap());
-        Assert.True(metrics.CalculateCompressible());
     }
 }

@@ -92,10 +92,10 @@ public class PcfFontBuilder
             accelerators.InkMetrics = false;
         }
 
-        metrics.TableFormat.CompressedMetrics = metrics.CalculateCompressible();
+        metrics.TableFormat.CompressedMetrics = accelerators.MinBounds.Compressible && accelerators.MaxBounds.Compressible;
         if (inkMetrics is not null)
         {
-            inkMetrics.TableFormat.CompressedMetrics = inkMetrics.CalculateCompressible();
+            inkMetrics.TableFormat.CompressedMetrics = accelerators.InkMinBounds!.Compressible && accelerators.InkMaxBounds!.Compressible;
         }
 
         var font = new PcfFont

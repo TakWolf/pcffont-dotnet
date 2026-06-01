@@ -105,8 +105,6 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
 
     public int CalculateMaxOverlap() => Count > 0 ? this.Max(metric => metric.RightSideBearing - metric.CharacterWidth) : 0;
 
-    public bool CalculateCompressible() => this.All(metric => metric.Compressible);
-
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         var glyphsCount = (uint)Count;
