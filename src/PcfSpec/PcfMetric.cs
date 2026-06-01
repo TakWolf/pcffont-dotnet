@@ -79,7 +79,8 @@ public class PcfMetric
         RightSideBearing is >= -128 and <= 127 &&
         CharacterWidth is >= -128 and <= 127 &&
         Ascent is >= -128 and <= 127 &&
-        Descent is >= -128 and <= 127;
+        Descent is >= -128 and <= 127 &&
+        Attributes == 0;
 
     public void Dump(Stream stream, bool msByteFirst, bool compressed)
     {

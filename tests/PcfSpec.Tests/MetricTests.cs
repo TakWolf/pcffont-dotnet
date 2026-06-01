@@ -35,7 +35,9 @@ public class MetricTests
     [Fact]
     public void TestCompressible()
     {
-        var metric = new PcfMetric();
+        var metric = new PcfMetric(attributes: 1);
+        Assert.False(metric.Compressible);
+        metric.Attributes = 0;
         Assert.True(metric.Compressible);
 
         metric.LeftSideBearing = -129;
