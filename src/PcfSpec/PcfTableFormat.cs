@@ -13,6 +13,26 @@ public class PcfTableFormat
     public static readonly uint[] GlyphPadOptions = [1, 2, 4, 8];
     public static readonly uint[] ScanUnitOptions = [1, 2, 4];
 
+    public static int GlyphPadToIndex(uint glyphPad)
+    {
+        var index = Array.IndexOf(GlyphPadOptions, glyphPad);
+        if (index < 0)
+        {
+            throw new ArgumentException($"'{nameof(glyphPad)}' must be one of [{string.Join(", ", GlyphPadOptions)}].", nameof(glyphPad));
+        }
+        return index;
+    }
+
+    public static int ScanUnitToIndex(uint scanUnit)
+    {
+        var index = Array.IndexOf(ScanUnitOptions, scanUnit);
+        if (index < 0)
+        {
+            throw new ArgumentException($"'{nameof(scanUnit)}' must be one of [{string.Join(", ", ScanUnitOptions)}].", nameof(scanUnit));
+        }
+        return index;
+    }
+
     public static PcfTableFormat Parse(uint value)
     {
         var msByteFirst = (value & MaskByteOrder) > 0;
@@ -63,29 +83,13 @@ public class PcfTableFormat
     public uint GlyphPad
     {
         get => GlyphPadOptions[GlyphPadIndex];
-        set
-        {
-            var index = Array.IndexOf(GlyphPadOptions, value);
-            if (index < 0)
-            {
-                throw new ArgumentException($"{nameof(GlyphPad)} must be one of [{string.Join(", ", GlyphPadOptions)}].", nameof(GlyphPad));
-            }
-            GlyphPadIndex = index;
-        }
+        set => GlyphPadIndex = GlyphPadToIndex(value);
     }
 
     public uint ScanUnit
     {
         get => ScanUnitOptions[ScanUnitIndex];
-        set
-        {
-            var index = Array.IndexOf(ScanUnitOptions, value);
-            if (index < 0)
-            {
-                throw new ArgumentException($"{nameof(ScanUnit)} must be one of [{string.Join(", ", ScanUnitOptions)}].", nameof(ScanUnit));
-            }
-            ScanUnitIndex = index;
-        }
+        set => ScanUnitIndex = ScanUnitToIndex(value);
     }
 
     public uint Value

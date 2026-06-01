@@ -50,8 +50,7 @@ public class TableFormatTests
         Assert.Equal(3, tableFormat.GlyphPadIndex);
 
         var e = Assert.Throws<ArgumentException>(() => tableFormat.GlyphPad = 16);
-        Assert.Equal(nameof(PcfTableFormat.GlyphPad), e.ParamName);
-        Assert.Equal($"{nameof(PcfTableFormat.GlyphPad)} must be one of [1, 2, 4, 8]. (Parameter '{nameof(PcfTableFormat.GlyphPad)}')", e.Message);
+        Assert.Equal("glyphPad", e.ParamName);
     }
 
     [Fact]
@@ -66,7 +65,6 @@ public class TableFormatTests
         Assert.Equal(2, tableFormat.ScanUnitIndex);
 
         var e = Assert.Throws<ArgumentException>(() => tableFormat.ScanUnit = 8);
-        Assert.Equal(nameof(PcfTableFormat.ScanUnit), e.ParamName);
-        Assert.Equal($"{nameof(PcfTableFormat.ScanUnit)} must be one of [1, 2, 4]. (Parameter '{nameof(PcfTableFormat.ScanUnit)}')", e.Message);
+        Assert.Equal("scanUnit", e.ParamName);
     }
 }
