@@ -150,7 +150,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
             }
 
             bitmapOffsets.Add(bitmapsSize);
-            bitmapsSize += (uint)stream.WriteBytes(bitmapData.AsSpan());
+            bitmapsSize += (uint)stream.WriteBytes(bitmapData);
         }
 
         // Compat
