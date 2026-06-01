@@ -1,5 +1,7 @@
+using System.Buffers;
 using System.Buffers.Binary;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
 [assembly: InternalsVisibleTo("PcfSpec.Tests")]
@@ -14,9 +16,10 @@ internal static class StreamExtensions
         {
             return [];
         }
+
         var buffer = new byte[size];
-        var numRead = stream.ReadAtLeast(buffer, buffer.Length, throwOnEndOfStream);
-        if (numRead != buffer.Length)
+        var numRead = stream.ReadAtLeast(buffer, size, throwOnEndOfStream);
+        if (numRead != size)
         {
             var copy = new byte[numRead];
             Buffer.BlockCopy(buffer, 0, copy, 0, numRead);
@@ -37,12 +40,28 @@ internal static class StreamExtensions
 
     public static List<byte> ReadUInt8List(this Stream stream, int count)
     {
-        var values = new List<byte>(count);
-        for (var i = 0; i < count; i++)
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (count == 0)
         {
-            values.Add(stream.ReadUInt8());
+            return [];
         }
-        return values;
+
+        var buffer = ArrayPool<byte>.Shared.Rent(count);
+        try
+        {
+            stream.ReadExactly(buffer, 0, count);
+
+            var values = new List<byte>(count);
+            for (var i = 0; i < count; i++)
+            {
+                values.Add(buffer[i]);
+            }
+            return values;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static sbyte ReadInt8(this Stream stream)
@@ -57,12 +76,28 @@ internal static class StreamExtensions
 
     public static List<sbyte> ReadInt8List(this Stream stream, int count)
     {
-        var values = new List<sbyte>(count);
-        for (var i = 0; i < count; i++)
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (count == 0)
         {
-            values.Add(stream.ReadInt8());
+            return [];
         }
-        return values;
+
+        var buffer = ArrayPool<byte>.Shared.Rent(count);
+        try
+        {
+            stream.ReadExactly(buffer, 0, count);
+
+            var values = new List<sbyte>(count);
+            for (var i = 0; i < count; i++)
+            {
+                values.Add((sbyte)buffer[i]);
+            }
+            return values;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static ushort ReadUInt16(this Stream stream, bool msByteFirst = false)
@@ -74,12 +109,30 @@ internal static class StreamExtensions
 
     public static List<ushort> ReadUInt16List(this Stream stream, int count, bool msByteFirst = false)
     {
-        var values = new List<ushort>(count);
-        for (var i = 0; i < count; i++)
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (count == 0)
         {
-            values.Add(stream.ReadUInt16(msByteFirst));
+            return [];
         }
-        return values;
+
+        var size = count * 2;
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            stream.ReadExactly(buffer, 0, size);
+
+            var values = new List<ushort>(count);
+            for (var i = 0; i < count; i++)
+            {
+                var span = buffer.AsSpan(i * 2, 2);
+                values.Add(msByteFirst ? BinaryPrimitives.ReadUInt16BigEndian(span) : BinaryPrimitives.ReadUInt16LittleEndian(span));
+            }
+            return values;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static short ReadInt16(this Stream stream, bool msByteFirst = false)
@@ -91,12 +144,30 @@ internal static class StreamExtensions
 
     public static List<short> ReadInt16List(this Stream stream, int count, bool msByteFirst = false)
     {
-        var values = new List<short>(count);
-        for (var i = 0; i < count; i++)
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (count == 0)
         {
-            values.Add(stream.ReadInt16(msByteFirst));
+            return [];
         }
-        return values;
+
+        var size = count * 2;
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            stream.ReadExactly(buffer, 0, size);
+
+            var values = new List<short>(count);
+            for (var i = 0; i < count; i++)
+            {
+                var span = buffer.AsSpan(i * 2, 2);
+                values.Add(msByteFirst ? BinaryPrimitives.ReadInt16BigEndian(span) : BinaryPrimitives.ReadInt16LittleEndian(span));
+            }
+            return values;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static uint ReadUInt32(this Stream stream, bool msByteFirst = false)
@@ -108,12 +179,30 @@ internal static class StreamExtensions
 
     public static List<uint> ReadUInt32List(this Stream stream, int count, bool msByteFirst = false)
     {
-        var values = new List<uint>(count);
-        for (var i = 0; i < count; i++)
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (count == 0)
         {
-            values.Add(stream.ReadUInt32(msByteFirst));
+            return [];
         }
-        return values;
+
+        var size = count * 4;
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            stream.ReadExactly(buffer, 0, size);
+
+            var values = new List<uint>(count);
+            for (var i = 0; i < count; i++)
+            {
+                var span = buffer.AsSpan(i * 4, 4);
+                values.Add(msByteFirst ? BinaryPrimitives.ReadUInt32BigEndian(span) : BinaryPrimitives.ReadUInt32LittleEndian(span));
+            }
+            return values;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static int ReadInt32(this Stream stream, bool msByteFirst = false)
@@ -125,12 +214,30 @@ internal static class StreamExtensions
 
     public static List<int> ReadInt32List(this Stream stream, int count, bool msByteFirst = false)
     {
-        var values = new List<int>(count);
-        for (var i = 0; i < count; i++)
+        ArgumentOutOfRangeException.ThrowIfNegative(count);
+        if (count == 0)
         {
-            values.Add(stream.ReadInt32(msByteFirst));
+            return [];
         }
-        return values;
+
+        var size = count * 4;
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            stream.ReadExactly(buffer, 0, size);
+
+            var values = new List<int>(count);
+            for (var i = 0; i < count; i++)
+            {
+                var span = buffer.AsSpan(i * 4, 4);
+                values.Add(msByteFirst ? BinaryPrimitives.ReadInt32BigEndian(span) : BinaryPrimitives.ReadInt32LittleEndian(span));
+            }
+            return values;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static string ReadString(this Stream stream)
@@ -145,15 +252,20 @@ internal static class StreamExtensions
             }
             buffer.Add(b);
         }
-        return Encoding.UTF8.GetString(buffer.ToArray());
+        return Encoding.UTF8.GetString(CollectionsMarshal.AsSpan(buffer));
     }
 
     public static bool ReadBool(this Stream stream) => stream.ReadUInt8() != 0;
 
-    public static int WriteBytes(this Stream stream, ReadOnlySpan<byte> values)
+    public static int WriteBytes(this Stream stream, ReadOnlySpan<byte> buffer)
     {
-        stream.Write(values);
-        return values.Length;
+        if (buffer.IsEmpty)
+        {
+            return 0;
+        }
+
+        stream.Write(buffer);
+        return buffer.Length;
     }
 
     public static int WriteUInt8(this Stream stream, byte value)
@@ -164,12 +276,13 @@ internal static class StreamExtensions
 
     public static int WriteUInt8List(this Stream stream, List<byte> values)
     {
-        var size = 0;
-        foreach (var value in values)
+        if (values.Count == 0)
         {
-            size += stream.WriteUInt8(value);
+            return 0;
         }
-        return size;
+
+        stream.Write(CollectionsMarshal.AsSpan(values));
+        return values.Count;
     }
 
     public static int WriteInt8(this Stream stream, sbyte value)
@@ -180,12 +293,13 @@ internal static class StreamExtensions
 
     public static int WriteInt8List(this Stream stream, List<sbyte> values)
     {
-        var size = 0;
-        foreach (var value in values)
+        if (values.Count == 0)
         {
-            size += stream.WriteInt8(value);
+            return 0;
         }
-        return size;
+
+        stream.Write(MemoryMarshal.Cast<sbyte, byte>(CollectionsMarshal.AsSpan(values)));
+        return values.Count;
     }
 
     public static int WriteUInt16(this Stream stream, ushort value, bool msByteFirst = false)
@@ -204,12 +318,35 @@ internal static class StreamExtensions
 
     public static int WriteUInt16List(this Stream stream, List<ushort> values, bool msByteFirst = false)
     {
-        var size = 0;
-        foreach (var value in values)
+        if (values.Count == 0)
         {
-            size += stream.WriteUInt16(value, msByteFirst);
+            return 0;
         }
-        return size;
+
+        var size = values.Count * 2;
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            for (var i = 0; i < values.Count; i++)
+            {
+                var span = buffer.AsSpan(i * 2, 2);
+                var value = values[i];
+                if (msByteFirst)
+                {
+                    BinaryPrimitives.WriteUInt16BigEndian(span, value);
+                }
+                else
+                {
+                    BinaryPrimitives.WriteUInt16LittleEndian(span, value);
+                }
+            }
+            stream.Write(buffer, 0, size);
+            return size;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static int WriteInt16(this Stream stream, short value, bool msByteFirst = false)
@@ -228,12 +365,35 @@ internal static class StreamExtensions
 
     public static int WriteInt16List(this Stream stream, List<short> values, bool msByteFirst = false)
     {
-        var size = 0;
-        foreach (var value in values)
+        if (values.Count == 0)
         {
-            size += stream.WriteInt16(value, msByteFirst);
+            return 0;
         }
-        return size;
+
+        var size = values.Count * 2;
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            for (var i = 0; i < values.Count; i++)
+            {
+                var span = buffer.AsSpan(i * 2, 2);
+                var value = values[i];
+                if (msByteFirst)
+                {
+                    BinaryPrimitives.WriteInt16BigEndian(span, value);
+                }
+                else
+                {
+                    BinaryPrimitives.WriteInt16LittleEndian(span, value);
+                }
+            }
+            stream.Write(buffer, 0, size);
+            return size;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static int WriteUInt32(this Stream stream, uint value, bool msByteFirst = false)
@@ -252,12 +412,35 @@ internal static class StreamExtensions
 
     public static int WriteUInt32List(this Stream stream, List<uint> values, bool msByteFirst = false)
     {
-        var size = 0;
-        foreach (var value in values)
+        if (values.Count == 0)
         {
-            size += stream.WriteUInt32(value, msByteFirst);
+            return 0;
         }
-        return size;
+
+        var size = values.Count * 4;
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            for (var i = 0; i < values.Count; i++)
+            {
+                var span = buffer.AsSpan(i * 4, 4);
+                var value = values[i];
+                if (msByteFirst)
+                {
+                    BinaryPrimitives.WriteUInt32BigEndian(span, value);
+                }
+                else
+                {
+                    BinaryPrimitives.WriteUInt32LittleEndian(span, value);
+                }
+            }
+            stream.Write(buffer, 0, size);
+            return size;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static int WriteInt32(this Stream stream, int value, bool msByteFirst = false)
@@ -276,15 +459,58 @@ internal static class StreamExtensions
 
     public static int WriteInt32List(this Stream stream, List<int> values, bool msByteFirst = false)
     {
-        var size = 0;
-        foreach (var value in values)
+        if (values.Count == 0)
         {
-            size += stream.WriteInt32(value, msByteFirst);
+            return 0;
         }
-        return size;
+
+        var size = values.Count * 4;
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            for (var i = 0; i < values.Count; i++)
+            {
+                var span = buffer.AsSpan(i * 4, 4);
+                var value = values[i];
+                if (msByteFirst)
+                {
+                    BinaryPrimitives.WriteInt32BigEndian(span, value);
+                }
+                else
+                {
+                    BinaryPrimitives.WriteInt32LittleEndian(span, value);
+                }
+            }
+            stream.Write(buffer, 0, size);
+            return size;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
-    public static int WriteString(this Stream stream, string value) => stream.WriteBytes(Encoding.UTF8.GetBytes(value)) + stream.WriteNulls(1);
+    public static int WriteString(this Stream stream, string value)
+    {
+        if (value.Length == 0)
+        {
+            stream.WriteByte(0);
+            return 1;
+        }
+
+        var buffer = ArrayPool<byte>.Shared.Rent(Encoding.UTF8.GetMaxByteCount(value.Length));
+        try
+        {
+            var size = Encoding.UTF8.GetBytes(value, buffer);
+            stream.Write(buffer, 0, size);
+            stream.WriteByte(0);
+            return size + 1;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
+    }
 
     public static int WriteBool(this Stream stream, bool value) => stream.WriteUInt8(value ? (byte)1 : (byte)0);
 
