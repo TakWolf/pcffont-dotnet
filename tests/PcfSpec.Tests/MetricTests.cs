@@ -85,6 +85,42 @@ public class MetricTests
     }
 
     [Fact]
+    public void TestCreateByGlyph()
+    {
+        var glyph = new PcfGlyph(
+            name: "_",
+            encoding: 0,
+            characterWidth: 5,
+            dimensions: (5, 8),
+            offset: (0, -2),
+            bitmap: [
+                [0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0]
+            ],
+            attributes: 1);
+        Assert.True(PcfMetric.Equals(new PcfMetric(
+            leftSideBearing: 0,
+            rightSideBearing: 5,
+            characterWidth: 5,
+            ascent: 6,
+            descent: 2,
+            attributes: 1), glyph.CreateMetric(false)));
+        Assert.True(PcfMetric.Equals(new PcfMetric(
+            leftSideBearing: 1,
+            rightSideBearing: 4,
+            characterWidth: 5,
+            ascent: 5,
+            descent: 1,
+            attributes: 1), glyph.CreateMetric(true)));
+    }
+
+    [Fact]
     public void TestCalculate1()
     {
         var metrics = new PcfMetrics(metrics: [
