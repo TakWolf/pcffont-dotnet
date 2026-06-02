@@ -1,4 +1,5 @@
 using PcfSpec.Tables;
+using PcfSpec.Utils;
 
 namespace PcfSpec;
 
@@ -46,9 +47,9 @@ public class PcfFontBuilder
             bitmaps.Add(glyph.Bitmap);
         }
 
-        accelerators.MinBounds = metrics.CalculateMinBounds();
-        accelerators.MaxBounds = metrics.CalculateMaxBounds();
-        accelerators.MaxOverlap = metrics.CalculateMaxOverlap();
+        accelerators.MaxOverlap = CalculateUtil.CalculateMaxOverlap(metrics);
+        accelerators.MinBounds = CalculateUtil.CalculateMinBounds(metrics);
+        accelerators.MaxBounds = CalculateUtil.CalculateMaxBounds(metrics);
         accelerators.CalculateBounds();
 
         PcfMetrics? inkMetrics;
@@ -56,8 +57,8 @@ public class PcfFontBuilder
         {
             inkMetrics = new PcfMetrics(Config.ToTableFormat(), Glyphs.Select(glyph => glyph.CreateMetric(true)));
 
-            accelerators.InkMinBounds = inkMetrics.CalculateMinBounds();
-            accelerators.InkMaxBounds = inkMetrics.CalculateMaxBounds();
+            accelerators.InkMinBounds = CalculateUtil.CalculateMinBounds(inkMetrics);
+            accelerators.InkMaxBounds = CalculateUtil.CalculateMaxBounds(inkMetrics);
             accelerators.TableFormat.InkBounds = true;
             accelerators.InkMetrics = true;
         }

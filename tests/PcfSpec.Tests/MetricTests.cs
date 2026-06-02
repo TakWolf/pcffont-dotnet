@@ -1,4 +1,4 @@
-using PcfSpec.Tables;
+using PcfSpec.Utils;
 
 namespace PcfSpec.Tests;
 
@@ -125,59 +125,59 @@ public class MetricTests
     [Fact]
     public void TestCalculate1()
     {
-        var metrics = new PcfMetrics(metrics: [
-            new PcfMetric(
+        PcfMetric[] metrics = [
+            new(
                 leftSideBearing: -3,
                 rightSideBearing: 8,
                 characterWidth: 4,
                 ascent: 9,
                 descent: -5,
                 attributes: 0b_00000001),
-            new PcfMetric(
+            new(
                 leftSideBearing: 7,
                 rightSideBearing: 3,
                 characterWidth: 1,
                 ascent: -6,
                 descent: 0,
                 attributes: 0b_00010001),
-            new PcfMetric(
+            new(
                 leftSideBearing: 1,
                 rightSideBearing: 0,
                 characterWidth: 2,
                 ascent: 5,
                 descent: 4,
                 attributes: 0b_10000001),
-            new PcfMetric(
+            new(
                 leftSideBearing: -5,
                 rightSideBearing: -1,
                 characterWidth: 7,
                 ascent: -3,
                 descent: -9,
                 attributes: 0b_01100001)
-        ]);
+        ];
+        Assert.Equal(4, CalculateUtil.CalculateMaxOverlap(metrics));
         Assert.True(PcfMetric.Equals(new PcfMetric(
             leftSideBearing: -5,
             rightSideBearing: -1,
             characterWidth: 1,
             ascent: -6,
             descent: -9,
-            attributes: 0b_00000001), metrics.CalculateMinBounds()));
+            attributes: 0b_00000001), CalculateUtil.CalculateMinBounds(metrics)));
         Assert.True(PcfMetric.Equals(new PcfMetric(
             leftSideBearing: 7,
             rightSideBearing: 8,
             characterWidth: 7,
             ascent: 9,
             descent: 4,
-            attributes: 0b_11110001), metrics.CalculateMaxBounds()));
-        Assert.Equal(4, metrics.CalculateMaxOverlap());
+            attributes: 0b_11110001), CalculateUtil.CalculateMaxBounds(metrics)));
     }
 
     [Fact]
     public void TestCalculate2()
     {
-        var metrics = new PcfMetrics();
-        Assert.True(PcfMetric.Equals(new PcfMetric(), metrics.CalculateMinBounds()));
-        Assert.True(PcfMetric.Equals(new PcfMetric(), metrics.CalculateMaxBounds()));
-        Assert.Equal(0, metrics.CalculateMaxOverlap());
+        var metrics = Array.Empty<PcfMetric>();
+        Assert.Equal(0, CalculateUtil.CalculateMaxOverlap(metrics));
+        Assert.True(PcfMetric.Equals(new PcfMetric(), CalculateUtil.CalculateMinBounds(metrics)));
+        Assert.True(PcfMetric.Equals(new PcfMetric(), CalculateUtil.CalculateMaxBounds(metrics)));
     }
 }
