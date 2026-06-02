@@ -110,6 +110,40 @@ public class PcfAccelerators : IPcfTable
         InkMaxBounds = inkMaxBounds;
     }
 
+    public void CalculateBounds()
+    {
+        if (MinBounds is null || MaxBounds is null)
+        {
+            return;
+        }
+
+        NoOverlap = MaxOverlap <= MinBounds.LeftSideBearing;
+
+        if (PcfMetric.Equals(MinBounds, MaxBounds))
+        {
+            ConstantMetrics = true;
+            TerminalFont =
+                MinBounds.LeftSideBearing == 0 &&
+                MinBounds.RightSideBearing == MinBounds.CharacterWidth &&
+                MinBounds.Ascent == FontAscent &&
+                MinBounds.Descent == FontDescent;
+        }
+        else
+        {
+            ConstantMetrics = false;
+            TerminalFont = false;
+        }
+
+        ConstantWidth = MinBounds.CharacterWidth == MaxBounds.CharacterWidth;
+        InkInside =
+            MaxOverlap <= 0 &&
+            MinBounds.LeftSideBearing >= 0 &&
+            MinBounds.Ascent >= -FontDescent &&
+            MaxBounds.Ascent <= FontAscent &&
+            -MinBounds.Descent <= FontAscent &&
+            MaxBounds.Descent <= FontDescent;
+    }
+
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         stream.Seek(tableOffset, SeekOrigin.Begin);

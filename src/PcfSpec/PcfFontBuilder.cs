@@ -49,30 +49,7 @@ public class PcfFontBuilder
         accelerators.MinBounds = metrics.CalculateMinBounds();
         accelerators.MaxBounds = metrics.CalculateMaxBounds();
         accelerators.MaxOverlap = metrics.CalculateMaxOverlap();
-        accelerators.NoOverlap = accelerators.MaxOverlap <= accelerators.MinBounds.LeftSideBearing;
-        accelerators.ConstantWidth = accelerators.MinBounds.CharacterWidth == accelerators.MaxBounds.CharacterWidth;
-        accelerators.InkInside =
-            accelerators.MaxOverlap <= 0 &&
-            accelerators.MinBounds.LeftSideBearing >= 0 &&
-            accelerators.MinBounds.Ascent >= -accelerators.FontDescent &&
-            accelerators.MaxBounds.Ascent <= accelerators.FontAscent &&
-            -accelerators.MinBounds.Descent <= accelerators.FontAscent &&
-            accelerators.MaxBounds.Descent <= accelerators.FontDescent;
-
-        if (PcfMetric.Equals(accelerators.MinBounds, accelerators.MaxBounds))
-        {
-            accelerators.ConstantMetrics = true;
-            accelerators.TerminalFont =
-                accelerators.MinBounds.LeftSideBearing == 0 &&
-                accelerators.MinBounds.RightSideBearing == accelerators.MinBounds.CharacterWidth &&
-                accelerators.MinBounds.Ascent == accelerators.FontAscent &&
-                accelerators.MinBounds.Descent == accelerators.FontDescent;
-        }
-        else
-        {
-            accelerators.ConstantMetrics = false;
-            accelerators.TerminalFont = false;
-        }
+        accelerators.CalculateBounds();
 
         PcfMetrics? inkMetrics;
         if (accelerators.ConstantMetrics)
