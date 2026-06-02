@@ -114,4 +114,11 @@ public class PcfTableFormat
             return value;
         }
     }
+
+    public PcfTableFormat Copy() => new(
+        MsByteFirst,
+        MsBitFirst,
+        InkBoundsOrCompressedMetrics,
+        GlyphPadIndex,
+        ScanUnitIndex);
 }

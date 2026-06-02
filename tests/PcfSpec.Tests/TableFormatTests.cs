@@ -99,4 +99,19 @@ public class TableFormatTests
         var e = Assert.Throws<ArgumentException>(() => tableFormat.ScanUnit = 8);
         Assert.Equal("scanUnit", e.ParamName);
     }
+
+    [Fact]
+    public void TestCopy()
+    {
+        var format1 = new PcfTableFormat(
+            msByteFirst: true,
+            msBitFirst: true,
+            inkBoundsOrCompressedMetrics: true,
+            glyphPadIndex: 1,
+            scanUnitIndex: 2
+        );
+        var format2 = format1.Copy();
+        Assert.Equal(format1.Value, format2.Value);
+        Assert.NotSame(format1, format2);
+    }
 }
