@@ -32,12 +32,7 @@ public class MetricTests
     [Fact]
     public void TestCompressible()
     {
-        var metric = new PcfMetric(
-            leftSideBearing: 0,
-            rightSideBearing: 0,
-            characterWidth: 0,
-            ascent: 0,
-            descent: 0);
+        var metric = new PcfMetric();
         Assert.True(metric.Compressible);
 
         metric.LeftSideBearing = -129;
@@ -137,8 +132,8 @@ public class MetricTests
     public void TestCalculate2()
     {
         var metrics = new PcfMetrics();
-        Assert.True(PcfMetric.Equals(new PcfMetric(0, 0, 0, 0, 0), metrics.CalculateMinBounds()));
-        Assert.True(PcfMetric.Equals(new PcfMetric(0, 0, 0, 0, 0), metrics.CalculateMaxBounds()));
+        Assert.True(PcfMetric.Equals(new PcfMetric(), metrics.CalculateMinBounds()));
+        Assert.True(PcfMetric.Equals(new PcfMetric(), metrics.CalculateMaxBounds()));
         Assert.Equal(0, metrics.CalculateMaxOverlap());
         Assert.True(metrics.CalculateCompressible());
     }

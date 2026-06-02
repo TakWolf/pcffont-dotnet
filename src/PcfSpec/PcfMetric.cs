@@ -47,11 +47,11 @@ public class PcfMetric
     public ushort Attributes;
 
     public PcfMetric(
-        short leftSideBearing,
-        short rightSideBearing,
-        short characterWidth,
-        short ascent,
-        short descent,
+        short leftSideBearing = 0,
+        short rightSideBearing = 0,
+        short characterWidth = 0,
+        short ascent = 0,
+        short descent = 0,
         ushort attributes = 0)
     {
         LeftSideBearing = leftSideBearing;

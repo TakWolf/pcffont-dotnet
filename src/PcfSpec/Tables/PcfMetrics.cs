@@ -64,7 +64,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
                 minBounds.Descent = short.Min(minBounds.Descent, metric.Descent);
             }
         }
-        return minBounds ?? new PcfMetric(0, 0, 0, 0, 0);
+        return minBounds ?? new PcfMetric();
     }
 
     public PcfMetric CalculateMaxBounds()
@@ -90,7 +90,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
                 maxBounds.Descent = short.Max(maxBounds.Descent, metric.Descent);
             }
         }
-        return maxBounds ?? new PcfMetric(0, 0, 0, 0, 0);
+        return maxBounds ?? new PcfMetric();
     }
 
     public int CalculateMaxOverlap() => Count > 0 ? this.Max(metric => metric.RightSideBearing - metric.CharacterWidth) : 0;
