@@ -87,6 +87,22 @@ public class MetricTests
     }
 
     [Fact]
+    public void TestCopy()
+    {
+        var metric1 = new PcfMetric(
+            leftSideBearing: 1,
+            rightSideBearing: 2,
+            characterWidth: 3,
+            ascent: 4,
+            descent: 5,
+            attributes: 6);
+
+        var metric2 = metric1.Copy();
+        Assert.True(PcfMetric.Equals(metric1, metric2));
+        Assert.NotSame(metric1, metric2);
+    }
+
+    [Fact]
     public void TestCreateByGlyph()
     {
         var glyph = new PcfGlyph(

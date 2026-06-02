@@ -82,6 +82,14 @@ public class PcfMetric
         Descent is >= -128 and <= 127 &&
         Attributes == 0;
 
+    public PcfMetric Copy() => new(
+        LeftSideBearing,
+        RightSideBearing,
+        CharacterWidth,
+        Ascent,
+        Descent,
+        Attributes);
+
     public void Dump(Stream stream, bool msByteFirst, bool compressed)
     {
         if (compressed)

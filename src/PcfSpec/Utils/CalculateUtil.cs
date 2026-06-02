@@ -14,13 +14,7 @@ internal static class CalculateUtil
         {
             if (minBounds is null)
             {
-                minBounds = new PcfMetric(
-                    metric.LeftSideBearing,
-                    metric.RightSideBearing,
-                    metric.CharacterWidth,
-                    metric.Ascent,
-                    metric.Descent,
-                    metric.Attributes);
+                minBounds = metric.Copy();
             }
             else
             {
@@ -45,13 +39,7 @@ internal static class CalculateUtil
         {
             if (maxBounds is null)
             {
-                maxBounds = new PcfMetric(
-                    metric.LeftSideBearing,
-                    metric.RightSideBearing,
-                    metric.CharacterWidth,
-                    metric.Ascent,
-                    metric.Descent,
-                    metric.Attributes);
+                maxBounds = metric.Copy();
             }
             else
             {
