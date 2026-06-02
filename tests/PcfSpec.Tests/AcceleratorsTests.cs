@@ -209,7 +209,6 @@ public class AcceleratorsTests
             inkMinBounds: new PcfMetric(7, 8, 9, 10, 11, 12),
             inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
         );
-        accelerators1.CompatInfo = ([1, 2, 3, 4], 10);
 
         var accelerators2 = accelerators1.Copy();
         Assert.True(PcfAccelerators.Equals(accelerators1, accelerators2));
@@ -219,6 +218,5 @@ public class AcceleratorsTests
         Assert.NotSame(accelerators1.MaxBounds, accelerators2.MaxBounds);
         Assert.NotSame(accelerators1.InkMinBounds, accelerators2.InkMinBounds);
         Assert.NotSame(accelerators1.InkMaxBounds, accelerators2.InkMaxBounds);
-        Assert.NotSame(accelerators1.CompatInfo!.Value.Item1, accelerators2.CompatInfo!.Value.Item1);
     }
 }

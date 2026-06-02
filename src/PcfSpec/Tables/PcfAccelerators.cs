@@ -31,7 +31,7 @@ public class PcfAccelerators : IPcfTable
             inkMaxBounds = PcfMetric.Parse(stream, tableFormat.MsByteFirst, false);
         }
 
-        var table = new PcfAccelerators(
+        return new PcfAccelerators(
             tableFormat,
             noOverlap,
             constantMetrics,
@@ -47,16 +47,6 @@ public class PcfAccelerators : IPcfTable
             maxBounds,
             inkMinBounds,
             inkMaxBounds);
-
-        // Compat
-        if (header.TableSize > stream.Position - header.TableOffset)
-        {
-            stream.Seek(header.TableOffset, SeekOrigin.Begin);
-            var rawChunk = stream.ReadBytes((int)header.TableSize, throwOnEndOfStream: false);
-            table.CompatInfo = (rawChunk, header.TableSize);
-        }
-
-        return table;
     }
 
     public PcfTableFormat TableFormat { get; set; }
@@ -74,7 +64,6 @@ public class PcfAccelerators : IPcfTable
     public PcfMetric? MaxBounds;
     public PcfMetric? InkMinBounds;
     public PcfMetric? InkMaxBounds;
-    public (byte[], uint)? CompatInfo;
 
     public PcfAccelerators(
         PcfTableFormat? tableFormat = null,
@@ -144,9 +133,7 @@ public class PcfAccelerators : IPcfTable
             MaxBounds.Descent <= FontDescent;
     }
 
-    public PcfAccelerators Copy()
-    {
-        var accelerators = new PcfAccelerators(
+    public PcfAccelerators Copy() => new(
             TableFormat.Copy(),
             NoOverlap,
             ConstantMetrics,
@@ -161,15 +148,7 @@ public class PcfAccelerators : IPcfTable
             MinBounds?.Copy(),
             MaxBounds?.Copy(),
             InkMinBounds?.Copy(),
-            InkMaxBounds?.Copy()
-        );
-        if (CompatInfo is not null)
-        {
-            var (rawChunk, tableSize) = CompatInfo.Value;
-            accelerators.CompatInfo = (rawChunk.ToArray(), tableSize);
-        }
-        return accelerators;
-    }
+            InkMaxBounds?.Copy());
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
@@ -196,37 +175,13 @@ public class PcfAccelerators : IPcfTable
             InkMaxBounds!.Dump(stream, TableFormat.MsByteFirst, false);
         }
 
-        long tableSize;
-
-        // Compat
-        if (CompatInfo is not null)
+        if (ReferenceEquals(this, font.Accelerators))
         {
-            (var rawChunk, tableSize) = CompatInfo.Value;
-            stream.WriteBytes(rawChunk.AsSpan((int)(stream.Position - tableOffset)));
-        }
-        else
-        {
-            stream.AlignTo4Bytes();
-            tableSize = stream.Position - tableOffset;
+            var tableSize = stream.Position - tableOffset;
+            stream.WriteNulls((int)(100 - tableSize));
         }
 
-        return (uint)tableSize;
-    }
-
-    private static bool CompatInfoEquals((byte[], uint)? objA, (byte[], uint)? objB)
-    {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
-        {
-            return false;
-        }
-        var (rawChunkA, tableSizeA) = objA.Value;
-        var (rawChunkB, tableSizeB) = objB.Value;
-        return rawChunkA.SequenceEqual(rawChunkB) &&
-               tableSizeA == tableSizeB;
+        return 100;
     }
 
     public static bool Equals(PcfAccelerators? objA, PcfAccelerators? objB)
@@ -253,7 +208,6 @@ public class PcfAccelerators : IPcfTable
                PcfMetric.Equals(objA.MinBounds, objB.MinBounds) &&
                PcfMetric.Equals(objA.MaxBounds, objB.MaxBounds) &&
                PcfMetric.Equals(objA.InkMinBounds, objB.InkMinBounds) &&
-               PcfMetric.Equals(objA.InkMaxBounds, objB.InkMaxBounds) &&
-               CompatInfoEquals(objA.CompatInfo, objB.CompatInfo);
+               PcfMetric.Equals(objA.InkMaxBounds, objB.InkMaxBounds);
     }
 }
