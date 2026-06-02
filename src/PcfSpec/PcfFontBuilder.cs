@@ -52,15 +52,64 @@ public class PcfFontBuilder
         accelerators.MaxBounds = CalculateUtil.CalculateMaxBounds(metrics);
         accelerators.CalculateBounds();
 
-        PcfMetrics? inkMetrics;
-        if (accelerators.ConstantMetrics)
+        var glyphIndices = new HashSet<ushort>(bdfEncodings.Values);
+
+        PcfAccelerators bdfAccelerators;
+        if (glyphIndices.Count == Glyphs.Count)
         {
-            inkMetrics = new PcfMetrics(Config.ToTableFormat(), Glyphs.Select(glyph => glyph.CreateMetric(true)));
+            bdfAccelerators = accelerators.Copy();
+        }
+        else
+        {
+            var bdfMetrics = new List<PcfMetric>(glyphIndices.Count);
+            foreach (var glyphIndex in glyphIndices)
+            {
+                bdfMetrics.Add(metrics[glyphIndex]);
+            }
+
+            bdfAccelerators = new PcfAccelerators(
+                Config.ToTableFormat(),
+                drawRightToLeft: Config.DrawRightToLeft,
+                fontAscent: Config.FontAscent,
+                fontDescent: Config.FontDescent);
+            bdfAccelerators.MaxOverlap = CalculateUtil.CalculateMaxOverlap(bdfMetrics);
+            bdfAccelerators.MinBounds = CalculateUtil.CalculateMinBounds(bdfMetrics);
+            bdfAccelerators.MaxBounds = CalculateUtil.CalculateMaxBounds(bdfMetrics);
+            bdfAccelerators.CalculateBounds();
+        }
+
+        PcfMetrics? inkMetrics;
+        if (bdfAccelerators.ConstantMetrics)
+        {
+            inkMetrics = new PcfMetrics(Config.ToTableFormat());
+            foreach (var glyph in Glyphs)
+            {
+                inkMetrics.Add(glyph.CreateMetric(true));
+            }
 
             accelerators.InkMinBounds = CalculateUtil.CalculateMinBounds(inkMetrics);
             accelerators.InkMaxBounds = CalculateUtil.CalculateMaxBounds(inkMetrics);
             accelerators.TableFormat.InkBounds = true;
             accelerators.InkMetrics = true;
+
+            if (glyphIndices.Count == Glyphs.Count)
+            {
+                bdfAccelerators.InkMinBounds = accelerators.InkMinBounds.Copy();
+                bdfAccelerators.InkMaxBounds = accelerators.InkMaxBounds.Copy();
+            }
+            else
+            {
+                var bdfInkMetrics = new List<PcfMetric>(glyphIndices.Count);
+                foreach (var glyphIndex in glyphIndices)
+                {
+                    bdfInkMetrics.Add(inkMetrics[glyphIndex]);
+                }
+
+                bdfAccelerators.InkMinBounds = CalculateUtil.CalculateMinBounds(bdfInkMetrics);
+                bdfAccelerators.InkMaxBounds = CalculateUtil.CalculateMaxBounds(bdfInkMetrics);
+            }
+            bdfAccelerators.TableFormat.InkBounds = true;
+            bdfAccelerators.InkMetrics = true;
         }
         else
         {
@@ -68,6 +117,9 @@ public class PcfFontBuilder
 
             accelerators.TableFormat.InkBounds = false;
             accelerators.InkMetrics = false;
+
+            bdfAccelerators.TableFormat.InkBounds = false;
+            bdfAccelerators.InkMetrics = false;
         }
 
         metrics.TableFormat.CompressedMetrics = accelerators.MinBounds.Compressible && accelerators.MaxBounds.Compressible;
@@ -76,19 +128,18 @@ public class PcfFontBuilder
             inkMetrics.TableFormat.CompressedMetrics = accelerators.InkMinBounds!.Compressible && accelerators.InkMaxBounds!.Compressible;
         }
 
-        var font = new PcfFont
+        return new PcfFont
         {
-            BdfEncodings = bdfEncodings,
-            GlyphNames = glyphNames,
-            ScalableWidths = scalableWidths,
-            Metrics = metrics,
-            InkMetrics = inkMetrics,
-            Bitmaps = bitmaps,
+            Properties = properties,
             Accelerators = accelerators,
-            BdfAccelerators = accelerators,
-            Properties = properties
+            Metrics = metrics,
+            Bitmaps = bitmaps,
+            InkMetrics = inkMetrics,
+            BdfEncodings = bdfEncodings,
+            ScalableWidths = scalableWidths,
+            GlyphNames = glyphNames,
+            BdfAccelerators = bdfAccelerators,
         };
-        return font;
     }
 
     public void Save(string path) => Build().Save(path);
