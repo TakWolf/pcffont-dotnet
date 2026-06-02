@@ -12,19 +12,22 @@ public class MetricTests
             rightSideBearing: 8,
             characterWidth: 4,
             ascent: 9,
-            descent: -5);
+            descent: -5,
+            attributes: 1);
         var metric2 = new PcfMetric(
             leftSideBearing: -3,
             rightSideBearing: 8,
             characterWidth: 4,
             ascent: 9,
-            descent: -5);
+            descent: -5,
+            attributes: 1);
         var metric3 = new PcfMetric(
             leftSideBearing: -2,
             rightSideBearing: 8,
             characterWidth: 4,
             ascent: 9,
-            descent: -5);
+            descent: -5,
+            attributes: 1);
         Assert.True(PcfMetric.Equals(metric1, metric2));
         Assert.False(PcfMetric.Equals(metric1, metric3));
     }

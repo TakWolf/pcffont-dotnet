@@ -11,6 +11,7 @@ public class PcfGlyph
     public short OffsetX;
     public short OffsetY;
     public List<List<byte>> Bitmap;
+    public ushort Attributes;
 
     public PcfGlyph(
         string name,
@@ -19,7 +20,8 @@ public class PcfGlyph
         short characterWidth = 0,
         (short, short) dimensions = default,
         (short, short) offset = default,
-        List<List<byte>>? bitmap = null)
+        List<List<byte>>? bitmap = null,
+        ushort attributes = 0)
     {
         Name = name;
         Encoding = encoding;
@@ -28,6 +30,7 @@ public class PcfGlyph
         (Width, Height) = dimensions;
         (OffsetX, OffsetY) = offset;
         Bitmap = bitmap ?? [];
+        Attributes = attributes;
     }
 
     public (short, short) Dimensions
@@ -49,7 +52,8 @@ public class PcfGlyph
             rightSideBearing: (short)(OffsetX + Width),
             characterWidth: CharacterWidth,
             ascent: (short)(OffsetY + Height),
-            descent: (short)-OffsetY);
+            descent: (short)-OffsetY,
+            attributes: Attributes);
 
         if (!isInk)
         {
