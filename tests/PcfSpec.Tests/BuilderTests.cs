@@ -49,7 +49,14 @@ public class BuilderTests
         var font1 = PcfFont.Load(pcfPath);
         var font2 = CreatePcfByBdf(bdfPath);
         font2.Properties = font1.Properties;
-        Assert.Equal(font1.DumpToBytes(), font2.DumpToBytes());
+        var font3 = PcfFontBuilder.Modify(font1).Build();
+
+        var data1 = font1.DumpToBytes();
+        var data2 = font2.DumpToBytes();
+        var data3 = font3.DumpToBytes();
+
+        Assert.Equal(data1, data2);
+        Assert.Equal(data1, data3);
     }
 
     [Fact]
@@ -61,7 +68,14 @@ public class BuilderTests
         var font1 = PcfFont.Load(pcfPath);
         var font2 = CreatePcfByBdf(bdfPath);
         font2.Properties = font1.Properties;
-        Assert.Equal(font1.DumpToBytes(), font2.DumpToBytes());
+        var font3 = PcfFontBuilder.Modify(font1).Build();
+
+        var data1 = font1.DumpToBytes();
+        var data2 = font2.DumpToBytes();
+        var data3 = font3.DumpToBytes();
+
+        Assert.Equal(data1, data2);
+        Assert.Equal(data1, data3);
     }
 
     [Fact]
@@ -73,6 +87,13 @@ public class BuilderTests
         var font1 = PcfFont.Load(pcfPath);
         var font2 = CreatePcfByBdf(bdfPath);
         font2.Properties = font1.Properties;
-        Assert.Equal(font1.DumpToBytes(), font2.DumpToBytes());
+        var font3 = PcfFontBuilder.Modify(font1).Build();
+
+        var data1 = font1.DumpToBytes();
+        var data2 = font2.DumpToBytes();
+        var data3 = font3.DumpToBytes();
+
+        Assert.Equal(data1, data2);
+        Assert.Equal(data1, data3);
     }
 }

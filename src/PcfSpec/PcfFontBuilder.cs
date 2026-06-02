@@ -5,6 +5,56 @@ namespace PcfSpec;
 
 public class PcfFontBuilder
 {
+    public static PcfFontBuilder Modify(PcfFont font)
+    {
+        var accelerators = font.Accelerators!;
+        var bdfEncodings = font.BdfEncodings!;
+        var glyphNames = font.GlyphNames!;
+        var scalableWidths = font.ScalableWidths!;
+        var metrics = font.Metrics!;
+        var bitmaps = font.Bitmaps!;
+        var properties = font.Properties!;
+
+        var builder = new PcfFontBuilder();
+        builder.Config.FontAscent = accelerators.FontAscent;
+        builder.Config.FontDescent = accelerators.FontDescent;
+        builder.Config.DefaultChar = bdfEncodings.DefaultChar;
+        builder.Config.DrawRightToLeft = accelerators.DrawRightToLeft;
+        builder.Config.MsByteFirst = bitmaps.TableFormat.MsByteFirst;
+        builder.Config.MsBitFirst = bitmaps.TableFormat.MsBitFirst;
+        builder.Config.GlyphPadIndex = bitmaps.TableFormat.GlyphPadIndex;
+        builder.Config.ScanUnitIndex = bitmaps.TableFormat.ScanUnitIndex;
+
+        builder.Properties = properties;
+
+        var glyphIndexToEncoding = new Dictionary<ushort, ushort>();
+        foreach (var (encoding, glyphIndex) in bdfEncodings)
+        {
+            glyphIndexToEncoding[glyphIndex] = encoding;
+        }
+
+        for (var glyphIndex = 0; glyphIndex < glyphNames.Count; glyphIndex++)
+        {
+            var encoding = glyphIndexToEncoding.GetValueOrDefault((ushort)glyphIndex, PcfBdfEncodings.NoEncoding);
+            var glyphName = glyphNames[glyphIndex];
+            var scalableWidth = scalableWidths[glyphIndex];
+            var metric = metrics[glyphIndex];
+            var bitmap = bitmaps[glyphIndex];
+
+            builder.Glyphs.Add(new PcfGlyph(
+                name: glyphName,
+                encoding: encoding,
+                scalableWidth: scalableWidth,
+                characterWidth: metric.CharacterWidth,
+                dimensions: ((short, short))metric.Dimensions,
+                offset: ((short, short))metric.Offset,
+                bitmap: bitmap,
+                attributes: metric.Attributes));
+        }
+
+        return builder;
+    }
+
     public PcfFontConfig Config;
     public PcfProperties Properties;
     public List<PcfGlyph> Glyphs;
