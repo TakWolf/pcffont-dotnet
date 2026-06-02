@@ -144,6 +144,33 @@ public class PcfAccelerators : IPcfTable
             MaxBounds.Descent <= FontDescent;
     }
 
+    public PcfAccelerators Copy()
+    {
+        var accelerators = new PcfAccelerators(
+            TableFormat.Copy(),
+            NoOverlap,
+            ConstantMetrics,
+            TerminalFont,
+            ConstantWidth,
+            InkInside,
+            InkMetrics,
+            DrawRightToLeft,
+            FontAscent,
+            FontDescent,
+            MaxOverlap,
+            MinBounds?.Copy(),
+            MaxBounds?.Copy(),
+            InkMinBounds?.Copy(),
+            InkMaxBounds?.Copy()
+        );
+        if (CompatInfo is not null)
+        {
+            var (rawChunk, tableSize) = CompatInfo.Value;
+            accelerators.CompatInfo = (rawChunk.ToArray(), tableSize);
+        }
+        return accelerators;
+    }
+
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         stream.Seek(tableOffset, SeekOrigin.Begin);

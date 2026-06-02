@@ -188,4 +188,37 @@ public class AcceleratorsTests
         Assert.False(accelerators.ConstantMetrics);
         Assert.False(accelerators.TerminalFont);
     }
+
+    [Fact]
+    public void TestCopy()
+    {
+        var accelerators1 = new PcfAccelerators(
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            noOverlap: true,
+            constantMetrics: true,
+            terminalFont: true,
+            constantWidth: true,
+            inkInside: true,
+            inkMetrics: true,
+            drawRightToLeft: true,
+            fontAscent: 1,
+            fontDescent: 2,
+            maxOverlap: 4,
+            minBounds: new PcfMetric(1, 2, 3, 4, 5, 6),
+            maxBounds: new PcfMetric(6, 5, 4, 3, 2, 1),
+            inkMinBounds: new PcfMetric(7, 8, 9, 10, 11, 12),
+            inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
+        );
+        accelerators1.CompatInfo = ([1, 2, 3, 4], 10);
+
+        var accelerators2 = accelerators1.Copy();
+        Assert.True(PcfAccelerators.Equals(accelerators1, accelerators2));
+        Assert.NotSame(accelerators1, accelerators2);
+        Assert.NotSame(accelerators1.TableFormat, accelerators2.TableFormat);
+        Assert.NotSame(accelerators1.MinBounds, accelerators2.MinBounds);
+        Assert.NotSame(accelerators1.MaxBounds, accelerators2.MaxBounds);
+        Assert.NotSame(accelerators1.InkMinBounds, accelerators2.InkMinBounds);
+        Assert.NotSame(accelerators1.InkMaxBounds, accelerators2.InkMaxBounds);
+        Assert.NotSame(accelerators1.CompatInfo!.Value.Item1, accelerators2.CompatInfo!.Value.Item1);
+    }
 }
