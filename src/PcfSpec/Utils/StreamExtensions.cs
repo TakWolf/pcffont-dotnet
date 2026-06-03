@@ -21,9 +21,9 @@ internal static class StreamExtensions
         var numRead = stream.ReadAtLeast(buffer, size, throwOnEndOfStream);
         if (numRead != size)
         {
-            var copy = new byte[numRead];
-            Buffer.BlockCopy(buffer, 0, copy, 0, numRead);
-            buffer = copy;
+            var newBuffer = new byte[numRead];
+            Buffer.BlockCopy(buffer, 0, newBuffer, 0, numRead);
+            buffer = newBuffer;
         }
         return buffer;
     }
@@ -89,24 +89,17 @@ internal static class StreamExtensions
             return [];
         }
 
-        var size = count * 2;
-        var buffer = ArrayPool<byte>.Shared.Rent(size);
-        try
+        var values = new ushort[count];
+        var target = values.AsSpan();
+        stream.ReadExactly(MemoryMarshal.AsBytes(target));
+        if (msByteFirst != !BitConverter.IsLittleEndian)
         {
-            stream.ReadExactly(buffer, 0, size);
-
-            var values = new ushort[count];
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < target.Length; i++)
             {
-                var span = buffer.AsSpan(i * 2, 2);
-                values[i] = msByteFirst ? BinaryPrimitives.ReadUInt16BigEndian(span) : BinaryPrimitives.ReadUInt16LittleEndian(span);
+                target[i] = BinaryPrimitives.ReverseEndianness(target[i]);
             }
-            return values;
         }
-        finally
-        {
-            ArrayPool<byte>.Shared.Return(buffer);
-        }
+        return values;
     }
 
     public static short ReadInt16(this Stream stream, bool msByteFirst = false)
@@ -124,24 +117,17 @@ internal static class StreamExtensions
             return [];
         }
 
-        var size = count * 2;
-        var buffer = ArrayPool<byte>.Shared.Rent(size);
-        try
+        var values = new short[count];
+        var target = values.AsSpan();
+        stream.ReadExactly(MemoryMarshal.AsBytes(target));
+        if (msByteFirst != !BitConverter.IsLittleEndian)
         {
-            stream.ReadExactly(buffer, 0, size);
-
-            var values = new short[count];
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < target.Length; i++)
             {
-                var span = buffer.AsSpan(i * 2, 2);
-                values[i] = msByteFirst ? BinaryPrimitives.ReadInt16BigEndian(span) : BinaryPrimitives.ReadInt16LittleEndian(span);
+                target[i] = BinaryPrimitives.ReverseEndianness(target[i]);
             }
-            return values;
         }
-        finally
-        {
-            ArrayPool<byte>.Shared.Return(buffer);
-        }
+        return values;
     }
 
     public static uint ReadUInt32(this Stream stream, bool msByteFirst = false)
@@ -159,24 +145,17 @@ internal static class StreamExtensions
             return [];
         }
 
-        var size = count * 4;
-        var buffer = ArrayPool<byte>.Shared.Rent(size);
-        try
+        var values = new uint[count];
+        var target = values.AsSpan();
+        stream.ReadExactly(MemoryMarshal.AsBytes(target));
+        if (msByteFirst != !BitConverter.IsLittleEndian)
         {
-            stream.ReadExactly(buffer, 0, size);
-
-            var values = new uint[count];
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < target.Length; i++)
             {
-                var span = buffer.AsSpan(i * 4, 4);
-                values[i] = msByteFirst ? BinaryPrimitives.ReadUInt32BigEndian(span) : BinaryPrimitives.ReadUInt32LittleEndian(span);
+                target[i] = BinaryPrimitives.ReverseEndianness(target[i]);
             }
-            return values;
         }
-        finally
-        {
-            ArrayPool<byte>.Shared.Return(buffer);
-        }
+        return values;
     }
 
     public static int ReadInt32(this Stream stream, bool msByteFirst = false)
@@ -194,39 +173,50 @@ internal static class StreamExtensions
             return [];
         }
 
-        var size = count * 4;
-        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        var values = new int[count];
+        var target = values.AsSpan();
+        stream.ReadExactly(MemoryMarshal.AsBytes(target));
+        if (msByteFirst != !BitConverter.IsLittleEndian)
+        {
+            for (var i = 0; i < target.Length; i++)
+            {
+                target[i] = BinaryPrimitives.ReverseEndianness(target[i]);
+            }
+        }
+        return values;
+    }
+
+    public static string ReadString(this Stream stream)
+    {
+        var buffer = ArrayPool<byte>.Shared.Rent(256);
         try
         {
-            stream.ReadExactly(buffer, 0, size);
-
-            var values = new int[count];
-            for (var i = 0; i < count; i++)
+            var size = 0;
+            while (true)
             {
-                var span = buffer.AsSpan(i * 4, 4);
-                values[i] = msByteFirst ? BinaryPrimitives.ReadInt32BigEndian(span) : BinaryPrimitives.ReadInt32LittleEndian(span);
+                var b = stream.ReadUInt8();
+                if (b == 0)
+                {
+                    break;
+                }
+
+                if (size == buffer.Length)
+                {
+                    var newBuffer = ArrayPool<byte>.Shared.Rent(size * 2);
+                    Buffer.BlockCopy(buffer, 0, newBuffer, 0, size);
+                    ArrayPool<byte>.Shared.Return(buffer);
+                    buffer = newBuffer;
+                }
+
+                buffer[size] = b;
+                size += 1;
             }
-            return values;
+            return Encoding.UTF8.GetString(buffer, 0, size);
         }
         finally
         {
             ArrayPool<byte>.Shared.Return(buffer);
         }
-    }
-
-    public static string ReadString(this Stream stream)
-    {
-        var buffer = new List<byte>();
-        while (true)
-        {
-            var b = stream.ReadUInt8();
-            if (b == 0)
-            {
-                break;
-            }
-            buffer.Add(b);
-        }
-        return Encoding.UTF8.GetString(CollectionsMarshal.AsSpan(buffer));
     }
 
     public static bool ReadBool(this Stream stream) => stream.ReadUInt8() != 0;
@@ -298,22 +288,22 @@ internal static class StreamExtensions
         }
 
         var size = values.Length * 2;
+
+        if (msByteFirst == !BitConverter.IsLittleEndian)
+        {
+            stream.Write(MemoryMarshal.Cast<ushort, byte>(values));
+            return size;
+        }
+
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
+            var target = MemoryMarshal.Cast<byte, ushort>(buffer.AsSpan(0, size));
             for (var i = 0; i < values.Length; i++)
             {
-                var span = buffer.AsSpan(i * 2, 2);
-                var value = values[i];
-                if (msByteFirst)
-                {
-                    BinaryPrimitives.WriteUInt16BigEndian(span, value);
-                }
-                else
-                {
-                    BinaryPrimitives.WriteUInt16LittleEndian(span, value);
-                }
+                target[i] = BinaryPrimitives.ReverseEndianness(values[i]);
             }
+
             stream.Write(buffer, 0, size);
             return size;
         }
@@ -345,22 +335,22 @@ internal static class StreamExtensions
         }
 
         var size = values.Length * 2;
+
+        if (msByteFirst == !BitConverter.IsLittleEndian)
+        {
+            stream.Write(MemoryMarshal.Cast<short, byte>(values));
+            return size;
+        }
+
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
+            var target = MemoryMarshal.Cast<byte, short>(buffer.AsSpan(0, size));
             for (var i = 0; i < values.Length; i++)
             {
-                var span = buffer.AsSpan(i * 2, 2);
-                var value = values[i];
-                if (msByteFirst)
-                {
-                    BinaryPrimitives.WriteInt16BigEndian(span, value);
-                }
-                else
-                {
-                    BinaryPrimitives.WriteInt16LittleEndian(span, value);
-                }
+                target[i] = BinaryPrimitives.ReverseEndianness(values[i]);
             }
+
             stream.Write(buffer, 0, size);
             return size;
         }
@@ -392,22 +382,22 @@ internal static class StreamExtensions
         }
 
         var size = values.Length * 4;
+
+        if (msByteFirst == !BitConverter.IsLittleEndian)
+        {
+            stream.Write(MemoryMarshal.Cast<uint, byte>(values));
+            return size;
+        }
+
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
+            var target = MemoryMarshal.Cast<byte, uint>(buffer.AsSpan(0, size));
             for (var i = 0; i < values.Length; i++)
             {
-                var span = buffer.AsSpan(i * 4, 4);
-                var value = values[i];
-                if (msByteFirst)
-                {
-                    BinaryPrimitives.WriteUInt32BigEndian(span, value);
-                }
-                else
-                {
-                    BinaryPrimitives.WriteUInt32LittleEndian(span, value);
-                }
+                target[i] = BinaryPrimitives.ReverseEndianness(values[i]);
             }
+
             stream.Write(buffer, 0, size);
             return size;
         }
@@ -439,22 +429,22 @@ internal static class StreamExtensions
         }
 
         var size = values.Length * 4;
+
+        if (msByteFirst == !BitConverter.IsLittleEndian)
+        {
+            stream.Write(MemoryMarshal.Cast<int, byte>(values));
+            return size;
+        }
+
         var buffer = ArrayPool<byte>.Shared.Rent(size);
         try
         {
+            var target = MemoryMarshal.Cast<byte, int>(buffer.AsSpan(0, size));
             for (var i = 0; i < values.Length; i++)
             {
-                var span = buffer.AsSpan(i * 4, 4);
-                var value = values[i];
-                if (msByteFirst)
-                {
-                    BinaryPrimitives.WriteInt32BigEndian(span, value);
-                }
-                else
-                {
-                    BinaryPrimitives.WriteInt32LittleEndian(span, value);
-                }
+                target[i] = BinaryPrimitives.ReverseEndianness(values[i]);
             }
+
             stream.Write(buffer, 0, size);
             return size;
         }
@@ -490,11 +480,31 @@ internal static class StreamExtensions
 
     public static int WriteNulls(this Stream stream, int size)
     {
-        for (var i = 0; i < size; i++)
+        ArgumentOutOfRangeException.ThrowIfNegative(size);
+        if (size == 0)
         {
-            stream.WriteByte(0);
+            return 0;
         }
-        return size;
+
+        if (size <= 64)
+        {
+            Span<byte> span = stackalloc byte[size];
+            span.Clear();
+            stream.Write(span);
+            return size;
+        }
+
+        var buffer = ArrayPool<byte>.Shared.Rent(size);
+        try
+        {
+            Array.Clear(buffer, 0, size);
+            stream.Write(buffer, 0, size);
+            return size;
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     public static int AlignTo4Bytes(this Stream stream) => stream.WriteNulls((int)(3 - (stream.Position + 3) % 4));
