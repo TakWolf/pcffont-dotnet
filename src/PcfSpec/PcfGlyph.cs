@@ -6,10 +6,10 @@ public class PcfGlyph
     public ushort Encoding;
     public int ScalableWidth;
     public short CharacterWidth;
-    public short Width;
-    public short Height;
-    public short OffsetX;
-    public short OffsetY;
+    public int Width;
+    public int Height;
+    public int OffsetX;
+    public int OffsetY;
     public List<List<byte>> Bitmap;
     public ushort Attributes;
 
@@ -18,8 +18,8 @@ public class PcfGlyph
         ushort encoding,
         int scalableWidth = 0,
         short characterWidth = 0,
-        (short, short) dimensions = default,
-        (short, short) offset = default,
+        (int, int) dimensions = default,
+        (int, int) offset = default,
         List<List<byte>>? bitmap = null,
         ushort attributes = 0)
     {
@@ -33,13 +33,13 @@ public class PcfGlyph
         Attributes = attributes;
     }
 
-    public (short, short) Dimensions
+    public (int, int) Dimensions
     {
         get => (Width, Height);
         set => (Width, Height) = value;
     }
 
-    public (short, short) Offset
+    public (int, int) Offset
     {
         get => (OffsetX, OffsetY);
         set => (OffsetX, OffsetY) = value;
@@ -48,7 +48,7 @@ public class PcfGlyph
     public PcfMetric CreateMetric(bool isInk)
     {
         var metric = new PcfMetric(
-            leftSideBearing: OffsetX,
+            leftSideBearing: (short)OffsetX,
             rightSideBearing: (short)(OffsetX + Width),
             characterWidth: CharacterWidth,
             ascent: (short)(OffsetY + Height),

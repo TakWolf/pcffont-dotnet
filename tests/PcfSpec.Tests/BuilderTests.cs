@@ -32,8 +32,8 @@ public class BuilderTests
                 encoding: (ushort)bdfGlyph.Encoding,
                 scalableWidth: bdfGlyph.ScalableWidthX,
                 characterWidth: (short)bdfGlyph.DeviceWidthX,
-                dimensions: ((short, short))bdfGlyph.Dimensions,
-                offset: ((short, short))bdfGlyph.Offset,
+                dimensions: bdfGlyph.Dimensions,
+                offset: bdfGlyph.Offset,
                 bitmap: bdfGlyph.Bitmap));
         }
 

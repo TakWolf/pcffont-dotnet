@@ -46,8 +46,8 @@ public class PcfFontBuilder
                 encoding: encoding,
                 scalableWidth: scalableWidth,
                 characterWidth: metric.CharacterWidth,
-                dimensions: ((short, short))metric.Dimensions,
-                offset: ((short, short))metric.Offset,
+                dimensions: metric.Dimensions,
+                offset: metric.Offset,
                 bitmap: bitmap,
                 attributes: metric.Attributes));
         }
