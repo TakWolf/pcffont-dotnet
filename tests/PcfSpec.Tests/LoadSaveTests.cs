@@ -8,7 +8,7 @@ public partial class LoadSaveTests
     public void TestUnifont()
     {
         var loadPath = Path.Combine("assets", "unifont", "unifont-17.0.04.pcf");
-        var savePath = Path.Combine(PathUtils.CreateTempDir(), "unifont-17.0.04.pcf");
+        var savePath = Path.Combine(PathUtil.CreateTempDir(), "unifont-17.0.04.pcf");
         var font = PcfFont.Load(loadPath);
         font.Save(savePath);
         Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
@@ -28,7 +28,7 @@ public partial class LoadSaveTests
 
         foreach (var loadPath in loadPaths)
         {
-            var savePath = Path.Combine(PathUtils.CreateTempDir(), Path.GetFileName(loadPath));
+            var savePath = Path.Combine(PathUtil.CreateTempDir(), Path.GetFileName(loadPath));
             var font = PcfFont.Load(loadPath);
             font.Save(savePath);
             Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));
@@ -49,7 +49,7 @@ public partial class LoadSaveTests
 
         foreach (var loadPath in loadPaths)
         {
-            var savePath = Path.Combine(PathUtils.CreateTempDir(), Path.GetFileName(loadPath));
+            var savePath = Path.Combine(PathUtil.CreateTempDir(), Path.GetFileName(loadPath));
             var font = PcfFont.Load(loadPath);
             font.Save(savePath);
             Assert.Equal(File.ReadAllBytes(loadPath), File.ReadAllBytes(savePath));

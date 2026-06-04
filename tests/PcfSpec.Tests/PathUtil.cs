@@ -1,8 +1,8 @@
 namespace PcfSpec.Tests;
 
-internal static class PathUtils
+internal static class PathUtil
 {
-    static PathUtils()
+    static PathUtil()
     {
         if (Directory.Exists("temp"))
         {
