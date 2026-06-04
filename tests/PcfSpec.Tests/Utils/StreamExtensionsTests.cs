@@ -1,6 +1,6 @@
 using PcfSpec.Utils;
 
-namespace PcfSpec.Tests;
+namespace PcfSpec.Tests.Utils;
 
 public class StreamExtensionsTests
 {

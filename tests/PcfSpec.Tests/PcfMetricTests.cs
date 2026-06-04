@@ -2,7 +2,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tests;
 
-public class MetricTests
+public class PcfMetricTests
 {
     [Fact]
     public void TestEquals()

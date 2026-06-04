@@ -1,4 +1,4 @@
-namespace PcfSpec.Tests;
+namespace PcfSpec.Tests.Conformance;
 
 public class ParseDumpTests
 {

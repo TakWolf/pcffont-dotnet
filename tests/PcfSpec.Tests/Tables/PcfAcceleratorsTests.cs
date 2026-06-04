@@ -1,8 +1,8 @@
 using PcfSpec.Tables;
 
-namespace PcfSpec.Tests;
+namespace PcfSpec.Tests.Tables;
 
-public class AcceleratorsTests
+public class PcfAcceleratorsTests
 {
     [Fact]
     public void TestNoBounds()

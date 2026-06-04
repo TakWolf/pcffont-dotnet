@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
+using PcfSpec.Tests.TestUtils;
 
-namespace PcfSpec.Tests;
+namespace PcfSpec.Tests.Conformance;
 
 public partial class LoadSaveTests
 {

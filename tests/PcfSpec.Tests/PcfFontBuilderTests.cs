@@ -2,7 +2,7 @@ using BdfSpec;
 
 namespace PcfSpec.Tests;
 
-public class BuilderTests
+public class PcfFontBuilderTests
 {
     private static PcfFont CreatePcfByBdf(string path)
     {

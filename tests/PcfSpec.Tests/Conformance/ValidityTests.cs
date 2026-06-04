@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 using BdfSpec;
 using FreeTypeSharp;
 
-namespace PcfSpec.Tests;
+namespace PcfSpec.Tests.Conformance;
 
 public partial class ValidityTests
 {

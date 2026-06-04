@@ -1,4 +1,4 @@
-namespace PcfSpec.Tests;
+namespace PcfSpec.Tests.TestUtils;
 
 internal static class PathUtil
 {

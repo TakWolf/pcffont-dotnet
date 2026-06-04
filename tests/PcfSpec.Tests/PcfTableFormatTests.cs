@@ -1,6 +1,6 @@
 namespace PcfSpec.Tests;
 
-public class TableFormatTests
+public class PcfTableFormatTests
 {
     [Fact]
     public void TestValue()
