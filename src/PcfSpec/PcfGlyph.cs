@@ -2,16 +2,16 @@ namespace PcfSpec;
 
 public class PcfGlyph
 {
-    public string Name;
-    public ushort Encoding;
-    public int ScalableWidth;
-    public short CharacterWidth;
-    public int Width;
-    public int Height;
-    public int OffsetX;
-    public int OffsetY;
-    public List<List<byte>> Bitmap;
-    public ushort Attributes;
+    public string Name { get; set; }
+    public ushort Encoding { get; set; }
+    public int ScalableWidth { get; set; }
+    public short CharacterWidth { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public int OffsetX { get; set; }
+    public int OffsetY { get; set; }
+    public List<List<byte>> Bitmap { get; set; }
+    public ushort Attributes { get; set; }
 
     public PcfGlyph(
         string name,

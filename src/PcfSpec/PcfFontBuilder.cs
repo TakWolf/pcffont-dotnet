@@ -55,9 +55,9 @@ public class PcfFontBuilder
         return builder;
     }
 
-    public PcfFontConfig Config;
-    public PcfProperties Properties;
-    public List<PcfGlyph> Glyphs;
+    public PcfFontConfig Config { get; set; }
+    public PcfProperties Properties { get; set; }
+    public List<PcfGlyph> Glyphs { get; set; }
 
     public PcfFontBuilder(
         PcfFontConfig? config = null,

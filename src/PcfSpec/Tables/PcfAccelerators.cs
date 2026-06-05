@@ -50,20 +50,20 @@ public class PcfAccelerators : IPcfTable
     }
 
     public PcfTableFormat TableFormat { get; set; }
-    public bool NoOverlap;
-    public bool ConstantMetrics;
-    public bool TerminalFont;
-    public bool ConstantWidth;
-    public bool InkInside;
-    public bool InkMetrics;
-    public bool DrawRightToLeft;
-    public int FontAscent;
-    public int FontDescent;
-    public int MaxOverlap;
-    public PcfMetric? MinBounds;
-    public PcfMetric? MaxBounds;
-    public PcfMetric? InkMinBounds;
-    public PcfMetric? InkMaxBounds;
+    public bool NoOverlap { get; set; }
+    public bool ConstantMetrics { get; set; }
+    public bool TerminalFont { get; set; }
+    public bool ConstantWidth { get; set; }
+    public bool InkInside { get; set; }
+    public bool InkMetrics { get; set; }
+    public bool DrawRightToLeft { get; set; }
+    public int FontAscent { get; set; }
+    public int FontDescent { get; set; }
+    public int MaxOverlap { get; set; }
+    public PcfMetric? MinBounds { get; set; }
+    public PcfMetric? MaxBounds { get; set; }
+    public PcfMetric? InkMinBounds { get; set; }
+    public PcfMetric? InkMaxBounds { get; set; }
 
     public PcfAccelerators(
         PcfTableFormat? tableFormat = null,

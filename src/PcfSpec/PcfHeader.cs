@@ -49,10 +49,10 @@ public class PcfHeader : IComparable<PcfHeader>
         }
     }
 
-    public PcfTableType TableType;
-    public PcfTableFormat TableFormat;
-    public uint TableSize;
-    public uint TableOffset;
+    public PcfTableType TableType { get; set; }
+    public PcfTableFormat TableFormat { get; set; }
+    public uint TableSize { get; set; }
+    public uint TableOffset { get; set; }
 
     public PcfHeader(
         PcfTableType tableType,

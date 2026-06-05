@@ -48,11 +48,11 @@ public class PcfTableFormat
             scanUnitIndex);
     }
 
-    public bool MsByteFirst;
-    public bool MsBitFirst;
-    public bool InkBoundsOrCompressedMetrics;
-    public int GlyphPadIndex;
-    public int ScanUnitIndex;
+    public bool MsByteFirst { get; set; }
+    public bool MsBitFirst { get; set; }
+    public bool InkBoundsOrCompressedMetrics { get; set; }
+    public int GlyphPadIndex { get; set; }
+    public int ScanUnitIndex { get; set; }
 
     public PcfTableFormat(
         bool msByteFirst = false,

@@ -49,7 +49,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
     private readonly SortedDictionary<ushort, ushort> _dictionary = new();
 
     public PcfTableFormat TableFormat { get; set; }
-    public ushort DefaultChar;
+    public ushort DefaultChar { get; set; }
 
     public PcfBdfEncodings(
         PcfTableFormat? tableFormat = null,

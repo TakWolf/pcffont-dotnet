@@ -39,12 +39,12 @@ public class PcfMetric
             attributes);
     }
 
-    public short LeftSideBearing;
-    public short RightSideBearing;
-    public short CharacterWidth;
-    public short Ascent;
-    public short Descent;
-    public ushort Attributes;
+    public short LeftSideBearing { get; set; }
+    public short RightSideBearing { get; set; }
+    public short CharacterWidth { get; set; }
+    public short Ascent { get; set; }
+    public short Descent { get; set; }
+    public ushort Attributes { get; set; }
 
     public PcfMetric(
         short leftSideBearing = 0,

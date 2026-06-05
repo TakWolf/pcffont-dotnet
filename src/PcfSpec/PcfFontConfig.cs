@@ -4,14 +4,14 @@ namespace PcfSpec;
 
 public class PcfFontConfig
 {
-    public int FontAscent;
-    public int FontDescent;
-    public ushort DefaultChar;
-    public bool DrawRightToLeft;
-    public bool MsByteFirst;
-    public bool MsBitFirst;
-    public int GlyphPadIndex;
-    public int ScanUnitIndex;
+    public int FontAscent { get; set; }
+    public int FontDescent { get; set; }
+    public ushort DefaultChar { get; set; }
+    public bool DrawRightToLeft { get; set; }
+    public bool MsByteFirst { get; set; }
+    public bool MsBitFirst { get; set; }
+    public int GlyphPadIndex { get; set; }
+    public int ScanUnitIndex { get; set; }
 
     public PcfFontConfig(
         int fontAscent = 0,
