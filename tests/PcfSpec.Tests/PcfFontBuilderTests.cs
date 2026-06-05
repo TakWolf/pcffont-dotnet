@@ -21,7 +21,12 @@ public class PcfFontBuilderTests
 
         foreach (var (key, value) in bdfFont.Properties)
         {
-            builder.Properties[key] = value;
+            builder.Properties[key] = value switch
+            {
+                string stringValue => stringValue,
+                int intValue => intValue,
+                _ => throw new InvalidOperationException()
+            };
         }
         builder.Properties.GenerateXlfd();
 
