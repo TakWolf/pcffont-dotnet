@@ -110,7 +110,7 @@ public class PcfTableFormatTests
             glyphPadIndex: 1,
             scanUnitIndex: 2
         );
-        var format2 = format1.Copy();
+        var format2 = format1.DeepCopy();
         Assert.Equal(format1.Value, format2.Value);
         Assert.NotSame(format1, format2);
     }

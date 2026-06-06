@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, IEquatable<PcfBitmaps>
+public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmaps>, IEquatable<PcfBitmaps>
 {
     private static void SwapBytes(byte[] data, uint scanUnit)
     {
@@ -166,6 +166,10 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, IEquatable<PcfBitma
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;
     }
+
+    public PcfBitmaps Copy() => new(TableFormat, this);
+
+    public PcfBitmaps DeepCopy() => new(TableFormat.DeepCopy(), CopyUtil.DeepCopyList(this));
 
     public bool Equals(PcfBitmaps? other)
     {

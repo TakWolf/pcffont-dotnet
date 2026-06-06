@@ -2,7 +2,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfMetrics : List<PcfMetric>, IPcfTable, IEquatable<PcfMetrics>
+public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEquatable<PcfMetrics>
 {
     public static PcfMetrics Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -64,6 +64,10 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, IEquatable<PcfMetrics>
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;
     }
+
+    public PcfMetrics Copy() => new(TableFormat, this);
+
+    public PcfMetrics DeepCopy() => new(TableFormat.DeepCopy(), CopyUtil.DeepCopyList(this));
 
     public bool Equals(PcfMetrics? other)
     {

@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfScalableWidths : List<int>, IPcfTable, IEquatable<PcfScalableWidths>
+public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidths>, IEquatable<PcfScalableWidths>
 {
     public static PcfScalableWidths Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -41,6 +41,10 @@ public class PcfScalableWidths : List<int>, IPcfTable, IEquatable<PcfScalableWid
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;
     }
+
+    public PcfScalableWidths Copy() => new(TableFormat, this);
+
+    public PcfScalableWidths DeepCopy() => new(TableFormat.DeepCopy(), this);
 
     public bool Equals(PcfScalableWidths? other)
     {

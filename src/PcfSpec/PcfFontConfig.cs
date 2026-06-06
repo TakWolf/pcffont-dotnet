@@ -1,8 +1,9 @@
 using PcfSpec.Tables;
+using PcfSpec.Utils;
 
 namespace PcfSpec;
 
-public class PcfFontConfig : IEquatable<PcfFontConfig>
+public class PcfFontConfig : ICopyable<PcfFontConfig>, IEquatable<PcfFontConfig>
 {
     public int FontAscent { get; set; }
     public int FontDescent { get; set; }
@@ -50,6 +51,18 @@ public class PcfFontConfig : IEquatable<PcfFontConfig>
         msBitFirst: MsBitFirst,
         glyphPadIndex: GlyphPadIndex,
         scanUnitIndex: ScanUnitIndex);
+
+    public PcfFontConfig Copy() => new(
+        FontAscent,
+        FontDescent,
+        DefaultChar,
+        DrawRightToLeft,
+        MsByteFirst,
+        MsBitFirst,
+        GlyphPadIndex,
+        ScanUnitIndex);
+
+    public PcfFontConfig DeepCopy() => Copy();
 
     public bool Equals(PcfFontConfig? other)
     {

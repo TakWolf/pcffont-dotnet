@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfGlyphNames : List<string>, IPcfTable, IEquatable<PcfGlyphNames>
+public class PcfGlyphNames : List<string>, IPcfTable, ICopyable<PcfGlyphNames>, IEquatable<PcfGlyphNames>
 {
     public static PcfGlyphNames Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -63,6 +63,10 @@ public class PcfGlyphNames : List<string>, IPcfTable, IEquatable<PcfGlyphNames>
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;
     }
+
+    public PcfGlyphNames Copy() => new(TableFormat, this);
+
+    public PcfGlyphNames DeepCopy() => new(TableFormat.DeepCopy(), this);
 
     public bool Equals(PcfGlyphNames? other)
     {

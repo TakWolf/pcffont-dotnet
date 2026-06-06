@@ -210,7 +210,7 @@ public class PcfAcceleratorsTests
             inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
         );
 
-        var accelerators2 = accelerators1.Copy();
+        var accelerators2 = accelerators1.DeepCopy();
         Assert.Equal(accelerators1, accelerators2);
         Assert.NotSame(accelerators1, accelerators2);
         Assert.NotSame(accelerators1.TableFormat, accelerators2.TableFormat);

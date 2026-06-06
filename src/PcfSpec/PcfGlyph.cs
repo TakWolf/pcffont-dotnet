@@ -2,7 +2,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec;
 
-public class PcfGlyph : IEquatable<PcfGlyph>
+public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
 {
     public string Name { get; set; }
     public ushort Encoding { get; set; }
@@ -114,6 +114,26 @@ public class PcfGlyph : IEquatable<PcfGlyph>
 
         return metric;
     }
+
+    public PcfGlyph Copy() => new(
+        Name,
+        Encoding,
+        ScalableWidth,
+        CharacterWidth,
+        Dimensions,
+        Offset,
+        Bitmap,
+        Attributes);
+
+    public PcfGlyph DeepCopy() => new(
+        Name,
+        Encoding,
+        ScalableWidth,
+        CharacterWidth,
+        Dimensions,
+        Offset,
+        CopyUtil.DeepCopyBitmap(Bitmap),
+        Attributes);
 
     public bool Equals(PcfGlyph? other)
     {

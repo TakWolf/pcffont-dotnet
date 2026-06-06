@@ -2,7 +2,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfAccelerators : IPcfTable, IEquatable<PcfAccelerators>
+public class PcfAccelerators : IPcfTable, ICopyable<PcfAccelerators>, IEquatable<PcfAccelerators>
 {
     public static PcfAccelerators Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -133,23 +133,6 @@ public class PcfAccelerators : IPcfTable, IEquatable<PcfAccelerators>
             MaxBounds.Descent <= FontDescent;
     }
 
-    public PcfAccelerators Copy() => new(
-            TableFormat.Copy(),
-            NoOverlap,
-            ConstantMetrics,
-            TerminalFont,
-            ConstantWidth,
-            InkInside,
-            InkMetrics,
-            DrawRightToLeft,
-            FontAscent,
-            FontDescent,
-            MaxOverlap,
-            MinBounds?.Copy(),
-            MaxBounds?.Copy(),
-            InkMinBounds?.Copy(),
-            InkMaxBounds?.Copy());
-
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         stream.Seek(tableOffset, SeekOrigin.Begin);
@@ -183,6 +166,40 @@ public class PcfAccelerators : IPcfTable, IEquatable<PcfAccelerators>
 
         return 100;
     }
+
+    public PcfAccelerators Copy() => new(
+        TableFormat,
+        NoOverlap,
+        ConstantMetrics,
+        TerminalFont,
+        ConstantWidth,
+        InkInside,
+        InkMetrics,
+        DrawRightToLeft,
+        FontAscent,
+        FontDescent,
+        MaxOverlap,
+        MinBounds,
+        MaxBounds,
+        InkMinBounds,
+        InkMaxBounds);
+
+    public PcfAccelerators DeepCopy() => new(
+        TableFormat.DeepCopy(),
+        NoOverlap,
+        ConstantMetrics,
+        TerminalFont,
+        ConstantWidth,
+        InkInside,
+        InkMetrics,
+        DrawRightToLeft,
+        FontAscent,
+        FontDescent,
+        MaxOverlap,
+        MinBounds?.DeepCopy(),
+        MaxBounds?.DeepCopy(),
+        InkMinBounds?.DeepCopy(),
+        InkMaxBounds?.DeepCopy());
 
     public bool Equals(PcfAccelerators? other)
     {

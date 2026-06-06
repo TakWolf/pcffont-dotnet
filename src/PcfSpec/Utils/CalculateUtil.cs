@@ -14,7 +14,7 @@ internal static class CalculateUtil
         {
             if (minBounds is null)
             {
-                minBounds = metric.Copy();
+                minBounds = metric.DeepCopy();
             }
             else
             {
@@ -39,7 +39,7 @@ internal static class CalculateUtil
         {
             if (maxBounds is null)
             {
-                maxBounds = metric.Copy();
+                maxBounds = metric.DeepCopy();
             }
             else
             {

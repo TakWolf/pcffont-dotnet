@@ -97,7 +97,7 @@ public class PcfMetricTests
             descent: 5,
             attributes: 6);
 
-        var metric2 = metric1.Copy();
+        var metric2 = metric1.DeepCopy();
         Assert.Equal(metric1, metric2);
         Assert.NotSame(metric1, metric2);
     }

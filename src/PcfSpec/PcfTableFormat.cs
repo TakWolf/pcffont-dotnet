@@ -1,6 +1,8 @@
+using PcfSpec.Utils;
+
 namespace PcfSpec;
 
-public class PcfTableFormat : IEquatable<PcfTableFormat>
+public class PcfTableFormat : ICopyable<PcfTableFormat>, IEquatable<PcfTableFormat>
 {
     private const uint DefaultValue = 0b_0000_0000_0000;
     private const uint FlagInkBoundsOrCompressedMetrics = 0b_0001_0000_0000;
@@ -121,6 +123,8 @@ public class PcfTableFormat : IEquatable<PcfTableFormat>
         InkBoundsOrCompressedMetrics,
         GlyphPadIndex,
         ScanUnitIndex);
+
+    public PcfTableFormat DeepCopy() => Copy();
 
     public bool Equals(PcfTableFormat? other)
     {

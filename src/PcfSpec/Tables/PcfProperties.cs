@@ -5,7 +5,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, IList<KeyValuePair<string, PcfPropertyValue>>, IPcfTable, IEquatable<PcfProperties>
+public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, IList<KeyValuePair<string, PcfPropertyValue>>, IPcfTable, ICopyable<PcfProperties>, IEquatable<PcfProperties>
 {
     private const string KeyFoundry = "FOUNDRY";
     private const string KeyFamilyName = "FAMILY_NAME";
@@ -549,6 +549,10 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;
     }
+
+    public PcfProperties Copy() => new(TableFormat, _dictionary);
+
+    public PcfProperties DeepCopy() => new(TableFormat.DeepCopy(), _dictionary);
 
     public bool Equals(PcfProperties? other)
     {

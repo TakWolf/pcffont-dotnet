@@ -5,7 +5,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec;
 
-public class PcfFont : IDictionary<PcfTableType, IPcfTable>, IEquatable<PcfFont>
+public class PcfFont : IDictionary<PcfTableType, IPcfTable>, ICopyable<PcfFont>, IEquatable<PcfFont>
 {
     private static void CheckTableType(PcfTableType tableType, IPcfTable table)
     {
@@ -210,6 +210,28 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>, IEquatable<PcfFont>
         using var stream = File.OpenWrite(path);
         Dump(stream);
     }
+
+    public PcfFont Copy() => new(
+        Properties,
+        Accelerators,
+        Metrics,
+        Bitmaps,
+        InkMetrics,
+        BdfEncodings,
+        ScalableWidths,
+        GlyphNames,
+        BdfAccelerators);
+
+    public PcfFont DeepCopy() => new(
+        Properties?.DeepCopy(),
+        Accelerators?.DeepCopy(),
+        Metrics?.DeepCopy(),
+        Bitmaps?.DeepCopy(),
+        InkMetrics?.DeepCopy(),
+        BdfEncodings?.DeepCopy(),
+        ScalableWidths?.DeepCopy(),
+        GlyphNames?.DeepCopy(),
+        BdfAccelerators?.DeepCopy());
 
     public bool Equals(PcfFont? other)
     {

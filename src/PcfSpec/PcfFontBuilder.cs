@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec;
 
-public class PcfFontBuilder : IEquatable<PcfFontBuilder>
+public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuilder>
 {
     public static PcfFontBuilder Modify(PcfFont font)
     {
@@ -107,7 +107,7 @@ public class PcfFontBuilder : IEquatable<PcfFontBuilder>
         PcfAccelerators bdfAccelerators;
         if (glyphIndices.Count == Glyphs.Count)
         {
-            bdfAccelerators = accelerators.Copy();
+            bdfAccelerators = accelerators.DeepCopy();
         }
         else
         {
@@ -144,8 +144,8 @@ public class PcfFontBuilder : IEquatable<PcfFontBuilder>
 
             if (glyphIndices.Count == Glyphs.Count)
             {
-                bdfAccelerators.InkMinBounds = accelerators.InkMinBounds.Copy();
-                bdfAccelerators.InkMaxBounds = accelerators.InkMaxBounds.Copy();
+                bdfAccelerators.InkMinBounds = accelerators.InkMinBounds.DeepCopy();
+                bdfAccelerators.InkMaxBounds = accelerators.InkMaxBounds.DeepCopy();
             }
             else
             {
@@ -191,6 +191,16 @@ public class PcfFontBuilder : IEquatable<PcfFontBuilder>
     }
 
     public void Save(string path) => Build().Save(path);
+
+    public PcfFontBuilder Copy() => new(
+        Config,
+        Properties,
+        Glyphs);
+
+    public PcfFontBuilder DeepCopy() => new(
+        Config.DeepCopy(),
+        Properties.DeepCopy(),
+        CopyUtil.DeepCopyList(Glyphs));
 
     public bool Equals(PcfFontBuilder? other)
     {

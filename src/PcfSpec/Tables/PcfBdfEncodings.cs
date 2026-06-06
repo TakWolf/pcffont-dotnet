@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, IEquatable<PcfBdfEncodings>
+public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable<PcfBdfEncodings>, IEquatable<PcfBdfEncodings>
 {
     public const ushort NoEncoding = ushort.MaxValue;
     public const ushort NoGlyphIndex = ushort.MaxValue;
@@ -197,6 +197,16 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, IEquatabl
         var tableSize = stream.Position - tableOffset;
         return (uint)tableSize;
     }
+
+    public PcfBdfEncodings Copy() => new(
+        TableFormat,
+        DefaultChar,
+        _dictionary);
+
+    public PcfBdfEncodings DeepCopy() => new(
+        TableFormat.DeepCopy(),
+        DefaultChar,
+        _dictionary);
 
     public bool Equals(PcfBdfEncodings? other)
     {
