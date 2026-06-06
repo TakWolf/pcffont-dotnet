@@ -94,7 +94,7 @@ internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ILis
         var index = _keysData.IndexOf(item.Key);
         if (index >= 0)
         {
-            return Equals(_valuesData[index], item.Value);
+            return EqualityComparer<TValue>.Default.Equals(_valuesData[index], item.Value);
         }
         return false;
     }
@@ -104,7 +104,7 @@ internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ILis
         var index = _keysData.IndexOf(item.Key);
         if (index >= 0)
         {
-            return Equals(_valuesData[index], item.Value) ? index : -1;
+            return EqualityComparer<TValue>.Default.Equals(_valuesData[index], item.Value) ? index : -1;
         }
         return -1;
     }
@@ -146,7 +146,7 @@ internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ILis
     bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
     {
         var index = _keysData.IndexOf(item.Key);
-        if (index >= 0 && Equals(_valuesData[index], item.Value))
+        if (index >= 0 && EqualityComparer<TValue>.Default.Equals(_valuesData[index], item.Value))
         {
             _keysData.RemoveAt(index);
             _valuesData.RemoveAt(index);
