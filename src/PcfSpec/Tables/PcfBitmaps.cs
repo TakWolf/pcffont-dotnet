@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
+public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, IEquatable<PcfBitmaps>
 {
     private static void SwapBytes(byte[] data, uint scanUnit)
     {
@@ -167,32 +167,36 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable
         return (uint)tableSize;
     }
 
-    private static bool BitmapListEquals(List<List<List<byte>>> objA, List<List<List<byte>>> objB)
+    public bool Equals(PcfBitmaps? other)
     {
-        foreach (var (bitmapA, bitmapB) in objA.Zip(objB))
-        {
-            foreach (var (bitmapRowA, bitmapRowB) in bitmapA.Zip(bitmapB))
-            {
-                if (!bitmapRowA.SequenceEqual(bitmapRowB))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public static bool Equals(PcfBitmaps? objA, PcfBitmaps? objB)
-    {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
+        if (other is null)
         {
             return false;
         }
-        return objA.TableFormat.Value == objB.TableFormat.Value &&
-               BitmapListEquals(objA, objB);
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return TableFormat.Equals(other.TableFormat) &&
+               EqualUtil.ListEquals(this, other);
     }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfBitmaps)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

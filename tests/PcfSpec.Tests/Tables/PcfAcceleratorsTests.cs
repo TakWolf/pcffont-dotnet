@@ -211,7 +211,7 @@ public class PcfAcceleratorsTests
         );
 
         var accelerators2 = accelerators1.Copy();
-        Assert.True(PcfAccelerators.Equals(accelerators1, accelerators2));
+        Assert.Equal(accelerators1, accelerators2);
         Assert.NotSame(accelerators1, accelerators2);
         Assert.NotSame(accelerators1.TableFormat, accelerators2.TableFormat);
         Assert.NotSame(accelerators1.MinBounds, accelerators2.MinBounds);

@@ -2,7 +2,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfAccelerators : IPcfTable
+public class PcfAccelerators : IPcfTable, IEquatable<PcfAccelerators>
 {
     public static PcfAccelerators Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -108,7 +108,7 @@ public class PcfAccelerators : IPcfTable
 
         NoOverlap = MaxOverlap <= MinBounds.LeftSideBearing;
 
-        if (PcfMetric.Equals(MinBounds, MaxBounds))
+        if (MinBounds.Equals(MaxBounds))
         {
             ConstantMetrics = true;
             TerminalFont =
@@ -184,30 +184,49 @@ public class PcfAccelerators : IPcfTable
         return 100;
     }
 
-    public static bool Equals(PcfAccelerators? objA, PcfAccelerators? objB)
+    public bool Equals(PcfAccelerators? other)
     {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
+        if (other is null)
         {
             return false;
         }
-        return objA.TableFormat.Value == objB.TableFormat.Value &&
-               objA.NoOverlap == objB.NoOverlap &&
-               objA.ConstantMetrics == objB.ConstantMetrics &&
-               objA.TerminalFont == objB.TerminalFont &&
-               objA.ConstantWidth == objB.ConstantWidth &&
-               objA.InkInside == objB.InkInside &&
-               objA.InkMetrics == objB.InkMetrics &&
-               objA.DrawRightToLeft == objB.DrawRightToLeft &&
-               objA.FontAscent == objB.FontAscent &&
-               objA.FontDescent == objB.FontDescent &&
-               objA.MaxOverlap == objB.MaxOverlap &&
-               PcfMetric.Equals(objA.MinBounds, objB.MinBounds) &&
-               PcfMetric.Equals(objA.MaxBounds, objB.MaxBounds) &&
-               PcfMetric.Equals(objA.InkMinBounds, objB.InkMinBounds) &&
-               PcfMetric.Equals(objA.InkMaxBounds, objB.InkMaxBounds);
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return TableFormat.Equals(other.TableFormat) &&
+               NoOverlap == other.NoOverlap &&
+               ConstantMetrics == other.ConstantMetrics &&
+               TerminalFont == other.TerminalFont &&
+               ConstantWidth == other.ConstantWidth &&
+               InkInside == other.InkInside &&
+               InkMetrics == other.InkMetrics &&
+               DrawRightToLeft == other.DrawRightToLeft &&
+               FontAscent == other.FontAscent &&
+               FontDescent == other.FontDescent &&
+               MaxOverlap == other.MaxOverlap &&
+               EqualityComparer<PcfMetric>.Default.Equals(MinBounds, other.MinBounds) &&
+               EqualityComparer<PcfMetric>.Default.Equals(MaxBounds, other.MaxBounds) &&
+               EqualityComparer<PcfMetric>.Default.Equals(InkMinBounds, other.InkMinBounds) &&
+               EqualityComparer<PcfMetric>.Default.Equals(InkMaxBounds, other.InkMaxBounds);
     }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfAccelerators)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

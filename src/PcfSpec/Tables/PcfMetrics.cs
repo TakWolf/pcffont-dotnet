@@ -2,7 +2,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfMetrics : List<PcfMetric>, IPcfTable
+public class PcfMetrics : List<PcfMetric>, IPcfTable, IEquatable<PcfMetrics>
 {
     public static PcfMetrics Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -65,29 +65,36 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable
         return (uint)tableSize;
     }
 
-    private static bool MetricListEquals(List<PcfMetric> objA, List<PcfMetric> objB)
+    public bool Equals(PcfMetrics? other)
     {
-        foreach (var (metricA, metricB) in objA.Zip(objB))
-        {
-            if (!PcfMetric.Equals(metricA, metricB))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static bool Equals(PcfMetrics? objA, PcfMetrics? objB)
-    {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
+        if (other is null)
         {
             return false;
         }
-        return objA.TableFormat.Value == objB.TableFormat.Value &&
-               MetricListEquals(objA, objB);
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return TableFormat.Equals(other.TableFormat) &&
+               EqualUtil.ListEquals(this, other);
     }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfMetrics)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

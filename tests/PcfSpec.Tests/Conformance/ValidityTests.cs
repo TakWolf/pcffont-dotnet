@@ -39,7 +39,7 @@ public partial class ValidityTests
                 Assert.Equal(metricX.CharacterWidth, glyph.DeviceWidthX);
                 Assert.Equal(metricX.Dimensions, glyph.Dimensions);
                 Assert.Equal(metricX.Offset, glyph.Offset);
-                Assert.True(PcfMetric.Equals(metricX, metric0));
+                Assert.Equal(metricX, metric0);
 
                 var bitmap0 = pcfFont0.Bitmaps![glyphIndex];
                 var bitmapX = pcfFontX.Bitmaps![glyphIndex];

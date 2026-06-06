@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec;
 
-public class PcfFontBuilder
+public class PcfFontBuilder : IEquatable<PcfFontBuilder>
 {
     public static PcfFontBuilder Modify(PcfFont font)
     {
@@ -191,4 +191,38 @@ public class PcfFontBuilder
     }
 
     public void Save(string path) => Build().Save(path);
+
+    public bool Equals(PcfFontBuilder? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return Config.Equals(other.Config) &&
+               Properties.Equals(other.Properties) &&
+               EqualUtil.ListEquals(Glyphs, other.Glyphs);
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfFontBuilder)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

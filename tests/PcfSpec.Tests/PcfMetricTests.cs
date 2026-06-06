@@ -28,8 +28,8 @@ public class PcfMetricTests
             ascent: 9,
             descent: -5,
             attributes: 1);
-        Assert.True(PcfMetric.Equals(metric1, metric2));
-        Assert.False(PcfMetric.Equals(metric1, metric3));
+        Assert.Equal(metric1, metric2);
+        Assert.NotEqual(metric1, metric3);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class PcfMetricTests
             attributes: 6);
 
         var metric2 = metric1.Copy();
-        Assert.True(PcfMetric.Equals(metric1, metric2));
+        Assert.Equal(metric1, metric2);
         Assert.NotSame(metric1, metric2);
     }
 
@@ -122,20 +122,20 @@ public class PcfMetricTests
                 [0, 0, 0, 0, 0]
             ],
             attributes: 1);
-        Assert.True(PcfMetric.Equals(new PcfMetric(
+        Assert.Equal(new PcfMetric(
             leftSideBearing: 0,
             rightSideBearing: 5,
             characterWidth: 5,
             ascent: 6,
             descent: 2,
-            attributes: 1), glyph.CreateMetric(false)));
-        Assert.True(PcfMetric.Equals(new PcfMetric(
+            attributes: 1), glyph.CreateMetric(false));
+        Assert.Equal(new PcfMetric(
             leftSideBearing: 1,
             rightSideBearing: 4,
             characterWidth: 5,
             ascent: 5,
             descent: 1,
-            attributes: 1), glyph.CreateMetric(true)));
+            attributes: 1), glyph.CreateMetric(true));
     }
 
     [Fact]
@@ -172,20 +172,20 @@ public class PcfMetricTests
                 attributes: 0b_01100001)
         ];
         Assert.Equal(4, CalculateUtil.CalculateMaxOverlap(metrics));
-        Assert.True(PcfMetric.Equals(new PcfMetric(
+        Assert.Equal(new PcfMetric(
             leftSideBearing: -5,
             rightSideBearing: -1,
             characterWidth: 1,
             ascent: -6,
             descent: -9,
-            attributes: 0b_00000001), CalculateUtil.CalculateMinBounds(metrics)));
-        Assert.True(PcfMetric.Equals(new PcfMetric(
+            attributes: 0b_00000001), CalculateUtil.CalculateMinBounds(metrics));
+        Assert.Equal(new PcfMetric(
             leftSideBearing: 7,
             rightSideBearing: 8,
             characterWidth: 7,
             ascent: 9,
             descent: 4,
-            attributes: 0b_11110001), CalculateUtil.CalculateMaxBounds(metrics)));
+            attributes: 0b_11110001), CalculateUtil.CalculateMaxBounds(metrics));
     }
 
     [Fact]
@@ -193,7 +193,7 @@ public class PcfMetricTests
     {
         var metrics = Array.Empty<PcfMetric>();
         Assert.Equal(0, CalculateUtil.CalculateMaxOverlap(metrics));
-        Assert.True(PcfMetric.Equals(new PcfMetric(), CalculateUtil.CalculateMinBounds(metrics)));
-        Assert.True(PcfMetric.Equals(new PcfMetric(), CalculateUtil.CalculateMaxBounds(metrics)));
+        Assert.Equal(new PcfMetric(), CalculateUtil.CalculateMinBounds(metrics));
+        Assert.Equal(new PcfMetric(), CalculateUtil.CalculateMaxBounds(metrics));
     }
 }

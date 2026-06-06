@@ -2,7 +2,7 @@ using PcfSpec.Tables;
 
 namespace PcfSpec;
 
-public class PcfFontConfig
+public class PcfFontConfig : IEquatable<PcfFontConfig>
 {
     public int FontAscent { get; set; }
     public int FontDescent { get; set; }
@@ -50,4 +50,43 @@ public class PcfFontConfig
         msBitFirst: MsBitFirst,
         glyphPadIndex: GlyphPadIndex,
         scanUnitIndex: ScanUnitIndex);
+
+    public bool Equals(PcfFontConfig? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return FontAscent == other.FontAscent &&
+               FontDescent == other.FontDescent &&
+               DefaultChar == other.DefaultChar &&
+               DrawRightToLeft == other.DrawRightToLeft &&
+               MsByteFirst == other.MsByteFirst &&
+               MsBitFirst == other.MsBitFirst &&
+               GlyphPadIndex == other.GlyphPadIndex &&
+               ScanUnitIndex == other.ScanUnitIndex;
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfFontConfig)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

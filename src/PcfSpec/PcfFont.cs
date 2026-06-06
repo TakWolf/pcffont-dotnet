@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using PcfSpec.Tables;
+using PcfSpec.Utils;
 
 namespace PcfSpec;
 
-public class PcfFont : IDictionary<PcfTableType, IPcfTable>
+public class PcfFont : IDictionary<PcfTableType, IPcfTable>, IEquatable<PcfFont>
 {
     private static void CheckTableType(PcfTableType tableType, IPcfTable table)
     {
@@ -209,4 +210,36 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>
         using var stream = File.OpenWrite(path);
         Dump(stream);
     }
+
+    public bool Equals(PcfFont? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return EqualUtil.DictionaryEquals(_dictionary, other._dictionary);
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfFont)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

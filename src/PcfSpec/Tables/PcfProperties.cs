@@ -5,7 +5,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, IList<KeyValuePair<string, PcfPropertyValue>>, IPcfTable
+public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, IList<KeyValuePair<string, PcfPropertyValue>>, IPcfTable, IEquatable<PcfProperties>
 {
     private const string KeyFoundry = "FOUNDRY";
     private const string KeyFamilyName = "FAMILY_NAME";
@@ -550,17 +550,36 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         return (uint)tableSize;
     }
 
-    public static bool Equals(PcfProperties? objA, PcfProperties? objB)
+    public bool Equals(PcfProperties? other)
     {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
+        if (other is null)
         {
             return false;
         }
-        return objA.TableFormat.Value == objB.TableFormat.Value &&
-               objA.SequenceEqual(objB);
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return TableFormat.Equals(other.TableFormat) &&
+               EqualUtil.DictionaryEquals(_dictionary, other._dictionary);
     }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfProperties)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

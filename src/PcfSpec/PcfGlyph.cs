@@ -1,6 +1,8 @@
+using PcfSpec.Utils;
+
 namespace PcfSpec;
 
-public class PcfGlyph
+public class PcfGlyph : IEquatable<PcfGlyph>
 {
     public string Name { get; set; }
     public ushort Encoding { get; set; }
@@ -112,4 +114,45 @@ public class PcfGlyph
 
         return metric;
     }
+
+    public bool Equals(PcfGlyph? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return Name == other.Name &&
+               Encoding == other.Encoding &&
+               ScalableWidth == other.ScalableWidth &&
+               CharacterWidth == other.CharacterWidth &&
+               Width == other.Width &&
+               Height == other.Height &&
+               OffsetX == other.OffsetX &&
+               OffsetY == other.OffsetY &&
+               Attributes == other.Attributes &&
+               EqualUtil.BitmapEquals(Bitmap, other.Bitmap);
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfGlyph)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

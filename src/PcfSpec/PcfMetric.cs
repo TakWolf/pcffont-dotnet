@@ -2,7 +2,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec;
 
-public class PcfMetric
+public class PcfMetric : IEquatable<PcfMetric>
 {
     public static PcfMetric Parse(Stream stream, bool msByteFirst, bool compressed)
     {
@@ -111,21 +111,40 @@ public class PcfMetric
         }
     }
 
-    public static bool Equals(PcfMetric? objA, PcfMetric? objB)
+    public bool Equals(PcfMetric? other)
     {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
+        if (other is null)
         {
             return false;
         }
-        return objA.LeftSideBearing == objB.LeftSideBearing &&
-               objA.RightSideBearing == objB.RightSideBearing &&
-               objA.CharacterWidth == objB.CharacterWidth &&
-               objA.Ascent == objB.Ascent &&
-               objA.Descent == objB.Descent &&
-               objA.Attributes == objB.Attributes;
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return LeftSideBearing == other.LeftSideBearing &&
+               RightSideBearing == other.RightSideBearing &&
+               CharacterWidth == other.CharacterWidth &&
+               Ascent == other.Ascent &&
+               Descent == other.Descent &&
+               Attributes == other.Attributes;
     }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfMetric)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

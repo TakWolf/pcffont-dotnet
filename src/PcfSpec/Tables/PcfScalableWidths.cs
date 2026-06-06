@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfScalableWidths : List<int>, IPcfTable
+public class PcfScalableWidths : List<int>, IPcfTable, IEquatable<PcfScalableWidths>
 {
     public static PcfScalableWidths Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -42,17 +42,36 @@ public class PcfScalableWidths : List<int>, IPcfTable
         return (uint)tableSize;
     }
 
-    public static bool Equals(PcfScalableWidths? objA, PcfScalableWidths? objB)
+    public bool Equals(PcfScalableWidths? other)
     {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
+        if (other is null)
         {
             return false;
         }
-        return objA.TableFormat.Value == objB.TableFormat.Value &&
-               objA.SequenceEqual(objB);
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return TableFormat.Equals(other.TableFormat) &&
+               EqualUtil.ListEquals(this, other);
     }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfScalableWidths)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

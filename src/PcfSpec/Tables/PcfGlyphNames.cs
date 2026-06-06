@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfGlyphNames : List<string>, IPcfTable
+public class PcfGlyphNames : List<string>, IPcfTable, IEquatable<PcfGlyphNames>
 {
     public static PcfGlyphNames Parse(Stream stream, PcfHeader header, PcfFont font)
     {
@@ -64,17 +64,36 @@ public class PcfGlyphNames : List<string>, IPcfTable
         return (uint)tableSize;
     }
 
-    public static bool Equals(PcfGlyphNames? objA, PcfGlyphNames? objB)
+    public bool Equals(PcfGlyphNames? other)
     {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
+        if (other is null)
         {
             return false;
         }
-        return objA.TableFormat.Value == objB.TableFormat.Value &&
-               objA.SequenceEqual(objB);
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return TableFormat.Equals(other.TableFormat) &&
+               EqualUtil.ListEquals(this, other);
     }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfGlyphNames)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

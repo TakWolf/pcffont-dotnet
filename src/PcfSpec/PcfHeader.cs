@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec;
 
-public class PcfHeader : IComparable<PcfHeader>
+public class PcfHeader : IComparable<PcfHeader>, IEquatable<PcfHeader>
 {
     private static readonly byte[] FileVersion = "\u0001fcp"u8.ToArray();
 
@@ -78,4 +78,39 @@ public class PcfHeader : IComparable<PcfHeader>
     }
 
     int IComparable<PcfHeader>.CompareTo(PcfHeader? other) => other is null ? 1 : TableType.CompareTo(other.TableType);
+
+    public bool Equals(PcfHeader? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return TableType == other.TableType &&
+               TableFormat.Equals(other.TableFormat) &&
+               TableSize == other.TableSize &&
+               TableOffset == other.TableOffset;
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfHeader)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

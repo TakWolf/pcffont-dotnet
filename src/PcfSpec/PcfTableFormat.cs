@@ -1,6 +1,6 @@
 namespace PcfSpec;
 
-public class PcfTableFormat
+public class PcfTableFormat : IEquatable<PcfTableFormat>
 {
     private const uint DefaultValue = 0b_0000_0000_0000;
     private const uint FlagInkBoundsOrCompressedMetrics = 0b_0001_0000_0000;
@@ -121,4 +121,40 @@ public class PcfTableFormat
         InkBoundsOrCompressedMetrics,
         GlyphPadIndex,
         ScanUnitIndex);
+
+    public bool Equals(PcfTableFormat? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return MsByteFirst == other.MsByteFirst &&
+               MsBitFirst == other.MsBitFirst &&
+               InkBoundsOrCompressedMetrics == other.InkBoundsOrCompressedMetrics &&
+               GlyphPadIndex == other.GlyphPadIndex &&
+               ScanUnitIndex == other.ScanUnitIndex;
+    }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfTableFormat)other);
+    }
+
+    public override int GetHashCode() => 0;
 }

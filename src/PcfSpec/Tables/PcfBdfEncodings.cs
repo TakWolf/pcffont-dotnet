@@ -3,7 +3,7 @@ using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
 
-public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
+public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, IEquatable<PcfBdfEncodings>
 {
     public const ushort NoEncoding = ushort.MaxValue;
     public const ushort NoGlyphIndex = ushort.MaxValue;
@@ -198,18 +198,37 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable
         return (uint)tableSize;
     }
 
-    public static bool Equals(PcfBdfEncodings? objA, PcfBdfEncodings? objB)
+    public bool Equals(PcfBdfEncodings? other)
     {
-        if (objA == objB)
-        {
-            return true;
-        }
-        if (objA is null || objB is null)
+        if (other is null)
         {
             return false;
         }
-        return objA.TableFormat.Value == objB.TableFormat.Value &&
-               objA.DefaultChar == objB.DefaultChar &&
-               objA.SequenceEqual(objB);
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        return TableFormat.Equals(other.TableFormat) &&
+               DefaultChar == other.DefaultChar &&
+               EqualUtil.DictionaryEquals(_dictionary, other._dictionary);
     }
+
+    public override bool Equals(object? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other.GetType() != GetType())
+        {
+            return false;
+        }
+        return Equals((PcfBdfEncodings)other);
+    }
+
+    public override int GetHashCode() => 0;
 }
