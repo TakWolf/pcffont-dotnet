@@ -481,7 +481,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         foreach (var (key, part) in XlfdKeysOrder.Zip(parts))
         {
             PcfPropertyValue? value;
-            if ("".Equals(part))
+            if (part is "")
             {
                 value = null;
             }
