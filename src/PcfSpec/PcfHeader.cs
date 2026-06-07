@@ -77,7 +77,7 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
         return TableFormat;
     }
 
-    int IComparable<PcfHeader>.CompareTo(PcfHeader? other) => other is null ? 1 : TableType.CompareTo(other.TableType);
+    public int CompareTo(PcfHeader? other) => other is null ? 1 : TableType.CompareTo(other.TableType);
 
     public PcfHeader Copy() => new(
         TableType,
