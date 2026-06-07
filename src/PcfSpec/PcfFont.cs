@@ -40,6 +40,28 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>
 
     private readonly SortedDictionary<PcfTableType, IPcfTable> _dictionary = new();
 
+    public PcfFont(
+        PcfProperties? properties = null,
+        PcfAccelerators? accelerators = null,
+        PcfMetrics? metrics = null,
+        PcfBitmaps? bitmaps = null,
+        PcfMetrics? inkMetrics = null,
+        PcfBdfEncodings? bdfEncodings = null,
+        PcfScalableWidths? scalableWidths = null,
+        PcfGlyphNames? glyphNames = null,
+        PcfAccelerators? bdfAccelerators = null)
+    {
+        Properties = properties;
+        Accelerators = accelerators;
+        Metrics = metrics;
+        Bitmaps = bitmaps;
+        InkMetrics = inkMetrics;
+        BdfEncodings = bdfEncodings;
+        ScalableWidths = scalableWidths;
+        GlyphNames = glyphNames;
+        BdfAccelerators = bdfAccelerators;
+    }
+
     public int Count => _dictionary.Count;
 
     bool ICollection<KeyValuePair<PcfTableType, IPcfTable>>.IsReadOnly => false;

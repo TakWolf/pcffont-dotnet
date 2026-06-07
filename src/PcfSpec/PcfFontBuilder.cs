@@ -178,18 +178,16 @@ public class PcfFontBuilder
             inkMetrics.TableFormat.CompressedMetrics = accelerators.InkMinBounds!.Compressible && accelerators.InkMaxBounds!.Compressible;
         }
 
-        return new PcfFont
-        {
-            Properties = properties,
-            Accelerators = accelerators,
-            Metrics = metrics,
-            Bitmaps = bitmaps,
-            InkMetrics = inkMetrics,
-            BdfEncodings = bdfEncodings,
-            ScalableWidths = scalableWidths,
-            GlyphNames = glyphNames,
-            BdfAccelerators = bdfAccelerators,
-        };
+        return new PcfFont(
+            properties,
+            accelerators,
+            metrics,
+            bitmaps,
+            inkMetrics,
+            bdfEncodings,
+            scalableWidths,
+            glyphNames,
+            bdfAccelerators);
     }
 
     public void Save(string path) => Build().Save(path);
