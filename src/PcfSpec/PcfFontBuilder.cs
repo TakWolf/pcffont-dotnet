@@ -27,7 +27,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
 
         builder.Properties = properties;
 
-        var glyphIndexToEncoding = new Dictionary<ushort, ushort>();
+        var glyphIndexToEncoding = new Dictionary<ushort, ushort>(bdfEncodings.Count);
         foreach (var (encoding, glyphIndex) in bdfEncodings)
         {
             glyphIndexToEncoding[glyphIndex] = encoding;
