@@ -5,10 +5,26 @@ namespace PcfSpec.Utils;
 
 internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IList<KeyValuePair<TKey, TValue>>
 {
-    private readonly List<TKey> _keysData = [];
-    private readonly List<TValue> _valuesData = [];
+    private readonly List<TKey> _keysData;
+    private readonly List<TValue> _valuesData;
     private KeyCollection? _keys;
     private ValueCollection? _values;
+
+    public OrderedDictionary() : this(0) { }
+
+    public OrderedDictionary(int capacity)
+    {
+        _keysData = new List<TKey>(capacity);
+        _valuesData = new List<TValue>(capacity);
+    }
+
+    public OrderedDictionary(IDictionary<TKey, TValue> dictionary) : this(dictionary.Count)
+    {
+        foreach (var (key, value) in dictionary)
+        {
+            this[key] = value;
+        }
+    }
 
     public int Count => _keysData.Count;
 

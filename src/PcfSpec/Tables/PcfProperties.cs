@@ -175,7 +175,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         return new PcfProperties(tableFormat, properties);
     }
 
-    private readonly OrderedDictionary<string, PcfPropertyValue> _dictionary = new();
+    private readonly OrderedDictionary<string, PcfPropertyValue> _properties;
 
     public PcfTableFormat TableFormat { get; set; }
 
@@ -184,6 +184,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         IDictionary<string, PcfPropertyValue>? properties = null)
     {
         TableFormat = tableFormat ?? new PcfTableFormat();
+        _properties = new OrderedDictionary<string, PcfPropertyValue>(properties?.Count ?? 0);
         if (properties is not null)
         {
             foreach (var (key, value) in properties)
@@ -193,58 +194,58 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         }
     }
 
-    public int Count => _dictionary.Count;
+    public int Count => _properties.Count;
 
     bool ICollection<KeyValuePair<string, PcfPropertyValue>>.IsReadOnly => false;
 
-    public ICollection<string> Keys => _dictionary.Keys;
+    public ICollection<string> Keys => _properties.Keys;
 
-    public ICollection<PcfPropertyValue> Values => _dictionary.Values;
+    public ICollection<PcfPropertyValue> Values => _properties.Values;
 
-    public IEnumerator<KeyValuePair<string, PcfPropertyValue>> GetEnumerator() => _dictionary.GetEnumerator();
+    public IEnumerator<KeyValuePair<string, PcfPropertyValue>> GetEnumerator() => _properties.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public PcfPropertyValue this[string key]
     {
-        get => _dictionary[key.ToUpper()];
+        get => _properties[key.ToUpper()];
         set
         {
             key = key.ToUpper();
             CheckKey(key);
             CheckValue(key, value);
-            _dictionary[key] = value;
+            _properties[key] = value;
         }
     }
 
     KeyValuePair<string, PcfPropertyValue> IList<KeyValuePair<string, PcfPropertyValue>>.this[int index]
     {
-        get => (_dictionary as IList<KeyValuePair<string, PcfPropertyValue>>)[index];
+        get => (_properties as IList<KeyValuePair<string, PcfPropertyValue>>)[index];
         set
         {
             var key = value.Key.ToUpper();
             CheckKey(key);
             CheckValue(key, value.Value);
-            (_dictionary as IList<KeyValuePair<string, PcfPropertyValue>>)[index] = new KeyValuePair<string, PcfPropertyValue>(key, value.Value);
+            (_properties as IList<KeyValuePair<string, PcfPropertyValue>>)[index] = new KeyValuePair<string, PcfPropertyValue>(key, value.Value);
         }
     }
 
-    public bool TryGetValue(string key, out PcfPropertyValue value) => _dictionary.TryGetValue(key.ToUpper(), out value);
+    public bool TryGetValue(string key, out PcfPropertyValue value) => _properties.TryGetValue(key.ToUpper(), out value);
 
-    public bool ContainsKey(string key) => _dictionary.ContainsKey(key.ToUpper());
+    public bool ContainsKey(string key) => _properties.ContainsKey(key.ToUpper());
 
-    public bool ContainsValue(PcfPropertyValue value) => _dictionary.ContainsValue(value);
+    public bool ContainsValue(PcfPropertyValue value) => _properties.ContainsValue(value);
 
-    bool ICollection<KeyValuePair<string, PcfPropertyValue>>.Contains(KeyValuePair<string, PcfPropertyValue> item) => (_dictionary as ICollection<KeyValuePair<string, PcfPropertyValue>>).Contains(new KeyValuePair<string, PcfPropertyValue>(item.Key.ToUpper(), item.Value));
+    bool ICollection<KeyValuePair<string, PcfPropertyValue>>.Contains(KeyValuePair<string, PcfPropertyValue> item) => (_properties as ICollection<KeyValuePair<string, PcfPropertyValue>>).Contains(new KeyValuePair<string, PcfPropertyValue>(item.Key.ToUpper(), item.Value));
 
-    int IList<KeyValuePair<string, PcfPropertyValue>>.IndexOf(KeyValuePair<string, PcfPropertyValue> item) => (_dictionary as IList<KeyValuePair<string, PcfPropertyValue>>).IndexOf(new KeyValuePair<string, PcfPropertyValue>(item.Key.ToUpper(), item.Value));
+    int IList<KeyValuePair<string, PcfPropertyValue>>.IndexOf(KeyValuePair<string, PcfPropertyValue> item) => (_properties as IList<KeyValuePair<string, PcfPropertyValue>>).IndexOf(new KeyValuePair<string, PcfPropertyValue>(item.Key.ToUpper(), item.Value));
 
     public void Add(string key, PcfPropertyValue value)
     {
         key = key.ToUpper();
         CheckKey(key);
         CheckValue(key, value);
-        _dictionary.Add(key, value);
+        _properties.Add(key, value);
     }
 
     void ICollection<KeyValuePair<string, PcfPropertyValue>>.Add(KeyValuePair<string, PcfPropertyValue> item)
@@ -252,7 +253,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         var key = item.Key.ToUpper();
         CheckKey(key);
         CheckValue(key, item.Value);
-        (_dictionary as ICollection<KeyValuePair<string, PcfPropertyValue>>).Add(new KeyValuePair<string, PcfPropertyValue>(key, item.Value));
+        (_properties as ICollection<KeyValuePair<string, PcfPropertyValue>>).Add(new KeyValuePair<string, PcfPropertyValue>(key, item.Value));
     }
 
     void IList<KeyValuePair<string, PcfPropertyValue>>.Insert(int index, KeyValuePair<string, PcfPropertyValue> item)
@@ -260,18 +261,18 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         var key = item.Key.ToUpper();
         CheckKey(key);
         CheckValue(key, item.Value);
-        (_dictionary as IList<KeyValuePair<string, PcfPropertyValue>>).Insert(index, new KeyValuePair<string, PcfPropertyValue>(key, item.Value));
+        (_properties as IList<KeyValuePair<string, PcfPropertyValue>>).Insert(index, new KeyValuePair<string, PcfPropertyValue>(key, item.Value));
     }
 
-    public bool Remove(string key) => _dictionary.Remove(key.ToUpper());
+    public bool Remove(string key) => _properties.Remove(key.ToUpper());
 
-    bool ICollection<KeyValuePair<string, PcfPropertyValue>>.Remove(KeyValuePair<string, PcfPropertyValue> item) => (_dictionary as ICollection<KeyValuePair<string, PcfPropertyValue>>).Remove(new KeyValuePair<string, PcfPropertyValue>(item.Key.ToUpper(), item.Value));
+    bool ICollection<KeyValuePair<string, PcfPropertyValue>>.Remove(KeyValuePair<string, PcfPropertyValue> item) => (_properties as ICollection<KeyValuePair<string, PcfPropertyValue>>).Remove(new KeyValuePair<string, PcfPropertyValue>(item.Key.ToUpper(), item.Value));
 
-    void IList<KeyValuePair<string, PcfPropertyValue>>.RemoveAt(int index) => (_dictionary as IList<KeyValuePair<string, PcfPropertyValue>>).RemoveAt(index);
+    void IList<KeyValuePair<string, PcfPropertyValue>>.RemoveAt(int index) => (_properties as IList<KeyValuePair<string, PcfPropertyValue>>).RemoveAt(index);
 
-    public void Clear() => _dictionary.Clear();
+    public void Clear() => _properties.Clear();
 
-    void ICollection<KeyValuePair<string, PcfPropertyValue>>.CopyTo(KeyValuePair<string, PcfPropertyValue>[] array, int arrayIndex) => (_dictionary as ICollection<KeyValuePair<string, PcfPropertyValue>>).CopyTo(array, arrayIndex);
+    void ICollection<KeyValuePair<string, PcfPropertyValue>>.CopyTo(KeyValuePair<string, PcfPropertyValue>[] array, int arrayIndex) => (_properties as ICollection<KeyValuePair<string, PcfPropertyValue>>).CopyTo(array, arrayIndex);
 
     public PcfPropertyValue? GetValue(string key) => TryGetValue(key, out var value) ? value : (PcfPropertyValue?)null;
 
@@ -550,9 +551,9 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         return (uint)tableSize;
     }
 
-    public PcfProperties Copy() => new(TableFormat, _dictionary);
+    public PcfProperties Copy() => new(TableFormat, _properties);
 
-    public PcfProperties DeepCopy() => new(TableFormat.DeepCopy(), _dictionary);
+    public PcfProperties DeepCopy() => new(TableFormat.DeepCopy(), _properties);
 
     public bool Equals(PcfProperties? other)
     {
@@ -565,7 +566,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
             return true;
         }
         return TableFormat.Equals(other.TableFormat) &&
-               EqualUtil.DictionaryEquals(_dictionary, other._dictionary);
+               EqualUtil.DictionaryEquals(_properties, other._properties);
     }
 
     public override bool Equals(object? other)
