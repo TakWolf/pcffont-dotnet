@@ -33,8 +33,11 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
         var bitmapsStart = stream.Position;
 
         var bitmaps = new List<List<List<byte>>>((int)glyphsCount);
-        foreach (var (bitmapOffset, metric) in bitmapOffsets.Zip(font.Metrics!))
+        for (var glyphIndex = 0; glyphIndex < glyphsCount; glyphIndex++)
         {
+            var bitmapOffset = bitmapOffsets[glyphIndex];
+            var metric = font.Metrics![glyphIndex];
+
             var bitmapRowSize = (int)((metric.Width + tableFormat.GlyphPad * 8 - 1) / (tableFormat.GlyphPad * 8) * tableFormat.GlyphPad);
 
             stream.Seek(bitmapsStart + bitmapOffset, SeekOrigin.Begin);
@@ -101,8 +104,11 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
         var bitmapOffsets = new List<uint>((int)glyphsCount);
         var bitmapsSizeConfigs = new uint[4];
         stream.Seek(bitmapsStart, SeekOrigin.Begin);
-        foreach (var (bitmap, metric) in this.Zip(font.Metrics!))
+        for (var glyphIndex = 0; glyphIndex < glyphsCount; glyphIndex++)
         {
+            var bitmap = this[glyphIndex];
+            var metric = font.Metrics![glyphIndex];
+
             for (var glyphPadIndex = 0; glyphPadIndex < PcfTableFormat.GlyphPadOptions.Length; glyphPadIndex++)
             {
                 var glyphPad = PcfTableFormat.GlyphPadOptions[glyphPadIndex];

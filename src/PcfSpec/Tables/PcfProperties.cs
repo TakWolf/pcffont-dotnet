@@ -481,8 +481,10 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         {
             throw new PcfXlfdException("Must be 14 '-'.");
         }
-        foreach (var (key, part) in XlfdKeysOrder.Zip(parts))
+        for (var i = 0; i < XlfdKeysOrder.Length; i++)
         {
+            var key = XlfdKeysOrder[i];
+            var part = parts[i];
             PcfPropertyValue? value;
             if (part is "")
             {

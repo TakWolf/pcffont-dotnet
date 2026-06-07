@@ -40,9 +40,9 @@ internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ILis
 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
     {
-        foreach (var (key, value) in _keysData.Zip(_valuesData))
+        for (var i = 0; i < _keysData.Count; i++)
         {
-            yield return new KeyValuePair<TKey, TValue>(key, value);
+            yield return new KeyValuePair<TKey, TValue>(_keysData[i], _valuesData[i]);
         }
     }
 
