@@ -46,7 +46,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         return new PcfBdfEncodings(tableFormat, defaultChar, encodings);
     }
 
-    private readonly SortedDictionary<ushort, ushort> _dictionary = new();
+    private readonly SortedDictionary<ushort, ushort> _encodings = new();
 
     public PcfTableFormat TableFormat { get; set; }
     public ushort DefaultChar { get; set; }
@@ -67,35 +67,35 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         }
     }
 
-    public int Count => _dictionary.Count;
+    public int Count => _encodings.Count;
 
     bool ICollection<KeyValuePair<ushort, ushort>>.IsReadOnly => false;
 
-    public ICollection<ushort> Keys => _dictionary.Keys;
+    public ICollection<ushort> Keys => _encodings.Keys;
 
-    public ICollection<ushort> Values => _dictionary.Values;
+    public ICollection<ushort> Values => _encodings.Values;
 
-    public IEnumerator<KeyValuePair<ushort, ushort>> GetEnumerator() => _dictionary.GetEnumerator();
+    public IEnumerator<KeyValuePair<ushort, ushort>> GetEnumerator() => _encodings.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public ushort this[ushort key]
     {
-        get => _dictionary[key];
+        get => _encodings[key];
         set
         {
             if (value == NoGlyphIndex)
             {
-                _dictionary.Remove(key);
+                _encodings.Remove(key);
                 return;
             }
-            _dictionary[key] = value;
+            _encodings[key] = value;
         }
     }
 
     public bool TryGetValue(ushort key, out ushort value)
     {
-        var found = _dictionary.TryGetValue(key, out value);
+        var found = _encodings.TryGetValue(key, out value);
         if (!found)
         {
             value = NoGlyphIndex;
@@ -103,37 +103,37 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         return found;
     }
 
-    public bool ContainsKey(ushort key) => _dictionary.ContainsKey(key);
+    public bool ContainsKey(ushort key) => _encodings.ContainsKey(key);
 
-    public bool ContainsValue(ushort value) => _dictionary.ContainsValue(value);
+    public bool ContainsValue(ushort value) => _encodings.ContainsValue(value);
 
-    bool ICollection<KeyValuePair<ushort, ushort>>.Contains(KeyValuePair<ushort, ushort> item) => (_dictionary as ICollection<KeyValuePair<ushort, ushort>>).Contains(item);
+    bool ICollection<KeyValuePair<ushort, ushort>>.Contains(KeyValuePair<ushort, ushort> item) => (_encodings as ICollection<KeyValuePair<ushort, ushort>>).Contains(item);
 
     public void Add(ushort key, ushort value)
     {
-        if (value == NoGlyphIndex && !_dictionary.ContainsKey(key))
+        if (value == NoGlyphIndex && !_encodings.ContainsKey(key))
         {
             return;
         }
-        _dictionary.Add(key, value);
+        _encodings.Add(key, value);
     }
 
     void ICollection<KeyValuePair<ushort, ushort>>.Add(KeyValuePair<ushort, ushort> item)
     {
-        if (item.Value == NoGlyphIndex && !_dictionary.ContainsKey(item.Key))
+        if (item.Value == NoGlyphIndex && !_encodings.ContainsKey(item.Key))
         {
             return;
         }
-        (_dictionary as ICollection<KeyValuePair<ushort, ushort>>).Add(item);
+        (_encodings as ICollection<KeyValuePair<ushort, ushort>>).Add(item);
     }
 
-    public bool Remove(ushort key) => _dictionary.Remove(key);
+    public bool Remove(ushort key) => _encodings.Remove(key);
 
-    bool ICollection<KeyValuePair<ushort, ushort>>.Remove(KeyValuePair<ushort, ushort> item) => (_dictionary as ICollection<KeyValuePair<ushort, ushort>>).Remove(item);
+    bool ICollection<KeyValuePair<ushort, ushort>>.Remove(KeyValuePair<ushort, ushort> item) => (_encodings as ICollection<KeyValuePair<ushort, ushort>>).Remove(item);
 
-    public void Clear() => _dictionary.Clear();
+    public void Clear() => _encodings.Clear();
 
-    void ICollection<KeyValuePair<ushort, ushort>>.CopyTo(KeyValuePair<ushort, ushort>[] array, int arrayIndex) => (_dictionary as ICollection<KeyValuePair<ushort, ushort>>).CopyTo(array, arrayIndex);
+    void ICollection<KeyValuePair<ushort, ushort>>.CopyTo(KeyValuePair<ushort, ushort>[] array, int arrayIndex) => (_encodings as ICollection<KeyValuePair<ushort, ushort>>).CopyTo(array, arrayIndex);
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
@@ -201,12 +201,12 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
     public PcfBdfEncodings Copy() => new(
         TableFormat,
         DefaultChar,
-        _dictionary);
+        _encodings);
 
     public PcfBdfEncodings DeepCopy() => new(
         TableFormat.DeepCopy(),
         DefaultChar,
-        _dictionary);
+        _encodings);
 
     public bool Equals(PcfBdfEncodings? other)
     {
@@ -220,7 +220,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         }
         return TableFormat.Equals(other.TableFormat) &&
                DefaultChar == other.DefaultChar &&
-               EqualUtil.DictionaryEquals(_dictionary, other._dictionary);
+               EqualUtil.DictionaryEquals(_encodings, other._encodings);
     }
 
     public override bool Equals(object? other)
