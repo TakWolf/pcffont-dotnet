@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using PcfSpec.Errors;
 using PcfSpec.Utils;
 
@@ -5,12 +6,12 @@ namespace PcfSpec;
 
 public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatable<PcfHeader>
 {
-    private static readonly byte[] FileVersion = "\u0001fcp"u8.ToArray();
+    private static readonly uint FileVersion = BinaryPrimitives.ReadUInt32LittleEndian("\u0001fcp"u8);
 
     public static List<PcfHeader> Parse(Stream stream)
     {
         stream.Seek(0, SeekOrigin.Begin);
-        if (!FileVersion.SequenceEqual(stream.ReadBytes(4)))
+        if (stream.ReadUInt32() != FileVersion)
         {
             throw new PcfParseException("Data format not support.");
         }
@@ -37,7 +38,7 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
     public static void Dump(Stream stream, List<PcfHeader> headers)
     {
         stream.Seek(0, SeekOrigin.Begin);
-        stream.WriteBytes(FileVersion);
+        stream.WriteUInt32(FileVersion);
 
         stream.WriteUInt32((uint)headers.Count);
         foreach (var header in headers)
