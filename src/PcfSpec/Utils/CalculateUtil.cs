@@ -5,7 +5,16 @@ namespace PcfSpec.Utils;
 
 internal static class CalculateUtil
 {
-    public static int CalculateMaxOverlap(IList<PcfMetric> metrics) => metrics.Count > 0 ? metrics.Max(metric => metric.RightSideBearing - metric.CharacterWidth) : 0;
+    public static int CalculateMaxOverlap(IList<PcfMetric> metrics)
+    {
+        int? maxOverlap = null;
+        foreach (var metric in metrics)
+        {
+            var overlap = metric.RightSideBearing - metric.CharacterWidth;
+            maxOverlap = maxOverlap is null ? overlap : Math.Max(maxOverlap.Value, overlap);
+        }
+        return maxOverlap ?? 0;
+    }
 
     public static PcfMetric CalculateMinBounds(IList<PcfMetric> metrics)
     {
