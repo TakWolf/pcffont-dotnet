@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using System.Text.RegularExpressions;
 using PcfSpec.Errors;
 using PcfSpec.Utils;
@@ -450,7 +451,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
 
     public void GenerateXlfd()
     {
-        List<string> parts = [""];
+        var xlfd = new StringBuilder();
         foreach (var key in XlfdKeysOrder)
         {
             var value = GetValue(key)?.ToString() ?? "";
@@ -458,9 +459,10 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
             {
                 CheckXlfdStringValue(key, value);
             }
-            parts.Add(value);
+            xlfd.Append('-');
+            xlfd.Append(value);
         }
-        Font = string.Join("-", parts);
+        Font = xlfd.ToString();
     }
 
     public void UpdateByXlfd()
