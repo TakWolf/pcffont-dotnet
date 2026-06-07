@@ -21,7 +21,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         var glyphsCount = (maxByte2 - minByte2 + 1) * (maxByte1 - minByte1 + 1);
         var glyphIndices = stream.ReadUInt16Array(glyphsCount, tableFormat.MsByteFirst);
 
-        var encodings = new Dictionary<ushort, ushort>();
+        var encodings = new Dictionary<ushort, ushort>(glyphsCount);
         if (minByte1 == 0 && maxByte1 == 0)
         {
             for (var encoding = (int)minByte2; encoding <= maxByte2; encoding++)
