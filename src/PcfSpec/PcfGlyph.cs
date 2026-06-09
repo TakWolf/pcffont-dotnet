@@ -65,7 +65,7 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
         // Top
         foreach (var bitmapRow in Bitmap)
         {
-            if (bitmapRow.Any(color => color != 0))
+            if (bitmapRow.Any(pixel => pixel != 0))
             {
                 break;
             }
@@ -85,7 +85,7 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
         for (var i = Bitmap.Count - 1; i >= 0; i--)
         {
             var bitmapRow = Bitmap[i];
-            if (bitmapRow.Any(color => color != 0))
+            if (bitmapRow.Any(pixel => pixel != 0))
             {
                 break;
             }
