@@ -95,12 +95,12 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
 
     public bool TryGetValue(ushort key, out ushort value)
     {
-        var found = _encodings.TryGetValue(key, out value);
-        if (!found)
+        if (_encodings.TryGetValue(key, out value))
         {
-            value = NoGlyphIndex;
+            return true;
         }
-        return found;
+        value = NoGlyphIndex;
+        return false;
     }
 
     public bool ContainsKey(ushort key) => _encodings.ContainsKey(key);
@@ -109,23 +109,9 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
 
     bool ICollection<KeyValuePair<ushort, ushort>>.Contains(KeyValuePair<ushort, ushort> item) => (_encodings as ICollection<KeyValuePair<ushort, ushort>>).Contains(item);
 
-    public void Add(ushort key, ushort value)
-    {
-        if (value == NoGlyphIndex && !_encodings.ContainsKey(key))
-        {
-            return;
-        }
-        _encodings.Add(key, value);
-    }
+    public void Add(ushort key, ushort value) => this[key] = value;
 
-    void ICollection<KeyValuePair<ushort, ushort>>.Add(KeyValuePair<ushort, ushort> item)
-    {
-        if (item.Value == NoGlyphIndex && !_encodings.ContainsKey(item.Key))
-        {
-            return;
-        }
-        (_encodings as ICollection<KeyValuePair<ushort, ushort>>).Add(item);
-    }
+    void ICollection<KeyValuePair<ushort, ushort>>.Add(KeyValuePair<ushort, ushort> item) => this[item.Key] = item.Value;
 
     public bool Remove(ushort key) => _encodings.Remove(key);
 
