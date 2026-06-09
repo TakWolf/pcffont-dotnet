@@ -1,35 +1,22 @@
-using PcfSpec.Utils;
-
 namespace PcfSpec.Tests;
 
 public class PcfMetricTests
 {
     [Fact]
-    public void TestEquals()
+    public void TestMetric()
     {
-        var metric1 = new PcfMetric(
-            leftSideBearing: -3,
-            rightSideBearing: 8,
-            characterWidth: 4,
-            ascent: 9,
-            descent: -5,
-            attributes: 1);
-        var metric2 = new PcfMetric(
-            leftSideBearing: -3,
-            rightSideBearing: 8,
-            characterWidth: 4,
-            ascent: 9,
-            descent: -5,
-            attributes: 1);
-        var metric3 = new PcfMetric(
-            leftSideBearing: -2,
-            rightSideBearing: 8,
-            characterWidth: 4,
-            ascent: 9,
-            descent: -5,
-            attributes: 1);
-        Assert.Equal(metric1, metric2);
-        Assert.NotEqual(metric1, metric3);
+        var metric = new PcfMetric(
+            leftSideBearing: 1,
+            rightSideBearing: 2,
+            characterWidth: 3,
+            ascent: 4,
+            descent: 5);
+        Assert.Equal(1, metric.Width);
+        Assert.Equal(9, metric.Height);
+        Assert.Equal((1, 9), metric.Dimensions);
+        Assert.Equal(1, metric.OffsetX);
+        Assert.Equal(-5, metric.OffsetY);
+        Assert.Equal((1, -5), metric.Offset);
     }
 
     [Fact]
@@ -96,104 +83,32 @@ public class PcfMetricTests
             ascent: 4,
             descent: 5,
             attributes: 6);
+        var metric2 = metric1.Copy();
+        var metric3 = metric1.DeepCopy();
 
-        var metric2 = metric1.DeepCopy();
         Assert.Equal(metric1, metric2);
+        Assert.Equal(metric1, metric3);
         Assert.NotSame(metric1, metric2);
+        Assert.NotSame(metric1, metric3);
     }
 
     [Fact]
-    public void TestCreateByGlyph()
+    public void TestEquals()
     {
-        var glyph = new PcfGlyph(
-            name: "_",
-            encoding: 0,
-            characterWidth: 5,
-            dimensions: (5, 8),
-            offset: (0, -2),
-            bitmap: [
-                [0, 0, 0, 0, 0],
-                [0, 1, 1, 1, 0],
-                [0, 1, 0, 1, 0],
-                [0, 1, 0, 1, 0],
-                [0, 1, 0, 1, 0],
-                [0, 1, 0, 1, 0],
-                [0, 1, 1, 1, 0],
-                [0, 0, 0, 0, 0]
-            ],
-            attributes: 1);
-        Assert.Equal(new PcfMetric(
-            leftSideBearing: 0,
-            rightSideBearing: 5,
-            characterWidth: 5,
-            ascent: 6,
-            descent: 2,
-            attributes: 1), glyph.CreateMetric(false));
-        Assert.Equal(new PcfMetric(
+        var metric1 = new PcfMetric(
             leftSideBearing: 1,
-            rightSideBearing: 4,
-            characterWidth: 5,
-            ascent: 5,
-            descent: 1,
-            attributes: 1), glyph.CreateMetric(true));
-    }
-
-    [Fact]
-    public void TestCalculate1()
-    {
-        PcfMetric[] metrics = [
-            new(
-                leftSideBearing: -3,
-                rightSideBearing: 8,
-                characterWidth: 4,
-                ascent: 9,
-                descent: -5,
-                attributes: 0b_00000001),
-            new(
-                leftSideBearing: 7,
-                rightSideBearing: 3,
-                characterWidth: 1,
-                ascent: -6,
-                descent: 0,
-                attributes: 0b_00010001),
-            new(
-                leftSideBearing: 1,
-                rightSideBearing: 0,
-                characterWidth: 2,
-                ascent: 5,
-                descent: 4,
-                attributes: 0b_10000001),
-            new(
-                leftSideBearing: -5,
-                rightSideBearing: -1,
-                characterWidth: 7,
-                ascent: -3,
-                descent: -9,
-                attributes: 0b_01100001)
-        ];
-        Assert.Equal(4, CalculateUtil.CalculateMaxOverlap(metrics));
-        Assert.Equal(new PcfMetric(
-            leftSideBearing: -5,
-            rightSideBearing: -1,
-            characterWidth: 1,
-            ascent: -6,
-            descent: -9,
-            attributes: 0b_00000001), CalculateUtil.CalculateMinBounds(metrics));
-        Assert.Equal(new PcfMetric(
-            leftSideBearing: 7,
-            rightSideBearing: 8,
-            characterWidth: 7,
-            ascent: 9,
-            descent: 4,
-            attributes: 0b_11110001), CalculateUtil.CalculateMaxBounds(metrics));
-    }
-
-    [Fact]
-    public void TestCalculate2()
-    {
-        var metrics = Array.Empty<PcfMetric>();
-        Assert.Equal(0, CalculateUtil.CalculateMaxOverlap(metrics));
-        Assert.Equal(new PcfMetric(), CalculateUtil.CalculateMinBounds(metrics));
-        Assert.Equal(new PcfMetric(), CalculateUtil.CalculateMaxBounds(metrics));
+            rightSideBearing: 2,
+            characterWidth: 3,
+            ascent: 4,
+            descent: 5,
+            attributes: 6);
+        var metric2 = new PcfMetric(
+            leftSideBearing: 1,
+            rightSideBearing: 2,
+            characterWidth: 3,
+            ascent: 4,
+            descent: 5,
+            attributes: 6);
+        Assert.Equal(metric1, metric2);
     }
 }

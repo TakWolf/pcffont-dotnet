@@ -5,7 +5,7 @@ namespace PcfSpec.Tests.Tables;
 public class PcfAcceleratorsTests
 {
     [Fact]
-    public void TestNoBounds()
+    public void TestCalculateBounds1()
     {
         var accelerators = new PcfAccelerators(
             noOverlap: true,
@@ -22,7 +22,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestNoOverlapFalse()
+    public void TestCalculateBounds2()
     {
         var accelerators = new PcfAccelerators(
             maxOverlap: 5,
@@ -33,7 +33,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestNoOverlapTrue()
+    public void TestCalculateBounds3()
     {
         var accelerators = new PcfAccelerators(
             maxOverlap: -1,
@@ -44,7 +44,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestConstantMetricsTrueTerminalFontFalse()
+    public void TestCalculateBounds4()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 12,
@@ -68,7 +68,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestTerminalFontTrue()
+    public void TestCalculateBounds5()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 8,
@@ -90,7 +90,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestConstantWidthFalse()
+    public void TestCalculateBounds6()
     {
         var accelerators = new PcfAccelerators(
             minBounds: new PcfMetric(characterWidth: 5),
@@ -100,7 +100,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestConstantWidthTrue()
+    public void TestCalculateBounds7()
     {
         var accelerators = new PcfAccelerators(
             minBounds: new PcfMetric(characterWidth: 5),
@@ -110,7 +110,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestInkInsideAllConditionsMet()
+    public void TestCalculateBounds8()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 12,
@@ -126,7 +126,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestInkInsideFalseMaxOverlapPositive()
+    public void TestCalculateBounds9()
     {
         var accelerators = new PcfAccelerators(
             maxOverlap: 1,
@@ -137,7 +137,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestInkInsideFalseAscentExceeds()
+    public void TestCalculateBounds10()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 10,
@@ -149,7 +149,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestInkInsideFalseDescentExceeds()
+    public void TestCalculateBounds11()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 10,
@@ -165,7 +165,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestInkInsideFalseNegativeAscentBelowNegativeFontDescent()
+    public void TestCalculateBounds12()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 10,
@@ -177,7 +177,7 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestCalculateBoundsResetsWhenDifferent()
+    public void TestCalculateBounds13()
     {
         var accelerators = new PcfAccelerators(
             constantMetrics: true,
@@ -209,8 +209,39 @@ public class PcfAcceleratorsTests
             inkMinBounds: new PcfMetric(7, 8, 9, 10, 11, 12),
             inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
         );
+        var accelerators2 = accelerators1.Copy();
 
+        Assert.Equal(accelerators1, accelerators2);
+        Assert.NotSame(accelerators1, accelerators2);
+        Assert.Same(accelerators1.TableFormat, accelerators2.TableFormat);
+        Assert.Same(accelerators1.MinBounds, accelerators2.MinBounds);
+        Assert.Same(accelerators1.MaxBounds, accelerators2.MaxBounds);
+        Assert.Same(accelerators1.InkMinBounds, accelerators2.InkMinBounds);
+        Assert.Same(accelerators1.InkMaxBounds, accelerators2.InkMaxBounds);
+    }
+
+    [Fact]
+    public void TestDeepCopy()
+    {
+        var accelerators1 = new PcfAccelerators(
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            noOverlap: true,
+            constantMetrics: true,
+            terminalFont: true,
+            constantWidth: true,
+            inkInside: true,
+            inkMetrics: true,
+            drawRightToLeft: true,
+            fontAscent: 1,
+            fontDescent: 2,
+            maxOverlap: 4,
+            minBounds: new PcfMetric(1, 2, 3, 4, 5, 6),
+            maxBounds: new PcfMetric(6, 5, 4, 3, 2, 1),
+            inkMinBounds: new PcfMetric(7, 8, 9, 10, 11, 12),
+            inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
+        );
         var accelerators2 = accelerators1.DeepCopy();
+
         Assert.Equal(accelerators1, accelerators2);
         Assert.NotSame(accelerators1, accelerators2);
         Assert.NotSame(accelerators1.TableFormat, accelerators2.TableFormat);
@@ -218,5 +249,45 @@ public class PcfAcceleratorsTests
         Assert.NotSame(accelerators1.MaxBounds, accelerators2.MaxBounds);
         Assert.NotSame(accelerators1.InkMinBounds, accelerators2.InkMinBounds);
         Assert.NotSame(accelerators1.InkMaxBounds, accelerators2.InkMaxBounds);
+    }
+
+    [Fact]
+    public void TestEquals()
+    {
+        var accelerators1 = new PcfAccelerators(
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            noOverlap: true,
+            constantMetrics: true,
+            terminalFont: true,
+            constantWidth: true,
+            inkInside: true,
+            inkMetrics: true,
+            drawRightToLeft: true,
+            fontAscent: 1,
+            fontDescent: 2,
+            maxOverlap: 4,
+            minBounds: new PcfMetric(1, 2, 3, 4, 5, 6),
+            maxBounds: new PcfMetric(6, 5, 4, 3, 2, 1),
+            inkMinBounds: new PcfMetric(7, 8, 9, 10, 11, 12),
+            inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
+        );
+        var accelerators2 = new PcfAccelerators(
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            noOverlap: true,
+            constantMetrics: true,
+            terminalFont: true,
+            constantWidth: true,
+            inkInside: true,
+            inkMetrics: true,
+            drawRightToLeft: true,
+            fontAscent: 1,
+            fontDescent: 2,
+            maxOverlap: 4,
+            minBounds: new PcfMetric(1, 2, 3, 4, 5, 6),
+            maxBounds: new PcfMetric(6, 5, 4, 3, 2, 1),
+            inkMinBounds: new PcfMetric(7, 8, 9, 10, 11, 12),
+            inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
+        );
+        Assert.Equal(accelerators1, accelerators2);
     }
 }

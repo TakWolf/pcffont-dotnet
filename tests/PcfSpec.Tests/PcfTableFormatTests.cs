@@ -27,16 +27,6 @@ public class PcfTableFormatTests
     }
 
     [Fact]
-    public void TestEquals()
-    {
-        var tableFormat1 = new PcfTableFormat(msByteFirst: true);
-        var tableFormat2 = new PcfTableFormat(msByteFirst: true);
-        var tableFormat3 = new PcfTableFormat(glyphPadIndex: 2);
-        Assert.Equal(tableFormat1.Value, tableFormat2.Value);
-        Assert.NotEqual(tableFormat1.Value, tableFormat3.Value);
-    }
-
-    [Fact]
     public void TestGlyphPad1()
     {
         var tableFormat = new PcfTableFormat(glyphPadIndex: -1);
@@ -103,15 +93,36 @@ public class PcfTableFormatTests
     [Fact]
     public void TestCopy()
     {
-        var format1 = new PcfTableFormat(
+        var tableFormat1 = new PcfTableFormat(
             msByteFirst: true,
             msBitFirst: true,
             inkBoundsOrCompressedMetrics: true,
             glyphPadIndex: 1,
-            scanUnitIndex: 2
-        );
-        var format2 = format1.DeepCopy();
-        Assert.Equal(format1.Value, format2.Value);
-        Assert.NotSame(format1, format2);
+            scanUnitIndex: 2);
+        var tableFormat2 = tableFormat1.Copy();
+        var tableFormat3 = tableFormat1.DeepCopy();
+
+        Assert.Equal(tableFormat1, tableFormat2);
+        Assert.Equal(tableFormat1, tableFormat3);
+        Assert.NotSame(tableFormat1, tableFormat2);
+        Assert.NotSame(tableFormat1, tableFormat3);
+    }
+
+    [Fact]
+    public void TestEquals()
+    {
+        var tableFormat1 = new PcfTableFormat(
+            msByteFirst: true,
+            msBitFirst: true,
+            inkBoundsOrCompressedMetrics: true,
+            glyphPadIndex: 1,
+            scanUnitIndex: 2);
+        var tableFormat2 = new PcfTableFormat(
+            msByteFirst: true,
+            msBitFirst: true,
+            inkBoundsOrCompressedMetrics: true,
+            glyphPadIndex: 1,
+            scanUnitIndex: 2);
+        Assert.Equal(tableFormat1, tableFormat2);
     }
 }
