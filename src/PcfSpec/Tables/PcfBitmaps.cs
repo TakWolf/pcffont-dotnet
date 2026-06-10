@@ -32,7 +32,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
         stream.Seek(16, SeekOrigin.Current);  // bitmapsSizeConfigs
         var bitmapsStart = stream.Position;
 
-        var bitmaps = new List<List<List<byte>>>((int)glyphsCount);
+        var bitmaps = new PcfBitmaps((int)glyphsCount, tableFormat);
         for (var glyphIndex = 0; glyphIndex < glyphsCount; glyphIndex++)
         {
             var bitmapOffset = bitmapOffsets[glyphIndex];
@@ -78,8 +78,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
             }
             bitmaps.Add(bitmap);
         }
-
-        return new PcfBitmaps(bitmaps, tableFormat);
+        return bitmaps;
     }
 
     public PcfTableFormat TableFormat { get; set; }

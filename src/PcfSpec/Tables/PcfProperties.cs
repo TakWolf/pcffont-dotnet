@@ -155,7 +155,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         stream.Seek(4, SeekOrigin.Current);  // stringsSize
         var stringsStart = stream.Position;
 
-        var properties = new Dictionary<string, PcfPropertyValue>((int)propsCount);
+        var properties = new PcfProperties((int)propsCount, tableFormat);
         foreach (var (keyOffset, isStringProp, valueOrOffset) in propInfos)
         {
             stream.Seek(stringsStart + keyOffset, SeekOrigin.Begin);
@@ -172,8 +172,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
             }
             properties[key] = value;
         }
-
-        return new PcfProperties(properties, tableFormat);
+        return properties;
     }
 
     private readonly OrderedDictionary<string, PcfPropertyValue> _properties;

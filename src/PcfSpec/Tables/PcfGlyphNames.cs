@@ -14,15 +14,14 @@ public class PcfGlyphNames : List<string>, IPcfTable, ICopyable<PcfGlyphNames>, 
         stream.Seek(4, SeekOrigin.Current);  // stringsSize
         var stringsStart = stream.Position;
 
-        var names = new List<string>((int)glyphsCount);
+        var names = new PcfGlyphNames((int)glyphsCount, tableFormat);
         foreach (var nameOffset in nameOffsets)
         {
             stream.Seek(stringsStart + nameOffset, SeekOrigin.Begin);
             var name = stream.ReadString();
             names.Add(name);
         }
-
-        return new PcfGlyphNames(names, tableFormat);
+        return names;
     }
 
     public PcfTableFormat TableFormat { get; set; }
