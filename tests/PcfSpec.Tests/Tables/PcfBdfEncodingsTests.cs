@@ -17,14 +17,14 @@ public class PcfBdfEncodingsTests
     public void TestCopy()
     {
         var encodings1 = new PcfBdfEncodings(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            defaultChar: 1,
-            encodings: new Dictionary<ushort, ushort>
+            new Dictionary<ushort, ushort>
             {
                 { 1, 1 },
                 { 2, 2 },
                 { 3, 3 }
-            });
+            },
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            defaultChar: 1);
         var encodings2 = encodings1.Copy();
 
         Assert.Equal(encodings1, encodings2);
@@ -36,14 +36,14 @@ public class PcfBdfEncodingsTests
     public void TestDeepCopy()
     {
         var encodings1 = new PcfBdfEncodings(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            defaultChar: 1,
-            encodings: new Dictionary<ushort, ushort>
+            new Dictionary<ushort, ushort>
             {
                 { 1, 1 },
                 { 2, 2 },
                 { 3, 3 }
-            });
+            },
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            defaultChar: 1);
         var encodings2 = encodings1.DeepCopy();
 
         Assert.Equal(encodings1, encodings2);
@@ -55,23 +55,23 @@ public class PcfBdfEncodingsTests
     public void TestEquals()
     {
         var encodings1 = new PcfBdfEncodings(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            defaultChar: 1,
-            encodings: new Dictionary<ushort, ushort>
+            new Dictionary<ushort, ushort>
             {
                 { 1, 1 },
                 { 2, 2 },
                 { 3, 3 }
-            });
+            },
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            defaultChar: 1);
         var encodings2 = new PcfBdfEncodings(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            defaultChar: 1,
-            encodings: new Dictionary<ushort, ushort>
+            new Dictionary<ushort, ushort>
             {
                 { 1, 1 },
                 { 2, 2 },
                 { 3, 3 }
-            });
+            },
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            defaultChar: 1);
         Assert.Equal(encodings1, encodings2);
     }
 }

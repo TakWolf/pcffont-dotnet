@@ -8,8 +8,8 @@ public class PcfGlyphNamesTests
     public void TestCopy()
     {
         var names1 = new PcfGlyphNames(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            names: ["A", "B", "C"]);
+            ["A", "B", "C"],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var names2 = names1.Copy();
 
         Assert.Equal(names1, names2);
@@ -21,8 +21,8 @@ public class PcfGlyphNamesTests
     public void TestDeepCopy()
     {
         var names1 = new PcfGlyphNames(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            names: ["A", "B", "C"]);
+            ["A", "B", "C"],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var names2 = names1.DeepCopy();
 
         Assert.Equal(names1, names2);
@@ -34,11 +34,11 @@ public class PcfGlyphNamesTests
     public void TestEquals()
     {
         var names1 = new PcfGlyphNames(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            names: ["A", "B", "C"]);
+            ["A", "B", "C"],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var names2 = new PcfGlyphNames(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            names: ["A", "B", "C"]);
+            ["A", "B", "C"],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         Assert.Equal(names1, names2);
     }
 }

@@ -173,25 +173,41 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
             properties[key] = value;
         }
 
-        return new PcfProperties(tableFormat, properties);
+        return new PcfProperties(properties, tableFormat);
     }
 
     private readonly OrderedDictionary<string, PcfPropertyValue> _properties;
 
     public PcfTableFormat TableFormat { get; set; }
 
+    public PcfProperties(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+
     public PcfProperties(
-        PcfTableFormat? tableFormat = null,
-        IDictionary<string, PcfPropertyValue>? properties = null)
+        int capacity,
+        PcfTableFormat? tableFormat = null)
     {
+        _properties = new OrderedDictionary<string, PcfPropertyValue>(capacity);
         TableFormat = tableFormat ?? new PcfTableFormat();
-        _properties = new OrderedDictionary<string, PcfPropertyValue>(properties?.Count ?? 0);
-        if (properties is not null)
+    }
+
+    public PcfProperties(
+        IDictionary<string, PcfPropertyValue> properties,
+        PcfTableFormat? tableFormat = null) : this(properties.Count, tableFormat)
+    {
+        foreach (var (key, value) in properties)
         {
-            foreach (var (key, value) in properties)
-            {
-                this[key] = value;
-            }
+            this[key] = value;
+        }
+    }
+
+    public PcfProperties(
+        IEnumerable<KeyValuePair<string, PcfPropertyValue>> properties,
+        PcfTableFormat? tableFormat = null) :
+        this((properties as ICollection<KeyValuePair<string, PcfPropertyValue>>)?.Count ?? 0, tableFormat)
+    {
+        foreach (var (key, value) in properties)
+        {
+            this[key] = value;
         }
     }
 
@@ -555,9 +571,9 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         return (uint)tableSize;
     }
 
-    public PcfProperties Copy() => new(TableFormat, _properties);
+    public PcfProperties Copy() => new(_properties, TableFormat);
 
-    public PcfProperties DeepCopy() => new(TableFormat.DeepCopy(), _properties);
+    public PcfProperties DeepCopy() => new(_properties, TableFormat.DeepCopy());
 
     public bool Equals(PcfProperties? other)
     {

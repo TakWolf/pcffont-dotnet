@@ -8,11 +8,11 @@ public class PcfBitmapsTests
     public void TestCopy()
     {
         var bitmaps1 = new PcfBitmaps(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            bitmaps: [
+            [
                 [[1, 0, 0, 1]],
                 [[0, 1, 1, 0]]
-            ]);
+            ],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var bitmaps2 = bitmaps1.Copy();
 
         Assert.Equal(bitmaps1, bitmaps2);
@@ -29,11 +29,11 @@ public class PcfBitmapsTests
     public void TestDeepCopy()
     {
         var bitmaps1 = new PcfBitmaps(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            bitmaps: [
+            [
                 [[1, 0, 0, 1]],
                 [[0, 1, 1, 0]]
-            ]);
+            ],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var bitmaps2 = bitmaps1.DeepCopy();
 
         Assert.Equal(bitmaps1, bitmaps2);
@@ -54,17 +54,17 @@ public class PcfBitmapsTests
     public void TestEquals()
     {
         var bitmaps1 = new PcfBitmaps(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            bitmaps: [
+            [
                 [[1, 0, 0, 1]],
                 [[0, 1, 1, 0]]
-            ]);
+            ],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var bitmaps2 = new PcfBitmaps(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            bitmaps: [
+            [
                 [[1, 0, 0, 1]],
                 [[0, 1, 1, 0]]
-            ]);
+            ],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         Assert.Equal(bitmaps1, bitmaps2);
     }
 }

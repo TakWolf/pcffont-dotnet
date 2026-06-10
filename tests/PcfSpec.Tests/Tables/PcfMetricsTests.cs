@@ -8,11 +8,11 @@ public class PcfMetricsTests
     public void TestCopy()
     {
         var metrics1 = new PcfMetrics(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            metrics: [
+            [
                 new PcfMetric(1, 2, 3, 4, 5, 6),
                 new PcfMetric(6, 5, 4, 3, 2, 1)
-            ]);
+            ],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var metrics2 = metrics1.Copy();
 
         Assert.Equal(metrics1, metrics2);
@@ -29,11 +29,11 @@ public class PcfMetricsTests
     public void TestDeepCopy()
     {
         var metrics1 = new PcfMetrics(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            metrics: [
+            [
                 new PcfMetric(1, 2, 3, 4, 5, 6),
                 new PcfMetric(6, 5, 4, 3, 2, 1)
-            ]);
+            ],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var metrics2 = metrics1.DeepCopy();
 
         Assert.Equal(metrics1, metrics2);
@@ -50,17 +50,17 @@ public class PcfMetricsTests
     public void TestEquals()
     {
         var metrics1 = new PcfMetrics(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            metrics: [
+            [
                 new PcfMetric(1, 2, 3, 4, 5, 6),
                 new PcfMetric(6, 5, 4, 3, 2, 1)
-            ]);
+            ],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var metrics2 = new PcfMetrics(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            metrics: [
+            [
                 new PcfMetric(1, 2, 3, 4, 5, 6),
                 new PcfMetric(6, 5, 4, 3, 2, 1)
-            ]);
+            ],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         Assert.Equal(metrics1, metrics2);
     }
 }

@@ -25,20 +25,25 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
             metrics.Add(metric);
         }
 
-        return new PcfMetrics(tableFormat, metrics);
+        return new PcfMetrics(metrics, tableFormat);
     }
 
     public PcfTableFormat TableFormat { get; set; }
 
+    public PcfMetrics(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+
     public PcfMetrics(
-        PcfTableFormat? tableFormat = null,
-        IEnumerable<PcfMetric>? metrics = null)
+        int capacity,
+        PcfTableFormat? tableFormat = null) : base(capacity)
     {
         TableFormat = tableFormat ?? new PcfTableFormat();
-        if (metrics is not null)
-        {
-            AddRange(metrics);
-        }
+    }
+
+    public PcfMetrics(
+        IEnumerable<PcfMetric> metrics,
+        PcfTableFormat? tableFormat = null) : base(metrics)
+    {
+        TableFormat = tableFormat ?? new PcfTableFormat();
     }
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
@@ -65,9 +70,9 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
         return (uint)tableSize;
     }
 
-    public PcfMetrics Copy() => new(TableFormat, this);
+    public PcfMetrics Copy() => new(this, TableFormat);
 
-    public PcfMetrics DeepCopy() => new(TableFormat.DeepCopy(), CopyUtil.DeepCopyList(this));
+    public PcfMetrics DeepCopy() => new(CopyUtil.DeepCopyList(this), TableFormat.DeepCopy());
 
     public bool Equals(PcfMetrics? other)
     {

@@ -8,7 +8,7 @@ public class PcfPropertiesTests
     [Fact]
     public void TestProperties1()
     {
-        var properties = new PcfProperties(properties: new Dictionary<string, PcfPropertyValue>
+        var properties = new PcfProperties(new Dictionary<string, PcfPropertyValue>
         {
             { "PARAM_1", 1 },
             { "param_2", "2" }
@@ -241,7 +241,8 @@ public class PcfPropertiesTests
     [Fact]
     public void TestCopy()
     {
-        var properties1 = new PcfProperties(new PcfTableFormat(true, true, true, 1, 2));
+        var properties1 = new PcfProperties(
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         properties1.FamilyName = "Demo Font";
         properties1.PointSize = 100;
         var properties2 = properties1.Copy();
@@ -254,7 +255,8 @@ public class PcfPropertiesTests
     [Fact]
     public void TestDeepCopy()
     {
-        var properties1 = new PcfProperties(new PcfTableFormat(true, true, true, 1, 2));
+        var properties1 = new PcfProperties(
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         properties1.FamilyName = "Demo Font";
         properties1.PointSize = 100;
         var properties2 = properties1.DeepCopy();
@@ -267,11 +269,13 @@ public class PcfPropertiesTests
     [Fact]
     public void TestEquals()
     {
-        var properties1 = new PcfProperties(new PcfTableFormat(true, true, true, 1, 2));
+        var properties1 = new PcfProperties(
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         properties1.FamilyName = "Demo Font";
         properties1.PointSize = 100;
 
-        var properties2 = new PcfProperties(new PcfTableFormat(true, true, true, 1, 2));
+        var properties2 = new PcfProperties(
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         properties2.FamilyName = "Demo Font";
         properties2.PointSize = 100;
 

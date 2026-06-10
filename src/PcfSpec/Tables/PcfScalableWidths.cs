@@ -12,20 +12,25 @@ public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidt
         var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
         var scalableWidths = stream.ReadInt32Array((int)glyphsCount, tableFormat.MsByteFirst);
 
-        return new PcfScalableWidths(tableFormat, scalableWidths);
+        return new PcfScalableWidths(scalableWidths, tableFormat);
     }
 
     public PcfTableFormat TableFormat { get; set; }
 
+    public PcfScalableWidths(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+
     public PcfScalableWidths(
-        PcfTableFormat? tableFormat = null,
-        IEnumerable<int>? scalableWidths = null)
+        int capacity,
+        PcfTableFormat? tableFormat = null) : base(capacity)
     {
         TableFormat = tableFormat ?? new PcfTableFormat();
-        if (scalableWidths is not null)
-        {
-            AddRange(scalableWidths);
-        }
+    }
+
+    public PcfScalableWidths(
+        IEnumerable<int> scalableWidths,
+        PcfTableFormat? tableFormat = null) : base(scalableWidths)
+    {
+        TableFormat = tableFormat ?? new PcfTableFormat();
     }
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
@@ -42,9 +47,9 @@ public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidt
         return (uint)tableSize;
     }
 
-    public PcfScalableWidths Copy() => new(TableFormat, this);
+    public PcfScalableWidths Copy() => new(this, TableFormat);
 
-    public PcfScalableWidths DeepCopy() => new(TableFormat.DeepCopy(), this);
+    public PcfScalableWidths DeepCopy() => new(this, TableFormat.DeepCopy());
 
     public bool Equals(PcfScalableWidths? other)
     {

@@ -8,8 +8,8 @@ public class PcfScalableWidthsTests
     public void TestCopy()
     {
         var scalableWidths1 = new PcfScalableWidths(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            scalableWidths: [1, 2, 3, 4]);
+            [1, 2, 3, 4],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var scalableWidths2 = scalableWidths1.Copy();
 
         Assert.Equal(scalableWidths1, scalableWidths2);
@@ -21,8 +21,8 @@ public class PcfScalableWidthsTests
     public void TestDeepCopy()
     {
         var scalableWidths1 = new PcfScalableWidths(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            scalableWidths: [1, 2, 3, 4]);
+            [1, 2, 3, 4],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var scalableWidths2 = scalableWidths1.DeepCopy();
 
         Assert.Equal(scalableWidths1, scalableWidths2);
@@ -34,11 +34,11 @@ public class PcfScalableWidthsTests
     public void TestEquals()
     {
         var scalableWidths1 = new PcfScalableWidths(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            scalableWidths: [1, 2, 3, 4]);
+            [1, 2, 3, 4],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         var scalableWidths2 = new PcfScalableWidths(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            scalableWidths: [1, 2, 3, 4]);
+            [1, 2, 3, 4],
+            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
         Assert.Equal(scalableWidths1, scalableWidths2);
     }
 }

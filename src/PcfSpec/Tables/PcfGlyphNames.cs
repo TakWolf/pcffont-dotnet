@@ -22,20 +22,25 @@ public class PcfGlyphNames : List<string>, IPcfTable, ICopyable<PcfGlyphNames>, 
             names.Add(name);
         }
 
-        return new PcfGlyphNames(tableFormat, names);
+        return new PcfGlyphNames(names, tableFormat);
     }
 
     public PcfTableFormat TableFormat { get; set; }
 
+    public PcfGlyphNames(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+
     public PcfGlyphNames(
-        PcfTableFormat? tableFormat = null,
-        IEnumerable<string>? names = null)
+        int capacity,
+        PcfTableFormat? tableFormat = null) : base(capacity)
     {
         TableFormat = tableFormat ?? new PcfTableFormat();
-        if (names is not null)
-        {
-            AddRange(names);
-        }
+    }
+
+    public PcfGlyphNames(
+        IEnumerable<string> names,
+        PcfTableFormat? tableFormat = null) : base(names)
+    {
+        TableFormat = tableFormat ?? new PcfTableFormat();
     }
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
@@ -64,9 +69,9 @@ public class PcfGlyphNames : List<string>, IPcfTable, ICopyable<PcfGlyphNames>, 
         return (uint)tableSize;
     }
 
-    public PcfGlyphNames Copy() => new(TableFormat, this);
+    public PcfGlyphNames Copy() => new(this, TableFormat);
 
-    public PcfGlyphNames DeepCopy() => new(TableFormat.DeepCopy(), this);
+    public PcfGlyphNames DeepCopy() => new(this, TableFormat.DeepCopy());
 
     public bool Equals(PcfGlyphNames? other)
     {

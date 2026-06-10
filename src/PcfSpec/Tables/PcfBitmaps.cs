@@ -79,20 +79,25 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
             bitmaps.Add(bitmap);
         }
 
-        return new PcfBitmaps(tableFormat, bitmaps);
+        return new PcfBitmaps(bitmaps, tableFormat);
     }
 
     public PcfTableFormat TableFormat { get; set; }
 
+    public PcfBitmaps(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+
     public PcfBitmaps(
-        PcfTableFormat? tableFormat = null,
-        IEnumerable<List<List<byte>>>? bitmaps = null)
+        int capacity,
+        PcfTableFormat? tableFormat = null) : base(capacity)
     {
         TableFormat = tableFormat ?? new PcfTableFormat();
-        if (bitmaps is not null)
-        {
-            AddRange(bitmaps);
-        }
+    }
+
+    public PcfBitmaps(
+        IEnumerable<List<List<byte>>> bitmaps,
+        PcfTableFormat? tableFormat = null) : base(bitmaps)
+    {
+        TableFormat = tableFormat ?? new PcfTableFormat();
     }
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
@@ -174,9 +179,9 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
         return (uint)tableSize;
     }
 
-    public PcfBitmaps Copy() => new(TableFormat, this);
+    public PcfBitmaps Copy() => new(this, TableFormat);
 
-    public PcfBitmaps DeepCopy() => new(TableFormat.DeepCopy(), CopyUtil.DeepCopyList(this));
+    public PcfBitmaps DeepCopy() => new(CopyUtil.DeepCopyList(this), TableFormat.DeepCopy());
 
     public bool Equals(PcfBitmaps? other)
     {
