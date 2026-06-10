@@ -127,6 +127,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
                 }
 
                 var bitmapRow = bitmap[y];
+                var widthLimit = Math.Min(bitmapRow.Count, metric.Width);
                 for (var i = 0; i < bitmapRowSize; i++)
                 {
                     byte b = 0;
@@ -135,7 +136,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
                         for (var shift = 0; shift < 8; shift++)
                         {
                             var pixelIndex = i * 8 + shift;
-                            var pixel = pixelIndex < Math.Min(bitmapRow.Count, metric.Width) && bitmapRow[pixelIndex] != 0 ? 1 : 0;
+                            var pixel = pixelIndex < widthLimit && bitmapRow[pixelIndex] != 0 ? 1 : 0;
                             b = (byte)((b << 1) | pixel);
                         }
                     }
@@ -144,7 +145,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
                         for (var shift = 7; shift >= 0; shift--)
                         {
                             var pixelIndex = i * 8 + shift;
-                            var pixel = pixelIndex < Math.Min(bitmapRow.Count, metric.Width) && bitmapRow[pixelIndex] != 0 ? 1 : 0;
+                            var pixel = pixelIndex < widthLimit && bitmapRow[pixelIndex] != 0 ? 1 : 0;
                             b = (byte)((b << 1) | pixel);
                         }
                     }
