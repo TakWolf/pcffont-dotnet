@@ -180,7 +180,12 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
 
     public PcfBitmaps Copy() => new(this, TableFormat);
 
-    public PcfBitmaps DeepCopy() => new(CopyUtil.DeepCopyList(this), TableFormat.DeepCopy());
+    public PcfBitmaps DeepCopy()
+    {
+        var bitmaps = new PcfBitmaps(Count, TableFormat.DeepCopy());
+        CopyUtil.DeepCopyToList(this, bitmaps);
+        return bitmaps;
+    }
 
     public bool Equals(PcfBitmaps? other)
     {

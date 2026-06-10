@@ -71,7 +71,12 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
 
     public PcfMetrics Copy() => new(this, TableFormat);
 
-    public PcfMetrics DeepCopy() => new(CopyUtil.DeepCopyList(this), TableFormat.DeepCopy());
+    public PcfMetrics DeepCopy()
+    {
+        var metrics = new PcfMetrics(Count, TableFormat.DeepCopy());
+        CopyUtil.DeepCopyToList(this, metrics);
+        return metrics;
+    }
 
     public bool Equals(PcfMetrics? other)
     {

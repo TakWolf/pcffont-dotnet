@@ -29,13 +29,19 @@ internal static class CopyUtil
         return copied;
     }
 
-    public static List<List<List<byte>>> DeepCopyList(IList<List<List<byte>>> source)
+    public static void DeepCopyToList<T>(IList<T> source, IList<T> target) where T : ICopyable<T>
     {
-        var copied = new List<List<List<byte>>>(source.Count);
         foreach (var item in source)
         {
-            copied.Add(DeepCopyBitmap(item));
+            target.Add(item.DeepCopy());
         }
-        return copied;
+    }
+
+    public static void DeepCopyToList(IList<List<List<byte>>> source, IList<List<List<byte>>> target)
+    {
+        foreach (var item in source)
+        {
+            target.Add(DeepCopyBitmap(item));
+        }
     }
 }
