@@ -4,7 +4,7 @@ namespace PcfSpec;
 
 public static class PcfTableFactory
 {
-    private static readonly Dictionary<PcfTableType, (Type ClassType, IPcfTable.ParseDelegate Parse)> Registry = new()
+    private static readonly Dictionary<PcfTableType, (Type ClassType, IPcfTable.ParseDelegate Parse)> Registry = new(9)
     {
         { PcfTableType.Properties, (typeof(PcfProperties), PcfProperties.Parse) },
         { PcfTableType.Accelerators, (typeof(PcfAccelerators), PcfAccelerators.Parse) },
