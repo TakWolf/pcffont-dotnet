@@ -145,8 +145,8 @@ public class ValidityTests : IClassFixture<DemoFonts>
         {
             builder.Properties[key] = value switch
             {
-                string stringValue => stringValue,
-                int intValue => intValue,
+                { IsInt: true } => value.AsInt(),
+                { IsString: true } => value.AsString(),
                 _ => throw new InvalidOperationException()
             };
         }
