@@ -62,18 +62,44 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
             return metric;
         }
 
-        // Top
-        foreach (var bitmapRow in Bitmap)
+        var firstRow = Height;
+        var lastRow = -1;
+        var firstCol = Width;
+        var lastCol = -1;
+
+        for (var y = 0; y < Height; y++)
         {
-            if (bitmapRow.Any(pixel => pixel != 0))
+            if (y >= Bitmap.Count)
             {
                 break;
             }
-            metric.Ascent -= 1;
+            var bitmapRow = Bitmap[y];
+            var widthLimit = Math.Min(bitmapRow.Count, Width);
+            for (var x = 0; x < widthLimit; x++)
+            {
+                if (bitmapRow[x] != 0)
+                {
+                    if (y < firstRow)
+                    {
+                        firstRow = y;
+                    }
+                    if (y > lastRow)
+                    {
+                        lastRow = y;
+                    }
+                    if (x < firstCol)
+                    {
+                        firstCol = x;
+                    }
+                    if (x > lastCol)
+                    {
+                        lastCol = x;
+                    }
+                }
+            }
         }
 
-        // Empty
-        if (metric.Ascent + metric.Descent == 0)
+        if (firstRow == Height)
         {
             metric.Ascent = 0;
             metric.Descent = 0;
@@ -81,37 +107,10 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
             return metric;
         }
 
-        // Bottom
-        for (var i = Bitmap.Count - 1; i >= 0; i--)
-        {
-            var bitmapRow = Bitmap[i];
-            if (bitmapRow.Any(pixel => pixel != 0))
-            {
-                break;
-            }
-            metric.Descent -= 1;
-        }
-
-        // Left
-        for (var i = 0; i < Width; i++)
-        {
-            if (Bitmap.Any(bitmapRow => bitmapRow[i] != 0))
-            {
-                break;
-            }
-            metric.LeftSideBearing += 1;
-        }
-
-        // Right
-        for (var i = 0; i < Width; i++)
-        {
-            if (Bitmap.Any(bitmapRow => bitmapRow[Width - 1 - i] != 0))
-            {
-                break;
-            }
-            metric.RightSideBearing -= 1;
-        }
-
+        metric.Ascent -= (short)firstRow;
+        metric.Descent -= (short)(lastRow != -1 ? Height - 1 - lastRow : Height);
+        metric.LeftSideBearing += (short)firstCol;
+        metric.RightSideBearing -= (short)(lastCol != -1 ? Width - 1 - lastCol : Width);
         return metric;
     }
 

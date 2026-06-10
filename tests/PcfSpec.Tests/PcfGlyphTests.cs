@@ -19,7 +19,7 @@ public class PcfGlyphTests
     }
 
     [Fact]
-    public void TestCreateMetric()
+    public void TestCreateMetric1()
     {
         var glyph = new PcfGlyph(
             name: "_",
@@ -44,6 +44,42 @@ public class PcfGlyphTests
             characterWidth: 5,
             ascent: 6,
             descent: 2,
+            attributes: 1), glyph.CreateMetric(false));
+        Assert.Equal(new PcfMetric(
+            leftSideBearing: 1,
+            rightSideBearing: 4,
+            characterWidth: 5,
+            ascent: 5,
+            descent: 1,
+            attributes: 1), glyph.CreateMetric(true));
+    }
+
+    [Fact]
+    public void TestCreateMetric2()
+    {
+        var glyph = new PcfGlyph(
+            name: "_",
+            encoding: 0,
+            characterWidth: 5,
+            dimensions: (7, 10),
+            offset: (0, -4),
+            bitmap: [
+                [0, 0, 0, 0, 0],
+                [0, 1, 1, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 0, 1, 0],
+                [0, 1, 1, 1, 0],
+                [0, 0, 0, 0, 0]
+            ],
+            attributes: 1);
+        Assert.Equal(new PcfMetric(
+            leftSideBearing: 0,
+            rightSideBearing: 7,
+            characterWidth: 5,
+            ascent: 6,
+            descent: 4,
             attributes: 1), glyph.CreateMetric(false));
         Assert.Equal(new PcfMetric(
             leftSideBearing: 1,
