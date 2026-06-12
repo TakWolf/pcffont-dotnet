@@ -1,4 +1,4 @@
-﻿using PcfSpec;
+using PcfSpec;
 
 var outputsDir = Path.Combine("build");
 if (Directory.Exists(outputsDir))

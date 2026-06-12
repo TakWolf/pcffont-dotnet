@@ -1,4 +1,4 @@
-﻿using PcfSpec;
+using PcfSpec;
 using PcfSpec.Tables;
 
 var outputsDir = Path.Combine("build");
