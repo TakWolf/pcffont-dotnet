@@ -490,12 +490,12 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         }
         if (!font.StartsWith('-'))
         {
-            throw new PcfXlfdException("Not starts with '-'.");
+            throw new PcfXlfdException("Must starts with '-'.");
         }
         var parts = font[1..].Split('-');
-        if (parts.Length != 14)
+        if (parts.Length != XlfdKeysOrder.Length)
         {
-            throw new PcfXlfdException("Must be 14 '-'.");
+            throw new PcfXlfdException($"Must contains {XlfdKeysOrder.Length} XLFD fields.");
         }
         for (var i = 0; i < XlfdKeysOrder.Length; i++)
         {
