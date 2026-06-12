@@ -29,4 +29,4 @@ jobs:
         with:
           user: TakWolf
       - name: Publish
-        run: dotnet nuget push ./src/PcfSpec/bin/Release/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./artifacts/package/release/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
