@@ -207,7 +207,7 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>, ICopyable<PcfFont>,
 
     public void Save(string path)
     {
-        using var stream = File.OpenWrite(path);
+        using var stream = File.Create(path);
         Dump(stream);
     }
 
