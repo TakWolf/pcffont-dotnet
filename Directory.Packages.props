@@ -4,7 +4,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageVersion Include="BdfFont" Version="0.0.9" />
+        <PackageVersion Include="BdfFont" Version="0.0.10" />
         <PackageVersion Include="FreeTypeSharp" Version="3.1.0" />
         <PackageVersion Include="coverlet.collector" Version="10.0.1" />
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />

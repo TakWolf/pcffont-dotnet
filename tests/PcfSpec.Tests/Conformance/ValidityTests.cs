@@ -138,7 +138,8 @@ public class ValidityTests : IClassFixture<DemoFonts>
                 characterWidth: (short)bdfGlyph.DeviceWidthX,
                 dimensions: bdfGlyph.Dimensions,
                 offset: bdfGlyph.Offset,
-                bitmap: bdfGlyph.Bitmap));
+                bitmap: bdfGlyph.Bitmap,
+                attributes: bdfGlyph.Attributes));
         }
 
         foreach (var (key, value) in _demoFonts.DemoBdf.Properties)
