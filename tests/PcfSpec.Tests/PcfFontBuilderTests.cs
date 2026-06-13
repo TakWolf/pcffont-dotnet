@@ -48,8 +48,8 @@ public class PcfFontBuilderTests
                     characterWidth: (short)bdfGlyph.DeviceWidthX,
                     dimensions: bdfGlyph.Dimensions,
                     offset: bdfGlyph.Offset,
-                    bitmap: bdfGlyph.Bitmap,
-                    attributes: bdfGlyph.Attributes));
+                    attributes: bdfGlyph.Attributes,
+                    bitmap: bdfGlyph.Bitmap));
             }
 
             font3 = builder.Build();

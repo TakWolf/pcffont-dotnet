@@ -27,6 +27,7 @@ public class PcfGlyphTests
             characterWidth: 5,
             dimensions: (5, 8),
             offset: (0, -2),
+            attributes: 1,
             bitmap: [
                 [0, 0, 0, 0, 0],
                 [0, 1, 1, 1, 0],
@@ -36,8 +37,7 @@ public class PcfGlyphTests
                 [0, 1, 0, 1, 0],
                 [0, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0]
-            ],
-            attributes: 1);
+            ]);
         Assert.Equal(new PcfMetric(
             leftSideBearing: 0,
             rightSideBearing: 5,
@@ -63,6 +63,7 @@ public class PcfGlyphTests
             characterWidth: 5,
             dimensions: (7, 10),
             offset: (0, -4),
+            attributes: 1,
             bitmap: [
                 [0, 0, 0, 0, 0],
                 [0, 1, 1, 1, 0],
@@ -72,8 +73,7 @@ public class PcfGlyphTests
                 [0, 1, 0, 1, 0],
                 [0, 1, 1, 1, 0],
                 [0, 0, 0, 0, 0]
-            ],
-            attributes: 1);
+            ]);
         Assert.Equal(new PcfMetric(
             leftSideBearing: 0,
             rightSideBearing: 7,
@@ -99,8 +99,8 @@ public class PcfGlyphTests
             characterWidth: 1,
             dimensions: (2, 3),
             offset: (4, 5),
-            bitmap: [[1, 0, 0, 1]],
-            attributes: 1);
+            attributes: 1,
+            bitmap: [[1, 0, 0, 1]]);
         var glyph2 = glyph1.Copy();
 
         Assert.Equal(glyph1, glyph2);
@@ -117,8 +117,8 @@ public class PcfGlyphTests
             characterWidth: 1,
             dimensions: (2, 3),
             offset: (4, 5),
-            bitmap: [[1, 0, 0, 1]],
-            attributes: 1);
+            attributes: 1,
+            bitmap: [[1, 0, 0, 1]]);
         var glyph2 = glyph1.DeepCopy();
 
         Assert.Equal(glyph1, glyph2);
@@ -140,16 +140,16 @@ public class PcfGlyphTests
             characterWidth: 1,
             dimensions: (2, 3),
             offset: (4, 5),
-            bitmap: [[1, 0, 0, 1]],
-            attributes: 1);
+            attributes: 1,
+            bitmap: [[1, 0, 0, 1]]);
         var glyph2 = new PcfGlyph(
             name: "_",
             encoding: 0,
             characterWidth: 1,
             dimensions: (2, 3),
             offset: (4, 5),
-            bitmap: [[1, 0, 0, 1]],
-            attributes: 1);
+            attributes: 1,
+            bitmap: [[1, 0, 0, 1]]);
         Assert.Equal(glyph1, glyph2);
     }
 }

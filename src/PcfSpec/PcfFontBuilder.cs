@@ -48,8 +48,8 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
                 characterWidth: metric.CharacterWidth,
                 dimensions: metric.Dimensions,
                 offset: metric.Offset,
-                bitmap: bitmap,
-                attributes: metric.Attributes));
+                attributes: metric.Attributes,
+                bitmap: bitmap));
         }
 
         return builder;

@@ -12,8 +12,8 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
     public int Height { get; set; }
     public int OffsetX { get; set; }
     public int OffsetY { get; set; }
-    public List<List<byte>> Bitmap { get; set; }
     public ushort Attributes { get; set; }
+    public List<List<byte>> Bitmap { get; set; }
 
     public PcfGlyph(
         string name,
@@ -22,8 +22,8 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
         short characterWidth = 0,
         (int, int) dimensions = default,
         (int, int) offset = default,
-        List<List<byte>>? bitmap = null,
-        ushort attributes = 0)
+        ushort attributes = 0,
+        List<List<byte>>? bitmap = null)
     {
         Name = name;
         Encoding = encoding;
@@ -31,8 +31,8 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
         CharacterWidth = characterWidth;
         (Width, Height) = dimensions;
         (OffsetX, OffsetY) = offset;
-        Bitmap = bitmap ?? [];
         Attributes = attributes;
+        Bitmap = bitmap ?? [];
     }
 
     public (int, int) Dimensions
@@ -121,8 +121,8 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
         CharacterWidth,
         Dimensions,
         Offset,
-        Bitmap,
-        Attributes);
+        Attributes,
+        Bitmap);
 
     public PcfGlyph DeepCopy() => new(
         Name,
@@ -131,8 +131,8 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
         CharacterWidth,
         Dimensions,
         Offset,
-        CopyUtil.DeepCopyBitmap(Bitmap),
-        Attributes);
+        Attributes,
+        CopyUtil.DeepCopyBitmap(Bitmap));
 
     public bool Equals(PcfGlyph? other)
     {
