@@ -13,7 +13,7 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
         stream.Seek(0, SeekOrigin.Begin);
         if (stream.ReadUInt32() != FileVersion)
         {
-            throw new PcfParseException("Data format not support.");
+            throw new PcfParseException("Not a valid PCF font.");
         }
 
         var tablesCount = stream.ReadUInt32();

@@ -121,10 +121,9 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
 
     private static void CheckXlfdStringValue(string key, string value)
     {
-        var match = RegexXlfdValue().Match(value);
-        if (match.Success)
+        if (RegexXlfdValue().IsMatch(value))
         {
-            throw new PcfValueException($"Value of '{key}' contains illegal characters '{match.Value}'.");
+            throw new PcfValueException($"Value of '{key}' contains illegal characters.");
         }
     }
 
