@@ -3,7 +3,7 @@
         <AssemblyName>PcfFont</AssemblyName>
 
         <Title>PcfFont</Title>
-        <Description>A library for manipulating Portable Compiled Format (PCF) Fonts</Description>
+        <Description>A library for handling Portable Compiled Format (PCF) Fonts</Description>
         <Authors>TakWolf</Authors>
         <Copyright>Copyright (c) 2025 TakWolf</Copyright>
 

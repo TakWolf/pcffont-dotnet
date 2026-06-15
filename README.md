@@ -3,7 +3,7 @@
 [![.NET](https://img.shields.io/badge/dotnet-8.0-mediumpurple?style=flat-square)](https://dotnet.microsoft.com)
 [![NuGet](https://img.shields.io/nuget/v/PcfFont?style=flat-square)](https://www.nuget.org/packages/PcfFont)
 
-PcfFont is a library for manipulating [Portable Compiled Format (PCF) Fonts](https://en.wikipedia.org/wiki/Portable_Compiled_Format).
+A library for handling [Portable Compiled Format (PCF) Fonts](https://en.wikipedia.org/wiki/Portable_Compiled_Format).
 
 ## Installation
 
