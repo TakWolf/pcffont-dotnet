@@ -37,9 +37,9 @@ public class PcfTableFormat : ICopyable<PcfTableFormat>, IEquatable<PcfTableForm
 
     public static PcfTableFormat Parse(uint value)
     {
-        var msByteFirst = (value & MaskByteOrder) > 0;
-        var msBitFirst = (value & MaskBitOrder) > 0;
-        var inkBoundsOrCompressedMetrics = (value & FlagInkBoundsOrCompressedMetrics) > 0;
+        var msByteFirst = (value & MaskByteOrder) != 0;
+        var msBitFirst = (value & MaskBitOrder) != 0;
+        var inkBoundsOrCompressedMetrics = (value & FlagInkBoundsOrCompressedMetrics) != 0;
         var glyphPadIndex = (int)(value & MaskGlyphPad);
         var scanUnitIndex = (int)((value & MaskScanUnit) >> 4);
         return new PcfTableFormat(
