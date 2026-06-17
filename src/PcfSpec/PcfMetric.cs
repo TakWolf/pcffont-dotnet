@@ -12,6 +12,7 @@ public class PcfMetric : ICopyable<PcfMetric>, IEquatable<PcfMetric>
         short ascent;
         short descent;
         ushort attributes;
+
         if (compressed)
         {
             leftSideBearing = (short)(stream.ReadUInt8() - 0x80);
@@ -30,6 +31,7 @@ public class PcfMetric : ICopyable<PcfMetric>, IEquatable<PcfMetric>
             descent = stream.ReadInt16(msByteFirst);
             attributes = stream.ReadUInt16(msByteFirst);
         }
+
         return new PcfMetric(
             leftSideBearing,
             rightSideBearing,
