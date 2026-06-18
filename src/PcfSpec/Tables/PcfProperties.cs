@@ -103,7 +103,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
     {
         if (!RegexPropKey().IsMatch(key))
         {
-            throw new PcfKeyException("Key contains illegal characters.");
+            throw new PcfKeyException("Key contain illegal characters.");
         }
     }
 
@@ -123,7 +123,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
     {
         if (RegexXlfdValue().IsMatch(value))
         {
-            throw new PcfValueException($"Value of '{key}' contains illegal characters.");
+            throw new PcfValueException($"Value of '{key}' contain illegal characters.");
         }
     }
 
@@ -489,13 +489,13 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         }
         if (!font.StartsWith('-'))
         {
-            throw new PcfXlfdException("Must starts with '-'.");
+            throw new PcfXlfdException("Must start with '-'.");
         }
 
         var parts = font[1..].Split('-');
         if (parts.Length != XlfdKeysOrder.Length)
         {
-            throw new PcfXlfdException($"Must contains {XlfdKeysOrder.Length} XLFD fields.");
+            throw new PcfXlfdException($"Must contain {XlfdKeysOrder.Length} XLFD fields.");
         }
 
         for (var i = 0; i < XlfdKeysOrder.Length; i++)

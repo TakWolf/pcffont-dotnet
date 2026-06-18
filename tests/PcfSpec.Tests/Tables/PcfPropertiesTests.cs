@@ -138,7 +138,7 @@ public class PcfPropertiesTests
 
         properties.Font = "Bitstream-Charter-Medium-R-Normal--12-120-75-75-P-68-ISO8859-1";
         var e = Assert.Throws<PcfXlfdException>(() => properties.UpdateByXlfd());
-        Assert.Equal("Must starts with '-'.", e.Message);
+        Assert.Equal("Must start with '-'.", e.Message);
     }
 
     [Fact]
@@ -148,7 +148,7 @@ public class PcfPropertiesTests
 
         properties.Font = "-Bitstream-Charter-Medium-R-Normal--12-120-75-75-P-68-ISO8859-1-";
         var e = Assert.Throws<PcfXlfdException>(() => properties.UpdateByXlfd());
-        Assert.Equal("Must contains 14 XLFD fields.", e.Message);
+        Assert.Equal("Must contain 14 XLFD fields.", e.Message);
     }
 
     [Fact]
@@ -211,7 +211,7 @@ public class PcfPropertiesTests
         var properties = new PcfProperties();
 
         var e = Assert.Throws<PcfKeyException>(() => properties["abc-def"] = "abcdef");
-        Assert.Equal("Key contains illegal characters.", e.Message);
+        Assert.Equal("Key contain illegal characters.", e.Message);
     }
 
     [Fact]
