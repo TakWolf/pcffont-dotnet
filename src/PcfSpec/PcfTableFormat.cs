@@ -4,12 +4,11 @@ namespace PcfSpec;
 
 public class PcfTableFormat : ICopyable<PcfTableFormat>, IEquatable<PcfTableFormat>
 {
-    private const uint DefaultValue = 0b_0000_0000_0000;
-    private const uint FlagInkBoundsOrCompressedMetrics = 0b_0001_0000_0000;
+    private const uint FlagMsByteFirst = 0b_00_01_00;
+    private const uint FlagMsBitFirst = 0b_00_10_00;
+    private const uint FlagInkBoundsOrCompressedMetrics = 0b_01_0000_0000;
 
     private const uint MaskGlyphPad = 0b_00_00_11;
-    private const uint MaskByteOrder = 0b_00_01_00;
-    private const uint MaskBitOrder = 0b_00_10_00;
     private const uint MaskScanUnit = 0b_11_00_00;
 
     public static readonly uint[] GlyphPadOptions = [1, 2, 4, 8];
@@ -37,8 +36,8 @@ public class PcfTableFormat : ICopyable<PcfTableFormat>, IEquatable<PcfTableForm
 
     public static PcfTableFormat Parse(uint value)
     {
-        var msByteFirst = (value & MaskByteOrder) != 0;
-        var msBitFirst = (value & MaskBitOrder) != 0;
+        var msByteFirst = (value & FlagMsByteFirst) != 0;
+        var msBitFirst = (value & FlagMsBitFirst) != 0;
         var inkBoundsOrCompressedMetrics = (value & FlagInkBoundsOrCompressedMetrics) != 0;
         var glyphPadIndex = (int)(value & MaskGlyphPad);
         var scanUnitIndex = (int)((value & MaskScanUnit) >> 4);
@@ -98,14 +97,14 @@ public class PcfTableFormat : ICopyable<PcfTableFormat>, IEquatable<PcfTableForm
     {
         get
         {
-            var value = DefaultValue;
+            var value = 0u;
             if (MsByteFirst)
             {
-                value |= MaskByteOrder;
+                value |= FlagMsByteFirst;
             }
             if (MsBitFirst)
             {
-                value |= MaskBitOrder;
+                value |= FlagMsBitFirst;
             }
             if (InkBoundsOrCompressedMetrics)
             {
