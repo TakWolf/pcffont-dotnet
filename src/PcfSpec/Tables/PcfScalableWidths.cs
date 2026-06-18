@@ -17,20 +17,20 @@ public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidt
 
     public PcfTableFormat TableFormat { get; set; }
 
-    public PcfScalableWidths(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+    public PcfScalableWidths(PcfTableFormat tableFormat = default) : this(0, tableFormat) { }
 
     public PcfScalableWidths(
         int capacity,
-        PcfTableFormat? tableFormat = null) : base(capacity)
+        PcfTableFormat tableFormat = default) : base(capacity)
     {
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
     }
 
     public PcfScalableWidths(
         IEnumerable<int> scalableWidths,
-        PcfTableFormat? tableFormat = null) : base(scalableWidths)
+        PcfTableFormat tableFormat = default) : base(scalableWidths)
     {
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
     }
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
@@ -38,7 +38,7 @@ public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidt
         var glyphsCount = (uint)Count;
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
-        stream.WriteUInt32(TableFormat.Value);
+        stream.WriteUInt32(TableFormat);
         stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
         stream.WriteInt32Array(CollectionsMarshal.AsSpan(this), TableFormat.MsByteFirst);
         stream.AlignTo4Bytes();
@@ -49,7 +49,7 @@ public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidt
 
     public PcfScalableWidths Copy() => new(this, TableFormat);
 
-    public PcfScalableWidths DeepCopy() => new(this, TableFormat.DeepCopy());
+    public PcfScalableWidths DeepCopy() => Copy();
 
     public bool Equals(PcfScalableWidths? other)
     {
@@ -61,7 +61,7 @@ public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidt
         {
             return true;
         }
-        return TableFormat.Equals(other.TableFormat) &&
+        return TableFormat == other.TableFormat &&
                EqualUtil.ListEquals(this, other);
     }
 

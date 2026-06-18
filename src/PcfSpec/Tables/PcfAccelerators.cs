@@ -66,7 +66,7 @@ public class PcfAccelerators : IPcfTable, ICopyable<PcfAccelerators>, IEquatable
     public PcfMetric? InkMaxBounds { get; set; }
 
     public PcfAccelerators(
-        PcfTableFormat? tableFormat = null,
+        PcfTableFormat tableFormat = default,
         bool noOverlap = false,
         bool constantMetrics = false,
         bool terminalFont = false,
@@ -82,7 +82,7 @@ public class PcfAccelerators : IPcfTable, ICopyable<PcfAccelerators>, IEquatable
         PcfMetric? inkMinBounds = null,
         PcfMetric? inkMaxBounds = null)
     {
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
         NoOverlap = noOverlap;
         ConstantMetrics = constantMetrics;
         TerminalFont = terminalFont;
@@ -136,7 +136,7 @@ public class PcfAccelerators : IPcfTable, ICopyable<PcfAccelerators>, IEquatable
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
         stream.Seek(tableOffset, SeekOrigin.Begin);
-        stream.WriteUInt32(TableFormat.Value);
+        stream.WriteUInt32(TableFormat);
         stream.WriteBool(NoOverlap);
         stream.WriteBool(ConstantMetrics);
         stream.WriteBool(TerminalFont);
@@ -185,7 +185,7 @@ public class PcfAccelerators : IPcfTable, ICopyable<PcfAccelerators>, IEquatable
         InkMaxBounds);
 
     public PcfAccelerators DeepCopy() => new(
-        TableFormat.DeepCopy(),
+        TableFormat,
         NoOverlap,
         ConstantMetrics,
         TerminalFont,
@@ -211,7 +211,7 @@ public class PcfAccelerators : IPcfTable, ICopyable<PcfAccelerators>, IEquatable
         {
             return true;
         }
-        return TableFormat.Equals(other.TableFormat) &&
+        return TableFormat == other.TableFormat &&
                NoOverlap == other.NoOverlap &&
                ConstantMetrics == other.ConstantMetrics &&
                TerminalFont == other.TerminalFont &&

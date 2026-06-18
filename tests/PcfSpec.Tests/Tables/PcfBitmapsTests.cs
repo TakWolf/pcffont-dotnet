@@ -12,12 +12,11 @@ public class PcfBitmapsTests
                 [[1, 0, 0, 1]],
                 [[0, 1, 1, 0]]
             ],
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         var bitmaps2 = bitmaps1.Copy();
 
         Assert.Equal(bitmaps1, bitmaps2);
         Assert.NotSame(bitmaps1, bitmaps2);
-        Assert.Same(bitmaps1.TableFormat, bitmaps2.TableFormat);
 
         foreach (var (bitmap1, bitmap2) in bitmaps1.Zip(bitmaps2))
         {
@@ -33,12 +32,11 @@ public class PcfBitmapsTests
                 [[1, 0, 0, 1]],
                 [[0, 1, 1, 0]]
             ],
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         var bitmaps2 = bitmaps1.DeepCopy();
 
         Assert.Equal(bitmaps1, bitmaps2);
         Assert.NotSame(bitmaps1, bitmaps2);
-        Assert.NotSame(bitmaps1.TableFormat, bitmaps2.TableFormat);
 
         foreach (var (bitmap1, bitmap2) in bitmaps1.Zip(bitmaps2))
         {
@@ -58,13 +56,13 @@ public class PcfBitmapsTests
                 [[1, 0, 0, 1]],
                 [[0, 1, 1, 0]]
             ],
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         var bitmaps2 = new PcfBitmaps(
             [
                 [[1, 0, 0, 1]],
                 [[0, 1, 1, 0]]
             ],
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         Assert.Equal(bitmaps1, bitmaps2);
     }
 }

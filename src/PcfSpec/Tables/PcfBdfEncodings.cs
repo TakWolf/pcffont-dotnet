@@ -51,22 +51,22 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
     public ushort DefaultChar { get; set; }
 
     public PcfBdfEncodings(
-        PcfTableFormat? tableFormat = null,
+        PcfTableFormat tableFormat = default,
         ushort defaultChar = NoEncoding) : this(0, tableFormat, defaultChar) { }
 
     public PcfBdfEncodings(
         int capacity,
-        PcfTableFormat? tableFormat = null,
+        PcfTableFormat tableFormat = default,
         ushort defaultChar = NoEncoding)
     {
         _encodings = new SortedDictionary<ushort, ushort>();
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
         DefaultChar = defaultChar;
     }
 
     public PcfBdfEncodings(
         IDictionary<ushort, ushort> encodings,
-        PcfTableFormat? tableFormat = null,
+        PcfTableFormat tableFormat = default,
         ushort defaultChar = NoEncoding) : this(encodings.Count, tableFormat, defaultChar)
     {
         foreach (var (encoding, glyphIndex) in encodings)
@@ -77,7 +77,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
 
     public PcfBdfEncodings(
         IEnumerable<KeyValuePair<ushort, ushort>> encodings,
-        PcfTableFormat? tableFormat = null,
+        PcfTableFormat tableFormat = default,
         ushort defaultChar = NoEncoding) :
         this((encodings as ICollection<KeyValuePair<ushort, ushort>>)?.Count ?? 0, tableFormat, defaultChar)
     {
@@ -170,7 +170,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         }
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
-        stream.WriteUInt32(TableFormat.Value);
+        stream.WriteUInt32(TableFormat);
         stream.WriteUInt16(minByte2, TableFormat.MsByteFirst);
         stream.WriteUInt16(maxByte2, TableFormat.MsByteFirst);
         stream.WriteUInt16(minByte1, TableFormat.MsByteFirst);
@@ -209,10 +209,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         TableFormat,
         DefaultChar);
 
-    public PcfBdfEncodings DeepCopy() => new(
-        _encodings,
-        TableFormat.DeepCopy(),
-        DefaultChar);
+    public PcfBdfEncodings DeepCopy() => Copy();
 
     public bool Equals(PcfBdfEncodings? other)
     {
@@ -224,7 +221,7 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         {
             return true;
         }
-        return TableFormat.Equals(other.TableFormat) &&
+        return TableFormat == other.TableFormat &&
                DefaultChar == other.DefaultChar &&
                EqualUtil.DictionaryEquals(_encodings, other._encodings);
     }

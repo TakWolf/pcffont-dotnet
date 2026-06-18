@@ -181,19 +181,19 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
 
     public PcfTableFormat TableFormat { get; set; }
 
-    public PcfProperties(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+    public PcfProperties(PcfTableFormat tableFormat = default) : this(0, tableFormat) { }
 
     public PcfProperties(
         int capacity,
-        PcfTableFormat? tableFormat = null)
+        PcfTableFormat tableFormat = default)
     {
         _properties = new OrderedDictionary<string, PcfPropertyValue>(capacity, StringComparer.OrdinalIgnoreCase);
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
     }
 
     public PcfProperties(
         IDictionary<string, PcfPropertyValue> properties,
-        PcfTableFormat? tableFormat = null) : this(properties.Count, tableFormat)
+        PcfTableFormat tableFormat = default) : this(properties.Count, tableFormat)
     {
         foreach (var (key, value) in properties)
         {
@@ -203,7 +203,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
 
     public PcfProperties(
         IEnumerable<KeyValuePair<string, PcfPropertyValue>> properties,
-        PcfTableFormat? tableFormat = null) :
+        PcfTableFormat tableFormat = default) :
         this((properties as ICollection<KeyValuePair<string, PcfPropertyValue>>)?.Count ?? 0, tableFormat)
     {
         foreach (var (key, value) in properties)
@@ -547,7 +547,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         }
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
-        stream.WriteUInt32(TableFormat.Value);
+        stream.WriteUInt32(TableFormat);
         stream.WriteUInt32(propsCount, TableFormat.MsByteFirst);
         foreach (var (keyOffset, value, valueOffset) in propInfos)
         {
@@ -574,7 +574,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
 
     public PcfProperties Copy() => new(_properties, TableFormat);
 
-    public PcfProperties DeepCopy() => new(_properties, TableFormat.DeepCopy());
+    public PcfProperties DeepCopy() => Copy();
 
     public bool Equals(PcfProperties? other)
     {
@@ -586,7 +586,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         {
             return true;
         }
-        return TableFormat.Equals(other.TableFormat) &&
+        return TableFormat == other.TableFormat &&
                EqualUtil.DictionaryEquals(_properties, other._properties);
     }
 

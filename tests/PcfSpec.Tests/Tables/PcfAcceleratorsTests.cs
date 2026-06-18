@@ -193,7 +193,7 @@ public class PcfAcceleratorsTests
     public void TestCopy()
     {
         var accelerators1 = new PcfAccelerators(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             noOverlap: true,
             constantMetrics: true,
             terminalFont: true,
@@ -213,7 +213,6 @@ public class PcfAcceleratorsTests
 
         Assert.Equal(accelerators1, accelerators2);
         Assert.NotSame(accelerators1, accelerators2);
-        Assert.Same(accelerators1.TableFormat, accelerators2.TableFormat);
         Assert.Same(accelerators1.MinBounds, accelerators2.MinBounds);
         Assert.Same(accelerators1.MaxBounds, accelerators2.MaxBounds);
         Assert.Same(accelerators1.InkMinBounds, accelerators2.InkMinBounds);
@@ -224,7 +223,7 @@ public class PcfAcceleratorsTests
     public void TestDeepCopy()
     {
         var accelerators1 = new PcfAccelerators(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             noOverlap: true,
             constantMetrics: true,
             terminalFont: true,
@@ -244,7 +243,6 @@ public class PcfAcceleratorsTests
 
         Assert.Equal(accelerators1, accelerators2);
         Assert.NotSame(accelerators1, accelerators2);
-        Assert.NotSame(accelerators1.TableFormat, accelerators2.TableFormat);
         Assert.NotSame(accelerators1.MinBounds, accelerators2.MinBounds);
         Assert.NotSame(accelerators1.MaxBounds, accelerators2.MaxBounds);
         Assert.NotSame(accelerators1.InkMinBounds, accelerators2.InkMinBounds);
@@ -255,7 +253,7 @@ public class PcfAcceleratorsTests
     public void TestEquals()
     {
         var accelerators1 = new PcfAccelerators(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             noOverlap: true,
             constantMetrics: true,
             terminalFont: true,
@@ -272,7 +270,7 @@ public class PcfAcceleratorsTests
             inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
         );
         var accelerators2 = new PcfAccelerators(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             noOverlap: true,
             constantMetrics: true,
             terminalFont: true,

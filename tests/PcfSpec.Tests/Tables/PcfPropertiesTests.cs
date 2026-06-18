@@ -242,40 +242,28 @@ public class PcfPropertiesTests
     public void TestCopy()
     {
         var properties1 = new PcfProperties(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         properties1.FamilyName = "Demo Font";
         properties1.PointSize = 100;
         var properties2 = properties1.Copy();
+        var properties3 = properties1.DeepCopy();
 
         Assert.Equal(properties1, properties2);
+        Assert.Equal(properties1, properties3);
         Assert.NotSame(properties1, properties2);
-        Assert.Same(properties1.TableFormat, properties2.TableFormat);
-    }
-
-    [Fact]
-    public void TestDeepCopy()
-    {
-        var properties1 = new PcfProperties(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
-        properties1.FamilyName = "Demo Font";
-        properties1.PointSize = 100;
-        var properties2 = properties1.DeepCopy();
-
-        Assert.Equal(properties1, properties2);
-        Assert.NotSame(properties1, properties2);
-        Assert.NotSame(properties1.TableFormat, properties2.TableFormat);
+        Assert.NotSame(properties1, properties3);
     }
 
     [Fact]
     public void TestEquals()
     {
         var properties1 = new PcfProperties(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         properties1.FamilyName = "Demo Font";
         properties1.PointSize = 100;
 
         var properties2 = new PcfProperties(
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         properties2.FamilyName = "Demo Font";
         properties2.PointSize = 100;
 

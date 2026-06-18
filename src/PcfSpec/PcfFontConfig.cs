@@ -11,8 +11,8 @@ public class PcfFontConfig : ICopyable<PcfFontConfig>, IEquatable<PcfFontConfig>
     public bool DrawRightToLeft { get; set; }
     public bool MsByteFirst { get; set; }
     public bool MsBitFirst { get; set; }
-    public int GlyphPadIndex { get; set; }
-    public int ScanUnitIndex { get; set; }
+    public uint GlyphPad { get; set; }
+    public uint ScanUnit { get; set; }
 
     public PcfFontConfig(
         int fontAscent = 0,
@@ -21,8 +21,8 @@ public class PcfFontConfig : ICopyable<PcfFontConfig>, IEquatable<PcfFontConfig>
         bool drawRightToLeft = false,
         bool msByteFirst = false,
         bool msBitFirst = false,
-        int glyphPadIndex = 0,
-        int scanUnitIndex = 0)
+        uint glyphPad = 1,
+        uint scanUnit = 1)
     {
         FontAscent = fontAscent;
         FontDescent = fontDescent;
@@ -30,27 +30,15 @@ public class PcfFontConfig : ICopyable<PcfFontConfig>, IEquatable<PcfFontConfig>
         DrawRightToLeft = drawRightToLeft;
         MsByteFirst = msByteFirst;
         MsBitFirst = msBitFirst;
-        GlyphPadIndex = glyphPadIndex;
-        ScanUnitIndex = scanUnitIndex;
+        GlyphPad = glyphPad;
+        ScanUnit = scanUnit;
     }
 
-    public uint GlyphPad
-    {
-        get => PcfTableFormat.GlyphPadOptions[GlyphPadIndex];
-        set => GlyphPadIndex = PcfTableFormat.GlyphPadToIndex(value);
-    }
-
-    public uint ScanUnit
-    {
-        get => PcfTableFormat.ScanUnitOptions[ScanUnitIndex];
-        set => ScanUnitIndex = PcfTableFormat.ScanUnitToIndex(value);
-    }
-
-    public PcfTableFormat ToTableFormat() => new(
+    public PcfTableFormat ToTableFormat() => PcfTableFormat.Of(
         msByteFirst: MsByteFirst,
         msBitFirst: MsBitFirst,
-        glyphPadIndex: GlyphPadIndex,
-        scanUnitIndex: ScanUnitIndex);
+        glyphPad: GlyphPad,
+        scanUnit: ScanUnit);
 
     public PcfFontConfig Copy() => new(
         FontAscent,
@@ -59,8 +47,8 @@ public class PcfFontConfig : ICopyable<PcfFontConfig>, IEquatable<PcfFontConfig>
         DrawRightToLeft,
         MsByteFirst,
         MsBitFirst,
-        GlyphPadIndex,
-        ScanUnitIndex);
+        GlyphPad,
+        ScanUnit);
 
     public PcfFontConfig DeepCopy() => Copy();
 
@@ -80,8 +68,8 @@ public class PcfFontConfig : ICopyable<PcfFontConfig>, IEquatable<PcfFontConfig>
                DrawRightToLeft == other.DrawRightToLeft &&
                MsByteFirst == other.MsByteFirst &&
                MsBitFirst == other.MsBitFirst &&
-               GlyphPadIndex == other.GlyphPadIndex &&
-               ScanUnitIndex == other.ScanUnitIndex;
+               GlyphPad == other.GlyphPad &&
+               ScanUnit == other.ScanUnit;
     }
 
     public override bool Equals(object? other)

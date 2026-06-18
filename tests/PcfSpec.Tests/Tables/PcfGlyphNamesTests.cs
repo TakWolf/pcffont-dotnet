@@ -9,25 +9,14 @@ public class PcfGlyphNamesTests
     {
         var names1 = new PcfGlyphNames(
             ["A", "B", "C"],
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         var names2 = names1.Copy();
+        var names3 = names1.DeepCopy();
 
         Assert.Equal(names1, names2);
+        Assert.Equal(names1, names3);
         Assert.NotSame(names1, names2);
-        Assert.Same(names1.TableFormat, names2.TableFormat);
-    }
-
-    [Fact]
-    public void TestDeepCopy()
-    {
-        var names1 = new PcfGlyphNames(
-            ["A", "B", "C"],
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
-        var names2 = names1.DeepCopy();
-
-        Assert.Equal(names1, names2);
-        Assert.NotSame(names1, names2);
-        Assert.NotSame(names1.TableFormat, names2.TableFormat);
+        Assert.NotSame(names1, names3);
     }
 
     [Fact]
@@ -35,10 +24,10 @@ public class PcfGlyphNamesTests
     {
         var names1 = new PcfGlyphNames(
             ["A", "B", "C"],
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         var names2 = new PcfGlyphNames(
             ["A", "B", "C"],
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2));
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
         Assert.Equal(names1, names2);
     }
 }

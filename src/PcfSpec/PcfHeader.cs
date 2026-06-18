@@ -26,7 +26,7 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
             {
                 throw new PcfParseException($"Duplicate table '{tableType}'.");
             }
-            var tableFormat = PcfTableFormat.Parse(stream.ReadUInt32());
+            PcfTableFormat tableFormat = stream.ReadUInt32();
             var tableSize = stream.ReadUInt32();
             var tableOffset = stream.ReadUInt32();
             headers.Add(new PcfHeader(tableType, tableFormat, tableSize, tableOffset));
@@ -44,7 +44,7 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
         foreach (var header in headers)
         {
             stream.WriteUInt32((uint)header.TableType);
-            stream.WriteUInt32(header.TableFormat.Value);
+            stream.WriteUInt32(header.TableFormat);
             stream.WriteUInt32(header.TableSize);
             stream.WriteUInt32(header.TableOffset);
         }
@@ -70,8 +70,8 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
     public PcfTableFormat ReadAndCheckTableFormat(Stream stream)
     {
         stream.Seek(TableOffset, SeekOrigin.Begin);
-        var value = stream.ReadUInt32();
-        if (value != TableFormat.Value)
+        PcfTableFormat value = stream.ReadUInt32();
+        if (value != TableFormat)
         {
             throw new PcfParseException($"Inconsistent table format: '{TableType}'");
         }
@@ -86,11 +86,7 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
         TableSize,
         TableOffset);
 
-    public PcfHeader DeepCopy() => new(
-        TableType,
-        TableFormat.DeepCopy(),
-        TableSize,
-        TableOffset);
+    public PcfHeader DeepCopy() => Copy();
 
     public bool Equals(PcfHeader? other)
     {
@@ -103,7 +99,7 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
             return true;
         }
         return TableType == other.TableType &&
-               TableFormat.Equals(other.TableFormat) &&
+               TableFormat == other.TableFormat &&
                TableSize == other.TableSize &&
                TableOffset == other.TableOffset;
     }

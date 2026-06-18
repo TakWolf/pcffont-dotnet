@@ -29,20 +29,20 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
 
     public PcfTableFormat TableFormat { get; set; }
 
-    public PcfMetrics(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+    public PcfMetrics(PcfTableFormat tableFormat = default) : this(0, tableFormat) { }
 
     public PcfMetrics(
         int capacity,
-        PcfTableFormat? tableFormat = null) : base(capacity)
+        PcfTableFormat tableFormat = default) : base(capacity)
     {
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
     }
 
     public PcfMetrics(
         IEnumerable<PcfMetric> metrics,
-        PcfTableFormat? tableFormat = null) : base(metrics)
+        PcfTableFormat tableFormat = default) : base(metrics)
     {
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
     }
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
@@ -50,7 +50,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
         var glyphsCount = (uint)Count;
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
-        stream.WriteUInt32(TableFormat.Value);
+        stream.WriteUInt32(TableFormat);
         if (TableFormat.CompressedMetrics)
         {
             stream.WriteUInt16((ushort)glyphsCount, TableFormat.MsByteFirst);
@@ -73,7 +73,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
 
     public PcfMetrics DeepCopy()
     {
-        var metrics = new PcfMetrics(Count, TableFormat.DeepCopy());
+        var metrics = new PcfMetrics(Count, TableFormat);
         CopyUtil.DeepCopyToList(this, metrics);
         return metrics;
     }
@@ -88,7 +88,7 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
         {
             return true;
         }
-        return TableFormat.Equals(other.TableFormat) &&
+        return TableFormat == other.TableFormat &&
                EqualUtil.ListEquals(this, other);
     }
 

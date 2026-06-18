@@ -26,29 +26,16 @@ public class PcfHeaderTests
     {
         var header1 = new PcfHeader(
             tableType: PcfTableType.Accelerators,
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             tableSize: 10,
             tableOffset: 20);
         var header2 = header1.Copy();
+        var header3 = header1.DeepCopy();
 
         Assert.Equal(header1, header2);
+        Assert.Equal(header1, header3);
         Assert.NotSame(header1, header2);
-        Assert.Same(header1.TableFormat, header2.TableFormat);
-    }
-
-    [Fact]
-    public void TestDeepCopy()
-    {
-        var header1 = new PcfHeader(
-            tableType: PcfTableType.Accelerators,
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            tableSize: 10,
-            tableOffset: 20);
-        var header2 = header1.DeepCopy();
-
-        Assert.Equal(header1, header2);
-        Assert.NotSame(header1, header2);
-        Assert.NotSame(header1.TableFormat, header2.TableFormat);
+        Assert.NotSame(header1, header3);
     }
 
     [Fact]
@@ -56,12 +43,12 @@ public class PcfHeaderTests
     {
         var header1 = new PcfHeader(
             tableType: PcfTableType.Accelerators,
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             tableSize: 10,
             tableOffset: 20);
         var header2 = new PcfHeader(
             tableType: PcfTableType.Accelerators,
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             tableSize: 10,
             tableOffset: 20);
         Assert.Equal(header1, header2);

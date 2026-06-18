@@ -23,32 +23,15 @@ public class PcfBdfEncodingsTests
                 { 2, 2 },
                 { 3, 3 }
             },
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             defaultChar: 1);
         var encodings2 = encodings1.Copy();
+        var encodings3 = encodings1.DeepCopy();
 
         Assert.Equal(encodings1, encodings2);
+        Assert.Equal(encodings1, encodings3);
         Assert.NotSame(encodings1, encodings2);
-        Assert.Same(encodings1.TableFormat, encodings2.TableFormat);
-    }
-
-    [Fact]
-    public void TestDeepCopy()
-    {
-        var encodings1 = new PcfBdfEncodings(
-            new Dictionary<ushort, ushort>
-            {
-                { 1, 1 },
-                { 2, 2 },
-                { 3, 3 }
-            },
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
-            defaultChar: 1);
-        var encodings2 = encodings1.DeepCopy();
-
-        Assert.Equal(encodings1, encodings2);
-        Assert.NotSame(encodings1, encodings2);
-        Assert.NotSame(encodings1.TableFormat, encodings2.TableFormat);
+        Assert.NotSame(encodings1, encodings3);
     }
 
     [Fact]
@@ -61,7 +44,7 @@ public class PcfBdfEncodingsTests
                 { 2, 2 },
                 { 3, 3 }
             },
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             defaultChar: 1);
         var encodings2 = new PcfBdfEncodings(
             new Dictionary<ushort, ushort>
@@ -70,7 +53,7 @@ public class PcfBdfEncodingsTests
                 { 2, 2 },
                 { 3, 3 }
             },
-            tableFormat: new PcfTableFormat(true, true, true, 1, 2),
+            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
             defaultChar: 1);
         Assert.Equal(encodings1, encodings2);
     }

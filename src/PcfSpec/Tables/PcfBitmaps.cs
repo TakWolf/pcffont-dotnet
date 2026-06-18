@@ -83,20 +83,20 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
 
     public PcfTableFormat TableFormat { get; set; }
 
-    public PcfBitmaps(PcfTableFormat? tableFormat = null) : this(0, tableFormat) { }
+    public PcfBitmaps(PcfTableFormat tableFormat = default) : this(0, tableFormat) { }
 
     public PcfBitmaps(
         int capacity,
-        PcfTableFormat? tableFormat = null) : base(capacity)
+        PcfTableFormat tableFormat = default) : base(capacity)
     {
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
     }
 
     public PcfBitmaps(
         IEnumerable<List<List<byte>>> bitmaps,
-        PcfTableFormat? tableFormat = null) : base(bitmaps)
+        PcfTableFormat tableFormat = default) : base(bitmaps)
     {
-        TableFormat = tableFormat ?? new PcfTableFormat();
+        TableFormat = tableFormat;
     }
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
@@ -167,7 +167,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
         }
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
-        stream.WriteUInt32(TableFormat.Value);
+        stream.WriteUInt32(TableFormat);
         stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
         stream.WriteUInt32Array(CollectionsMarshal.AsSpan(bitmapOffsets), TableFormat.MsByteFirst);
         stream.WriteUInt32Array(bitmapsSizeConfigs, TableFormat.MsByteFirst);
@@ -182,7 +182,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
 
     public PcfBitmaps DeepCopy()
     {
-        var bitmaps = new PcfBitmaps(Count, TableFormat.DeepCopy());
+        var bitmaps = new PcfBitmaps(Count, TableFormat);
         CopyUtil.DeepCopyToList(this, bitmaps);
         return bitmaps;
     }
@@ -197,7 +197,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
         {
             return true;
         }
-        return TableFormat.Equals(other.TableFormat) &&
+        return TableFormat == other.TableFormat &&
                EqualUtil.ListEquals(this, other);
     }
 

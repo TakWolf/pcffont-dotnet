@@ -22,8 +22,8 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         builder.Config.DrawRightToLeft = accelerators.DrawRightToLeft;
         builder.Config.MsByteFirst = bitmaps.TableFormat.MsByteFirst;
         builder.Config.MsBitFirst = bitmaps.TableFormat.MsBitFirst;
-        builder.Config.GlyphPadIndex = bitmaps.TableFormat.GlyphPadIndex;
-        builder.Config.ScanUnitIndex = bitmaps.TableFormat.ScanUnitIndex;
+        builder.Config.GlyphPad = bitmaps.TableFormat.GlyphPad;
+        builder.Config.ScanUnit = bitmaps.TableFormat.ScanUnit;
 
         builder.Properties = properties;
 
@@ -71,25 +71,27 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
 
     public PcfFont Build()
     {
+        var tableFormat = Config.ToTableFormat();
+
         var bdfEncodings = new PcfBdfEncodings(
-            tableFormat: Config.ToTableFormat(),
+            tableFormat: tableFormat,
             defaultChar: Config.DefaultChar);
         var glyphNames = new PcfGlyphNames(
-            tableFormat: Config.ToTableFormat());
+            tableFormat: tableFormat);
         var scalableWidths = new PcfScalableWidths(
-            tableFormat: Config.ToTableFormat());
+            tableFormat: tableFormat);
         var metrics = new PcfMetrics(
-            tableFormat: Config.ToTableFormat());
+            tableFormat: tableFormat);
         var bitmaps = new PcfBitmaps(
-            tableFormat: Config.ToTableFormat());
+            tableFormat: tableFormat);
         var accelerators = new PcfAccelerators(
-            tableFormat: Config.ToTableFormat(),
+            tableFormat: tableFormat,
             drawRightToLeft: Config.DrawRightToLeft,
             fontAscent: Config.FontAscent,
             fontDescent: Config.FontDescent);
         var properties = new PcfProperties(
             Properties,
-            tableFormat: Config.ToTableFormat());
+            tableFormat: tableFormat);
 
         for (var glyphIndex = 0; glyphIndex < Glyphs.Count; glyphIndex++)
         {
@@ -122,7 +124,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
             }
 
             bdfAccelerators = new PcfAccelerators(
-                tableFormat: Config.ToTableFormat(),
+                tableFormat: tableFormat,
                 drawRightToLeft: Config.DrawRightToLeft,
                 fontAscent: Config.FontAscent,
                 fontDescent: Config.FontDescent);
@@ -136,7 +138,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         if (bdfAccelerators.ConstantMetrics)
         {
             inkMetrics = new PcfMetrics(
-                tableFormat: Config.ToTableFormat());
+                tableFormat: tableFormat);
             foreach (var glyph in Glyphs)
             {
                 inkMetrics.Add(glyph.CreateMetric(true));
@@ -144,7 +146,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
 
             accelerators.InkMinBounds = CalculateUtil.CalculateMinBounds(inkMetrics);
             accelerators.InkMaxBounds = CalculateUtil.CalculateMaxBounds(inkMetrics);
-            accelerators.TableFormat.InkBounds = true;
+            accelerators.TableFormat = accelerators.TableFormat.WithInkBounds(true);
             accelerators.InkMetrics = true;
 
             if (glyphIndices.Count == Glyphs.Count)
@@ -163,24 +165,24 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
                 bdfAccelerators.InkMinBounds = CalculateUtil.CalculateMinBounds(bdfInkMetrics);
                 bdfAccelerators.InkMaxBounds = CalculateUtil.CalculateMaxBounds(bdfInkMetrics);
             }
-            bdfAccelerators.TableFormat.InkBounds = true;
+            bdfAccelerators.TableFormat = bdfAccelerators.TableFormat.WithInkBounds(true);
             bdfAccelerators.InkMetrics = true;
         }
         else
         {
             inkMetrics = null;
 
-            accelerators.TableFormat.InkBounds = false;
+            accelerators.TableFormat = accelerators.TableFormat.WithInkBounds(false);
             accelerators.InkMetrics = false;
 
-            bdfAccelerators.TableFormat.InkBounds = false;
+            bdfAccelerators.TableFormat = bdfAccelerators.TableFormat.WithInkBounds(false);
             bdfAccelerators.InkMetrics = false;
         }
 
-        metrics.TableFormat.CompressedMetrics = accelerators.MinBounds.Compressible && accelerators.MaxBounds.Compressible;
+        metrics.TableFormat = metrics.TableFormat.WithCompressedMetrics(accelerators.MinBounds.Compressible && accelerators.MaxBounds.Compressible);
         if (inkMetrics is not null)
         {
-            inkMetrics.TableFormat.CompressedMetrics = accelerators.InkMinBounds!.Compressible && accelerators.InkMaxBounds!.Compressible;
+            inkMetrics.TableFormat = inkMetrics.TableFormat.WithCompressedMetrics(accelerators.InkMinBounds!.Compressible && accelerators.InkMaxBounds!.Compressible);
         }
 
         return new PcfFont(
