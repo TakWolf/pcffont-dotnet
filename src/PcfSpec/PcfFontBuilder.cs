@@ -73,11 +73,11 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
     {
         var tableFormat = Config.ToTableFormat();
 
-        var bdfEncodings = new PcfBdfEncodings(tableFormat: tableFormat, defaultChar: Config.DefaultChar);
-        var glyphNames = new PcfGlyphNames(tableFormat: tableFormat);
-        var scalableWidths = new PcfScalableWidths(tableFormat: tableFormat);
-        var metrics = new PcfMetrics(tableFormat: tableFormat);
-        var bitmaps = new PcfBitmaps(tableFormat: tableFormat);
+        var bdfEncodings = new PcfBdfEncodings(Glyphs.Count, tableFormat: tableFormat, defaultChar: Config.DefaultChar);
+        var glyphNames = new PcfGlyphNames(Glyphs.Count, tableFormat: tableFormat);
+        var scalableWidths = new PcfScalableWidths(Glyphs.Count, tableFormat: tableFormat);
+        var metrics = new PcfMetrics(Glyphs.Count, tableFormat: tableFormat);
+        var bitmaps = new PcfBitmaps(Glyphs.Count, tableFormat: tableFormat);
         var accelerators = new PcfAccelerators(
             tableFormat: tableFormat,
             drawRightToLeft: Config.DrawRightToLeft,
@@ -129,7 +129,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         PcfMetrics? inkMetrics;
         if (accelerators.ConstantMetrics)
         {
-            inkMetrics = new PcfMetrics(tableFormat: tableFormat);
+            inkMetrics = new PcfMetrics(Glyphs.Count, tableFormat: tableFormat);
             foreach (var glyph in Glyphs)
             {
                 inkMetrics.Add(glyph.CreateMetric(true));

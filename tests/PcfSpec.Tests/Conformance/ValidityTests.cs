@@ -160,7 +160,7 @@ public class ValidityTests : IClassFixture<DemoFonts>
             using var freeTypeLibrary = new FreeTypeLibrary();
             var ftFont = new FreeTypeFaceFacade(freeTypeLibrary, (IntPtr)fontBytesPtr, fontBytes.Length);
 
-            var pcfGlyphIndexToEncoding = new Dictionary<int, ushort>();
+            var pcfGlyphIndexToEncoding = new Dictionary<int, ushort>(pcfFont.BdfEncodings!.Count);
             foreach (var (encoding, glyphIndex) in pcfFont.BdfEncodings!)
             {
                 pcfGlyphIndexToEncoding[glyphIndex] = encoding;
