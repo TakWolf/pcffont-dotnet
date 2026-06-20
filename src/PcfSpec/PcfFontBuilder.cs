@@ -135,7 +135,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         }
 
         PcfMetrics? inkMetrics;
-        if (bdfAccelerators.ConstantMetrics)
+        if (accelerators.ConstantMetrics)
         {
             inkMetrics = new PcfMetrics(
                 tableFormat: tableFormat);
