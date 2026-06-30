@@ -49,7 +49,7 @@ public class LoadSaveTests
     [InlineData("spleen", "spleen-12x24.pcf")]
     [InlineData("spleen", "spleen-16x32.pcf")]
     [InlineData("spleen", "spleen-32x64.pcf")]
-    [InlineData("unifont", "unifont-17.0.04.pcf")]
+    [InlineData("unifont", "unifont-17.0.05.pcf")]
     public void TestLoadSave(string fontDir, string fontFileName)
     {
         var loadPath = Path.Combine("assets", fontDir, fontFileName);

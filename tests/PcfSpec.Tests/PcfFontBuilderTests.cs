@@ -7,7 +7,7 @@ public class PcfFontBuilderTests
     [Theory]
     [InlineData("demo", "demo")]
     [InlineData("demo", "demo-2")]
-    [InlineData("unifont", "unifont-17.0.04")]
+    [InlineData("unifont", "unifont-17.0.05")]
     public void TestBuilder(string fontDir, string fontFileName)
     {
         var font1 = PcfFont.Load(Path.Combine("assets", fontDir, $"{fontFileName}.pcf"));

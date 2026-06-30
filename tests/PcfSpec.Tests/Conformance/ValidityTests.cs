@@ -94,8 +94,8 @@ public class ValidityTests : IClassFixture<DemoFonts>
     [Fact]
     public void TestUnifont()
     {
-        var bdfFont = BdfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.04.bdf"));
-        var pcfFont = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.04.pcf"));
+        var bdfFont = BdfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.05.bdf"));
+        var pcfFont = PcfFont.Load(Path.Combine("assets", "unifont", "unifont-17.0.05.pcf"));
 
         for (var glyphIndex = 0; glyphIndex < bdfFont.Glyphs.Count; glyphIndex++)
         {
