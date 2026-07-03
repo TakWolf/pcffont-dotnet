@@ -23,7 +23,7 @@ public class PcfBdfEncodingsTests
                 { 2, 2 },
                 { 3, 3 }
             },
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             defaultChar: 1);
         var encodings2 = encodings1.Copy();
         var encodings3 = encodings1.DeepCopy();
@@ -44,7 +44,7 @@ public class PcfBdfEncodingsTests
                 { 2, 2 },
                 { 3, 3 }
             },
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             defaultChar: 1);
         var encodings2 = new PcfBdfEncodings(
             new Dictionary<ushort, ushort>
@@ -53,7 +53,7 @@ public class PcfBdfEncodingsTests
                 { 2, 2 },
                 { 3, 3 }
             },
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             defaultChar: 1);
         Assert.Equal(encodings1, encodings2);
     }

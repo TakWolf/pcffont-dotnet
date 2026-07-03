@@ -5,7 +5,7 @@ public class PcfTableFormatTests
     [Fact]
     public void TestValue1()
     {
-        var tableFormat = PcfTableFormat.Of();
+        var tableFormat = PcfTableFormat.Create();
         Assert.Equal(PcfTableFormat.Default, tableFormat);
         Assert.False(tableFormat.MsByteFirst);
         Assert.False(tableFormat.MsBitFirst);
@@ -20,7 +20,7 @@ public class PcfTableFormatTests
     [Fact]
     public void TestValue2()
     {
-        var tableFormat = PcfTableFormat.Of(
+        var tableFormat = PcfTableFormat.Create(
             msByteFirst: true,
             msBitFirst: true,
             inkBoundsOrCompressedMetrics: true,
@@ -43,10 +43,10 @@ public class PcfTableFormatTests
         var tableFormat = PcfTableFormat.Default;
         Assert.False(tableFormat.MsByteFirst);
 
-        tableFormat = tableFormat.WithMsByteFirst(true);
+        tableFormat = tableFormat.With(msByteFirst: true);
         Assert.True(tableFormat.MsByteFirst);
 
-        tableFormat = tableFormat.WithMsByteFirst(false);
+        tableFormat = tableFormat.With(msByteFirst: false);
         Assert.False(tableFormat.MsByteFirst);
     }
 
@@ -56,147 +56,89 @@ public class PcfTableFormatTests
         var tableFormat = PcfTableFormat.Default;
         Assert.False(tableFormat.MsBitFirst);
 
-        tableFormat = tableFormat.WithMsBitFirst(true);
+        tableFormat = tableFormat.With(msBitFirst: true);
         Assert.True(tableFormat.MsBitFirst);
 
-        tableFormat = tableFormat.WithMsBitFirst(false);
+        tableFormat = tableFormat.With(msBitFirst: false);
         Assert.False(tableFormat.MsBitFirst);
     }
 
     [Fact]
-    public void TestInkBounds()
+    public void TestInkBoundsOrCompressedMetrics()
     {
         var tableFormat = PcfTableFormat.Default;
         Assert.False(tableFormat.InkBounds);
-
-        tableFormat = tableFormat.WithInkBounds(true);
-        Assert.True(tableFormat.InkBounds);
-
-        tableFormat = tableFormat.WithInkBounds(false);
-        Assert.False(tableFormat.InkBounds);
-    }
-
-    [Fact]
-    public void TestCompressedMetrics()
-    {
-        var tableFormat = PcfTableFormat.Default;
         Assert.False(tableFormat.CompressedMetrics);
 
-        tableFormat = tableFormat.WithCompressedMetrics(true);
+        tableFormat = tableFormat.With(inkBoundsOrCompressedMetrics: true);
+        Assert.True(tableFormat.InkBounds);
         Assert.True(tableFormat.CompressedMetrics);
 
-        tableFormat = tableFormat.WithCompressedMetrics(false);
+        tableFormat = tableFormat.With(inkBoundsOrCompressedMetrics: false);
+        Assert.False(tableFormat.InkBounds);
         Assert.False(tableFormat.CompressedMetrics);
     }
 
     [Fact]
-    public void TestGlyphPad1()
-    {
-        var tableFormat = PcfTableFormat.Default;
-        Assert.Equal(0, tableFormat.GlyphPadIndex);
-        Assert.Equal(1u, tableFormat.GlyphPad);
-
-        tableFormat = tableFormat.WithGlyphPadIndex(1);
-        Assert.Equal(1, tableFormat.GlyphPadIndex);
-        Assert.Equal(2u, tableFormat.GlyphPad);
-
-        tableFormat = tableFormat.WithGlyphPadIndex(2);
-        Assert.Equal(2, tableFormat.GlyphPadIndex);
-        Assert.Equal(4u, tableFormat.GlyphPad);
-
-        tableFormat = tableFormat.WithGlyphPadIndex(3);
-        Assert.Equal(3, tableFormat.GlyphPadIndex);
-        Assert.Equal(8u, tableFormat.GlyphPad);
-
-        tableFormat = tableFormat.WithGlyphPadIndex(0);
-        Assert.Equal(0, tableFormat.GlyphPadIndex);
-        Assert.Equal(1u, tableFormat.GlyphPad);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => tableFormat.WithGlyphPadIndex(4));
-    }
-
-    [Fact]
-    public void TestGlyphPad2()
+    public void TestGlyphPad()
     {
         var tableFormat = PcfTableFormat.Default;
         Assert.Equal(1u, tableFormat.GlyphPad);
         Assert.Equal(0, tableFormat.GlyphPadIndex);
 
-        tableFormat = tableFormat.WithGlyphPad(2);
+        tableFormat = tableFormat.With(glyphPad: 2);
         Assert.Equal(2u, tableFormat.GlyphPad);
         Assert.Equal(1, tableFormat.GlyphPadIndex);
 
-        tableFormat = tableFormat.WithGlyphPad(4);
+        tableFormat = tableFormat.With(glyphPad: 4);
         Assert.Equal(4u, tableFormat.GlyphPad);
         Assert.Equal(2, tableFormat.GlyphPadIndex);
 
-        tableFormat = tableFormat.WithGlyphPad(8);
+        tableFormat = tableFormat.With(glyphPad: 8);
         Assert.Equal(8u, tableFormat.GlyphPad);
         Assert.Equal(3, tableFormat.GlyphPadIndex);
 
-        tableFormat = tableFormat.WithGlyphPad(1);
+        tableFormat = tableFormat.With(glyphPad: 1);
         Assert.Equal(1u, tableFormat.GlyphPad);
         Assert.Equal(0, tableFormat.GlyphPadIndex);
 
-        var e = Assert.Throws<ArgumentException>(() => tableFormat.WithGlyphPad(16));
+        var e = Assert.Throws<ArgumentException>(() => tableFormat.With(glyphPad: 16));
         Assert.Equal("glyphPad", e.ParamName);
     }
 
     [Fact]
-    public void TestScanUnit1()
-    {
-        var tableFormat = PcfTableFormat.Default;
-        Assert.Equal(0, tableFormat.ScanUnitIndex);
-        Assert.Equal(1u, tableFormat.ScanUnit);
-
-        tableFormat = tableFormat.WithScanUnitIndex(1);
-        Assert.Equal(1, tableFormat.ScanUnitIndex);
-        Assert.Equal(2u, tableFormat.ScanUnit);
-
-        tableFormat = tableFormat.WithScanUnitIndex(2);
-        Assert.Equal(2, tableFormat.ScanUnitIndex);
-        Assert.Equal(4u, tableFormat.ScanUnit);
-
-        tableFormat = tableFormat.WithScanUnitIndex(0);
-        Assert.Equal(0, tableFormat.ScanUnitIndex);
-        Assert.Equal(1u, tableFormat.ScanUnit);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => tableFormat.WithScanUnitIndex(3));
-    }
-
-    [Fact]
-    public void TestScanUnit2()
+    public void TestScanUnit()
     {
         var tableFormat = PcfTableFormat.Default;
         Assert.Equal(1u, tableFormat.ScanUnit);
         Assert.Equal(0, tableFormat.ScanUnitIndex);
 
-        tableFormat = tableFormat.WithScanUnit(2);
+        tableFormat = tableFormat.With(scanUnit: 2);
         Assert.Equal(2u, tableFormat.ScanUnit);
         Assert.Equal(1, tableFormat.ScanUnitIndex);
 
-        tableFormat = tableFormat.WithScanUnit(4);
+        tableFormat = tableFormat.With(scanUnit: 4);
         Assert.Equal(4u, tableFormat.ScanUnit);
         Assert.Equal(2, tableFormat.ScanUnitIndex);
 
-        tableFormat = tableFormat.WithScanUnit(1);
+        tableFormat = tableFormat.With(scanUnit: 1);
         Assert.Equal(1u, tableFormat.ScanUnit);
         Assert.Equal(0, tableFormat.ScanUnitIndex);
 
-        var e = Assert.Throws<ArgumentException>(() => tableFormat.WithScanUnit(8));
+        var e = Assert.Throws<ArgumentException>(() => tableFormat.With(scanUnit: 8));
         Assert.Equal("scanUnit", e.ParamName);
     }
 
     [Fact]
     public void TestEquals()
     {
-        var tableFormat1 = PcfTableFormat.Of(
+        var tableFormat1 = PcfTableFormat.Create(
             msByteFirst: true,
             msBitFirst: true,
             inkBoundsOrCompressedMetrics: true,
             glyphPad: 2,
             scanUnit: 4);
-        var tableFormat2 = PcfTableFormat.Of(
+        var tableFormat2 = PcfTableFormat.Create(
             msByteFirst: true,
             msBitFirst: true,
             inkBoundsOrCompressedMetrics: true,

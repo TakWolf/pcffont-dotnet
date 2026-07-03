@@ -126,6 +126,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
             bdfAccelerators.CalculateBounds();
         }
 
+        // inkBounds
         PcfMetrics? inkMetrics;
         if (accelerators.ConstantMetrics)
         {
@@ -137,7 +138,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
 
             accelerators.InkMinBounds = CalculateUtil.CalculateMinBounds(inkMetrics);
             accelerators.InkMaxBounds = CalculateUtil.CalculateMaxBounds(inkMetrics);
-            accelerators.TableFormat = accelerators.TableFormat.WithInkBounds(true);
+            accelerators.TableFormat = accelerators.TableFormat.With(inkBoundsOrCompressedMetrics: true);
             accelerators.InkMetrics = true;
 
             if (glyphIndices.Count == Glyphs.Count)
@@ -156,24 +157,25 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
                 bdfAccelerators.InkMinBounds = CalculateUtil.CalculateMinBounds(bdfInkMetrics);
                 bdfAccelerators.InkMaxBounds = CalculateUtil.CalculateMaxBounds(bdfInkMetrics);
             }
-            bdfAccelerators.TableFormat = bdfAccelerators.TableFormat.WithInkBounds(true);
+            bdfAccelerators.TableFormat = bdfAccelerators.TableFormat.With(inkBoundsOrCompressedMetrics: true);
             bdfAccelerators.InkMetrics = true;
         }
         else
         {
             inkMetrics = null;
 
-            accelerators.TableFormat = accelerators.TableFormat.WithInkBounds(false);
+            accelerators.TableFormat = accelerators.TableFormat.With(inkBoundsOrCompressedMetrics: false);
             accelerators.InkMetrics = false;
 
-            bdfAccelerators.TableFormat = bdfAccelerators.TableFormat.WithInkBounds(false);
+            bdfAccelerators.TableFormat = bdfAccelerators.TableFormat.With(inkBoundsOrCompressedMetrics: false);
             bdfAccelerators.InkMetrics = false;
         }
 
-        metrics.TableFormat = metrics.TableFormat.WithCompressedMetrics(accelerators.MinBounds.Compressible && accelerators.MaxBounds.Compressible);
+        // compressedMetrics
+        metrics.TableFormat = metrics.TableFormat.With(inkBoundsOrCompressedMetrics: accelerators.MinBounds.Compressible && accelerators.MaxBounds.Compressible);
         if (inkMetrics is not null)
         {
-            inkMetrics.TableFormat = inkMetrics.TableFormat.WithCompressedMetrics(accelerators.InkMinBounds!.Compressible && accelerators.InkMaxBounds!.Compressible);
+            inkMetrics.TableFormat = inkMetrics.TableFormat.With(inkBoundsOrCompressedMetrics: accelerators.InkMinBounds!.Compressible && accelerators.InkMaxBounds!.Compressible);
         }
 
         return new PcfFont(

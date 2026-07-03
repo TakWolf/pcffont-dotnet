@@ -9,7 +9,7 @@ public class PcfGlyphNamesTests
     {
         var names1 = new PcfGlyphNames(
             ["A", "B", "C"],
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4));
         var names2 = names1.Copy();
         var names3 = names1.DeepCopy();
 
@@ -24,10 +24,10 @@ public class PcfGlyphNamesTests
     {
         var names1 = new PcfGlyphNames(
             ["A", "B", "C"],
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4));
         var names2 = new PcfGlyphNames(
             ["A", "B", "C"],
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4));
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4));
         Assert.Equal(names1, names2);
     }
 }

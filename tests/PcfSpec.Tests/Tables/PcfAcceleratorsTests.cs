@@ -193,7 +193,7 @@ public class PcfAcceleratorsTests
     public void TestCopy()
     {
         var accelerators1 = new PcfAccelerators(
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             noOverlap: true,
             constantMetrics: true,
             terminalFont: true,
@@ -223,7 +223,7 @@ public class PcfAcceleratorsTests
     public void TestDeepCopy()
     {
         var accelerators1 = new PcfAccelerators(
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             noOverlap: true,
             constantMetrics: true,
             terminalFont: true,
@@ -253,7 +253,7 @@ public class PcfAcceleratorsTests
     public void TestEquals()
     {
         var accelerators1 = new PcfAccelerators(
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             noOverlap: true,
             constantMetrics: true,
             terminalFont: true,
@@ -270,7 +270,7 @@ public class PcfAcceleratorsTests
             inkMaxBounds: new PcfMetric(12, 11, 10, 9, 8, 7)
         );
         var accelerators2 = new PcfAccelerators(
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             noOverlap: true,
             constantMetrics: true,
             terminalFont: true,

@@ -6,7 +6,7 @@ public class PcfFontConfigTests
     public void TestToTableFormat()
     {
         Assert.Equal(PcfTableFormat.Default, new PcfFontConfig().ToTableFormat());
-        Assert.Equal(PcfTableFormat.Of(
+        Assert.Equal(PcfTableFormat.Create(
             msByteFirst: true,
             msBitFirst: true,
             glyphPad: 2,

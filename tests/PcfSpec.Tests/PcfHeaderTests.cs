@@ -26,7 +26,7 @@ public class PcfHeaderTests
     {
         var header1 = new PcfHeader(
             tableType: PcfTableType.Accelerators,
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             tableSize: 10,
             tableOffset: 20);
         var header2 = header1.Copy();
@@ -43,12 +43,12 @@ public class PcfHeaderTests
     {
         var header1 = new PcfHeader(
             tableType: PcfTableType.Accelerators,
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             tableSize: 10,
             tableOffset: 20);
         var header2 = new PcfHeader(
             tableType: PcfTableType.Accelerators,
-            tableFormat: PcfTableFormat.Of(true, true, true, 2, 4),
+            tableFormat: PcfTableFormat.Create(true, true, true, 2, 4),
             tableSize: 10,
             tableOffset: 20);
         Assert.Equal(header1, header2);

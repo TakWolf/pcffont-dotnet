@@ -34,30 +34,17 @@ public readonly struct PcfTableFormat : IEquatable<PcfTableFormat>
 
     public static readonly PcfTableFormat Default = default;
 
-    public static PcfTableFormat Of(
+    public static PcfTableFormat Create(
         bool msByteFirst = false,
         bool msBitFirst = false,
         bool inkBoundsOrCompressedMetrics = false,
         uint glyphPad = 1,
-        uint scanUnit = 1)
-    {
-        var value = Default.Value;
-        if (msByteFirst)
-        {
-            value |= FlagMsByteFirst;
-        }
-        if (msBitFirst)
-        {
-            value |= FlagMsBitFirst;
-        }
-        if (inkBoundsOrCompressedMetrics)
-        {
-            value |= FlagInkBoundsOrCompressedMetrics;
-        }
-        value |= (uint)GlyphPadToIndex(glyphPad);
-        value |= (uint)ScanUnitToIndex(scanUnit) << 4;
-        return new PcfTableFormat(value);
-    }
+        uint scanUnit = 1) => Default.With(
+        msByteFirst,
+        msBitFirst,
+        inkBoundsOrCompressedMetrics,
+        glyphPad,
+        scanUnit);
 
     public uint Value { get; }
 
@@ -65,45 +52,50 @@ public readonly struct PcfTableFormat : IEquatable<PcfTableFormat>
 
     public bool MsByteFirst => (Value & FlagMsByteFirst) != 0;
 
-    public PcfTableFormat WithMsByteFirst(bool enabled) => new(enabled ? Value | FlagMsByteFirst : Value & ~FlagMsByteFirst);
-
     public bool MsBitFirst => (Value & FlagMsBitFirst) != 0;
-
-    public PcfTableFormat WithMsBitFirst(bool enabled) => new(enabled ? Value | FlagMsBitFirst : Value & ~FlagMsBitFirst);
 
     public bool InkBounds => (Value & FlagInkBoundsOrCompressedMetrics) != 0;
 
-    public PcfTableFormat WithInkBounds(bool enabled) => new(enabled ? Value | FlagInkBoundsOrCompressedMetrics : Value & ~FlagInkBoundsOrCompressedMetrics);
-
     public bool CompressedMetrics => InkBounds;
-
-    public PcfTableFormat WithCompressedMetrics(bool enabled) => WithInkBounds(enabled);
 
     public int GlyphPadIndex => (int)(Value & MaskGlyphPad);
 
-    public PcfTableFormat WithGlyphPadIndex(int index)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegative(index);
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, GlyphPadOptions.Length);
-        return new PcfTableFormat((Value & ~MaskGlyphPad) | (uint)index);
-    }
-
     public uint GlyphPad => GlyphPadOptions[GlyphPadIndex];
-
-    public PcfTableFormat WithGlyphPad(uint glyphPad) => WithGlyphPadIndex(GlyphPadToIndex(glyphPad));
 
     public int ScanUnitIndex => (int)((Value & MaskScanUnit) >> 4);
 
-    public PcfTableFormat WithScanUnitIndex(int index)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegative(index);
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, ScanUnitOptions.Length);
-        return new PcfTableFormat((Value & ~MaskScanUnit) | ((uint)index << 4));
-    }
-
     public uint ScanUnit => ScanUnitOptions[ScanUnitIndex];
 
-    public PcfTableFormat WithScanUnit(uint scanUnit) => WithScanUnitIndex(ScanUnitToIndex(scanUnit));
+    public PcfTableFormat With(
+        bool? msByteFirst = null,
+        bool? msBitFirst = null,
+        bool? inkBoundsOrCompressedMetrics = null,
+        uint? glyphPad = null,
+        uint? scanUnit = null)
+    {
+        var value = Value;
+        if (msByteFirst is not null)
+        {
+            value = msByteFirst.Value ? value | FlagMsByteFirst : value & ~FlagMsByteFirst;
+        }
+        if (msBitFirst is not null)
+        {
+            value = msBitFirst.Value ? value | FlagMsBitFirst : value & ~FlagMsBitFirst;
+        }
+        if (inkBoundsOrCompressedMetrics is not null)
+        {
+            value = inkBoundsOrCompressedMetrics.Value ? value | FlagInkBoundsOrCompressedMetrics : value & ~FlagInkBoundsOrCompressedMetrics;
+        }
+        if (glyphPad is not null)
+        {
+            value = (value & ~MaskGlyphPad) | (uint)GlyphPadToIndex(glyphPad.Value);
+        }
+        if (scanUnit is not null)
+        {
+            value = (value & ~MaskScanUnit) | ((uint)ScanUnitToIndex(scanUnit.Value) << 4);
+        }
+        return new PcfTableFormat(value);
+    }
 
     public static implicit operator PcfTableFormat(uint value) => new(value);
 

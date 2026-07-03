@@ -34,7 +34,7 @@ public class PcfFontConfig : ICopyable<PcfFontConfig>, IEquatable<PcfFontConfig>
         ScanUnit = scanUnit;
     }
 
-    public PcfTableFormat ToTableFormat() => PcfTableFormat.Of(
+    public PcfTableFormat ToTableFormat() => PcfTableFormat.Create(
         msByteFirst: MsByteFirst,
         msBitFirst: MsBitFirst,
         glyphPad: GlyphPad,
