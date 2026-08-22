@@ -7,9 +7,9 @@
         <PackageVersion Include="BdfFont" Version="0.0.11" />
         <PackageVersion Include="FreeTypeSharp" Version="3.1.0" />
         <PackageVersion Include="coverlet.collector" Version="10.0.1" />
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
-        <PackageVersion Include="xunit.v3" Version="3.2.2" />
-        <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
-        <PackageVersion Include="Xunit.Combinatorial" Version="2.0.24" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+        <PackageVersion Include="xunit.v3" Version="4.0.0" />
+        <PackageVersion Include="xunit.runner.visualstudio" Version="4.0.0" />
+        <PackageVersion Include="Xunit.Combinatorial" Version="2.1.41" />
     </ItemGroup>
 </Project>
