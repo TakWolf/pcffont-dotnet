@@ -15,7 +15,8 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         var bitmaps = font.Bitmaps!;
         var properties = font.Properties!;
 
-        var builder = new PcfFontBuilder();
+        var builder = new PcfFontBuilder(properties: properties);
+
         builder.Config.FontAscent = accelerators.FontAscent;
         builder.Config.FontDescent = accelerators.FontDescent;
         builder.Config.DefaultChar = bdfEncodings.DefaultChar;
@@ -24,8 +25,6 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         builder.Config.MsBitFirst = bitmaps.TableFormat.MsBitFirst;
         builder.Config.GlyphPad = bitmaps.TableFormat.GlyphPad;
         builder.Config.ScanUnit = bitmaps.TableFormat.ScanUnit;
-
-        builder.Properties = properties;
 
         var glyphIndexToEncoding = new Dictionary<ushort, ushort>(bdfEncodings.Count);
         foreach (var (encoding, glyphIndex) in bdfEncodings)
