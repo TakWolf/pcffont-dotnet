@@ -1,5 +1,4 @@
 using PcfSpec;
-using PcfSpec.Tables;
 
 var outputsDir = Path.Combine("build");
 if (Directory.Exists(outputsDir))
@@ -11,10 +10,11 @@ Directory.CreateDirectory(outputsDir);
 var builder = new PcfFontBuilder();
 builder.Config.FontAscent = 14;
 builder.Config.FontDescent = 2;
+builder.Config.DefaultChar = 0xFFFE;
 
 builder.Glyphs.Add(new PcfGlyph(
     name: ".notdef",
-    encoding: PcfBdfEncodings.NoEncoding,
+    encoding: 0xFFFE,
     scalableWidth: 500,
     characterWidth: 8,
     dimensions: (8, 16),
@@ -39,8 +39,8 @@ builder.Glyphs.Add(new PcfGlyph(
     ]));
 
 builder.Glyphs.Add(new PcfGlyph(
-    name: "CAP_LETTER_A",
-    encoding: 65,
+    name: "LATIN_CAPITAL_LETTER_A",
+    encoding: 0x0041,
     scalableWidth: 500,
     characterWidth: 8,
     dimensions: (8, 16),
