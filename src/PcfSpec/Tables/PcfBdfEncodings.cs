@@ -1,4 +1,5 @@
 using System.Collections;
+using PcfSpec.Errors;
 using PcfSpec.Utils;
 
 namespace PcfSpec.Tables;
@@ -17,6 +18,15 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
         var minByte1 = stream.ReadUInt16(tableFormat.MsByteFirst);
         var maxByte1 = stream.ReadUInt16(tableFormat.MsByteFirst);
         var defaultChar = stream.ReadUInt16(tableFormat.MsByteFirst);
+
+        if (minByte2 > maxByte2 || minByte1 > maxByte1)
+        {
+            throw new PcfParseException("Invalid encoding range.");
+        }
+        if (maxByte2 > byte.MaxValue || maxByte1 > byte.MaxValue)
+        {
+            throw new PcfParseException("Encoding range exceeds 0xFF.");
+        }
 
         var glyphsCount = (maxByte2 - minByte2 + 1) * (maxByte1 - minByte1 + 1);
         var glyphIndices = stream.ReadUInt16Array(glyphsCount, tableFormat.MsByteFirst);
@@ -143,9 +153,9 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
-        byte minByte2 = 0xFF;
+        byte minByte2 = Count == 0 ? (byte)0 : byte.MaxValue;
         byte maxByte2 = 0;
-        byte minByte1 = 0xFF;
+        byte minByte1 = Count == 0 ? (byte)0 : byte.MaxValue;
         byte maxByte1 = 0;
         foreach (var encoding in Keys)
         {
