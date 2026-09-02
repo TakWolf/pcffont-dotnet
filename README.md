@@ -32,7 +32,7 @@ builder.Config.DefaultChar = 0xFFFE;
 
 builder.Glyphs.Add(new PcfGlyph(
     name: ".notdef",
-    encoding: 0xFFFE,
+    encodings: [0xFFFE],
     scalableWidth: 500,
     characterWidth: 8,
     dimensions: (8, 16),
@@ -58,7 +58,7 @@ builder.Glyphs.Add(new PcfGlyph(
 
 builder.Glyphs.Add(new PcfGlyph(
     name: "LATIN_CAPITAL_LETTER_A",
-    encoding: 0x0041,
+    encodings: [0x0041],
     scalableWidth: 500,
     characterWidth: 8,
     dimensions: (8, 16),

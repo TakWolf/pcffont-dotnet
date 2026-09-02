@@ -133,7 +133,7 @@ public class ValidityTests : IClassFixture<DemoFonts>
         {
             builder.Glyphs.Add(new PcfGlyph(
                 name: bdfGlyph.Name,
-                encoding: (ushort)bdfGlyph.Encoding,
+                encodings: [(ushort)bdfGlyph.Encoding],
                 scalableWidth: bdfGlyph.ScalableWidthX,
                 characterWidth: (short)bdfGlyph.DeviceWidthX,
                 dimensions: bdfGlyph.Dimensions,

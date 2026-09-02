@@ -5,7 +5,7 @@ namespace PcfSpec;
 public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
 {
     public string Name { get; set; }
-    public ushort Encoding { get; set; }
+    public HashSet<ushort> Encodings { get; set; }
     public int ScalableWidth { get; set; }
     public short CharacterWidth { get; set; }
     public int Width { get; set; }
@@ -17,7 +17,7 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
 
     public PcfGlyph(
         string name,
-        ushort encoding,
+        HashSet<ushort>? encodings = null,
         int scalableWidth = 0,
         short characterWidth = 0,
         (int, int) dimensions = default,
@@ -26,7 +26,7 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
         List<List<byte>>? bitmap = null)
     {
         Name = name;
-        Encoding = encoding;
+        Encodings = encodings ?? [];
         ScalableWidth = scalableWidth;
         CharacterWidth = characterWidth;
         (Width, Height) = dimensions;
@@ -116,7 +116,7 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
 
     public PcfGlyph Copy() => new(
         Name,
-        Encoding,
+        Encodings,
         ScalableWidth,
         CharacterWidth,
         Dimensions,
@@ -126,7 +126,7 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
 
     public PcfGlyph DeepCopy() => new(
         Name,
-        Encoding,
+        [.. Encodings],
         ScalableWidth,
         CharacterWidth,
         Dimensions,
@@ -145,7 +145,7 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
             return true;
         }
         return Name == other.Name &&
-               Encoding == other.Encoding &&
+               Encodings.SetEquals(other.Encodings) &&
                ScalableWidth == other.ScalableWidth &&
                CharacterWidth == other.CharacterWidth &&
                Width == other.Width &&

@@ -7,7 +7,7 @@ public class PcfGlyphTests
     {
         var glyph = new PcfGlyph(
             name: "_",
-            encoding: 0,
+            encodings: [0],
             dimensions: (1, 2),
             offset: (3, 4));
         Assert.Equal(1, glyph.Width);
@@ -23,7 +23,7 @@ public class PcfGlyphTests
     {
         var glyph = new PcfGlyph(
             name: "_",
-            encoding: 0,
+            encodings: [0],
             characterWidth: 5,
             dimensions: (5, 8),
             offset: (0, -2),
@@ -59,7 +59,7 @@ public class PcfGlyphTests
     {
         var glyph = new PcfGlyph(
             name: "_",
-            encoding: 0,
+            encodings: [0],
             characterWidth: 5,
             dimensions: (7, 10),
             offset: (0, -4),
@@ -95,7 +95,7 @@ public class PcfGlyphTests
     {
         var glyph1 = new PcfGlyph(
             name: "_",
-            encoding: 0,
+            encodings: [0],
             characterWidth: 1,
             dimensions: (2, 3),
             offset: (4, 5),
@@ -113,7 +113,7 @@ public class PcfGlyphTests
     {
         var glyph1 = new PcfGlyph(
             name: "_",
-            encoding: 0,
+            encodings: [0],
             characterWidth: 1,
             dimensions: (2, 3),
             offset: (4, 5),
@@ -136,7 +136,7 @@ public class PcfGlyphTests
     {
         var glyph1 = new PcfGlyph(
             name: "_",
-            encoding: 0,
+            encodings: [0],
             characterWidth: 1,
             dimensions: (2, 3),
             offset: (4, 5),
@@ -144,7 +144,7 @@ public class PcfGlyphTests
             bitmap: [[1, 0, 0, 1]]);
         var glyph2 = new PcfGlyph(
             name: "_",
-            encoding: 0,
+            encodings: [0],
             characterWidth: 1,
             dimensions: (2, 3),
             offset: (4, 5),

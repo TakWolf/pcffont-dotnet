@@ -1,3 +1,4 @@
+using PcfSpec.Errors;
 using PcfSpec.Tables;
 using PcfSpec.Utils;
 
@@ -26,15 +27,20 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         builder.Config.GlyphPad = bitmaps.TableFormat.GlyphPad;
         builder.Config.ScanUnit = bitmaps.TableFormat.ScanUnit;
 
-        var glyphIndexToEncoding = new Dictionary<ushort, ushort>(bdfEncodings.Count);
+        var glyphIndexToEncodings = new Dictionary<ushort, HashSet<ushort>>(bdfEncodings.Count);
         foreach (var (encoding, glyphIndex) in bdfEncodings)
         {
-            glyphIndexToEncoding[glyphIndex] = encoding;
+            if (!glyphIndexToEncodings.TryGetValue(glyphIndex, out var encodings))
+            {
+                encodings = [];
+                glyphIndexToEncodings[glyphIndex] = encodings;
+            }
+            encodings.Add(encoding);
         }
 
         for (var glyphIndex = 0; glyphIndex < glyphNames.Count; glyphIndex++)
         {
-            var encoding = glyphIndexToEncoding.GetValueOrDefault((ushort)glyphIndex, PcfBdfEncodings.NoEncoding);
+            var encodings = glyphIndexToEncodings.GetValueOrDefault((ushort)glyphIndex) ?? [];
             var glyphName = glyphNames[glyphIndex];
             var scalableWidth = scalableWidths[glyphIndex];
             var metric = metrics[glyphIndex];
@@ -42,7 +48,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
 
             builder.Glyphs.Add(new PcfGlyph(
                 name: glyphName,
-                encoding: encoding,
+                encodings: encodings,
                 scalableWidth: scalableWidth,
                 characterWidth: metric.CharacterWidth,
                 dimensions: metric.Dimensions,
@@ -87,11 +93,18 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         for (var glyphIndex = 0; glyphIndex < Glyphs.Count; glyphIndex++)
         {
             var glyph = Glyphs[glyphIndex];
-            bdfEncodings[glyph.Encoding] = (ushort)glyphIndex;
             glyphNames.Add(glyph.Name);
             scalableWidths.Add(glyph.ScalableWidth);
             metrics.Add(glyph.CreateMetric(false));
             bitmaps.Add(glyph.Bitmap);
+
+            foreach (var encoding in glyph.Encodings)
+            {
+                if (!bdfEncodings.TryAdd(encoding, (ushort)glyphIndex))
+                {
+                    throw new PcfException($"Duplicate glyph encoding: 0x{encoding:X4}");
+                }
+            }
         }
 
         accelerators.MaxOverlap = CalculateUtil.CalculateMaxOverlap(metrics);
