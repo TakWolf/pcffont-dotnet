@@ -110,7 +110,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
         accelerators.MaxOverlap = CalculateUtil.CalculateMaxOverlap(metrics);
         accelerators.MinBounds = CalculateUtil.CalculateMinBounds(metrics);
         accelerators.MaxBounds = CalculateUtil.CalculateMaxBounds(metrics);
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
 
         var glyphIndices = new HashSet<ushort>(bdfEncodings.Values);
 
@@ -135,7 +135,7 @@ public class PcfFontBuilder : ICopyable<PcfFontBuilder>, IEquatable<PcfFontBuild
             bdfAccelerators.MaxOverlap = CalculateUtil.CalculateMaxOverlap(bdfMetrics);
             bdfAccelerators.MinBounds = CalculateUtil.CalculateMinBounds(bdfMetrics);
             bdfAccelerators.MaxBounds = CalculateUtil.CalculateMaxBounds(bdfMetrics);
-            bdfAccelerators.CalculateBounds();
+            bdfAccelerators.RecalculateFlags();
         }
 
         // inkBounds

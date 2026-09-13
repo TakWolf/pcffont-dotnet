@@ -99,7 +99,7 @@ public class PcfAccelerators : IPcfTable, ICopyable<PcfAccelerators>, IEquatable
         InkMaxBounds = inkMaxBounds;
     }
 
-    public void CalculateBounds()
+    public void RecalculateFlags()
     {
         if (MinBounds is null || MaxBounds is null)
         {

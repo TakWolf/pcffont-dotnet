@@ -5,7 +5,7 @@ namespace PcfSpec.Tests.Tables;
 public class PcfAcceleratorsTests
 {
     [Fact]
-    public void TestCalculateBounds1()
+    public void TestRecalculateFlags1()
     {
         var accelerators = new PcfAccelerators(
             noOverlap: true,
@@ -13,7 +13,7 @@ public class PcfAcceleratorsTests
             terminalFont: true,
             constantWidth: true,
             inkInside: true);
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.True(accelerators.NoOverlap);
         Assert.True(accelerators.ConstantMetrics);
         Assert.True(accelerators.TerminalFont);
@@ -22,29 +22,29 @@ public class PcfAcceleratorsTests
     }
 
     [Fact]
-    public void TestCalculateBounds2()
+    public void TestRecalculateFlags2()
     {
         var accelerators = new PcfAccelerators(
             maxOverlap: 5,
             minBounds: new PcfMetric(leftSideBearing: -2),
             maxBounds: new PcfMetric());
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.False(accelerators.NoOverlap);
     }
 
     [Fact]
-    public void TestCalculateBounds3()
+    public void TestRecalculateFlags3()
     {
         var accelerators = new PcfAccelerators(
             maxOverlap: -1,
             minBounds: new PcfMetric(),
             maxBounds: new PcfMetric());
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.True(accelerators.NoOverlap);
     }
 
     [Fact]
-    public void TestCalculateBounds4()
+    public void TestRecalculateFlags4()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 12,
@@ -61,14 +61,14 @@ public class PcfAcceleratorsTests
                 characterWidth: 6,
                 ascent: 10,
                 descent: 3));
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.True(accelerators.ConstantMetrics);
         Assert.False(accelerators.TerminalFont);
         Assert.True(accelerators.ConstantWidth);
     }
 
     [Fact]
-    public void TestCalculateBounds5()
+    public void TestRecalculateFlags5()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 8,
@@ -83,34 +83,34 @@ public class PcfAcceleratorsTests
                 characterWidth: 10,
                 ascent: 8,
                 descent: 2));
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.True(accelerators.ConstantMetrics);
         Assert.True(accelerators.TerminalFont);
         Assert.True(accelerators.ConstantWidth);
     }
 
     [Fact]
-    public void TestCalculateBounds6()
+    public void TestRecalculateFlags6()
     {
         var accelerators = new PcfAccelerators(
             minBounds: new PcfMetric(characterWidth: 5),
             maxBounds: new PcfMetric(characterWidth: 7));
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.False(accelerators.ConstantWidth);
     }
 
     [Fact]
-    public void TestCalculateBounds7()
+    public void TestRecalculateFlags7()
     {
         var accelerators = new PcfAccelerators(
             minBounds: new PcfMetric(characterWidth: 5),
             maxBounds: new PcfMetric(characterWidth: 5));
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.True(accelerators.ConstantWidth);
     }
 
     [Fact]
-    public void TestCalculateBounds8()
+    public void TestRecalculateFlags8()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 12,
@@ -121,35 +121,35 @@ public class PcfAcceleratorsTests
             maxBounds: new PcfMetric(
                 ascent: 12,
                 descent: 5));
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.True(accelerators.InkInside);
     }
 
     [Fact]
-    public void TestCalculateBounds9()
+    public void TestRecalculateFlags9()
     {
         var accelerators = new PcfAccelerators(
             maxOverlap: 1,
             minBounds: new PcfMetric(),
             maxBounds: new PcfMetric());
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.False(accelerators.InkInside);
     }
 
     [Fact]
-    public void TestCalculateBounds10()
+    public void TestRecalculateFlags10()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 10,
             fontDescent: 5,
             minBounds: new PcfMetric(ascent: 12),
             maxBounds: new PcfMetric(ascent: 12));
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.False(accelerators.InkInside);
     }
 
     [Fact]
-    public void TestCalculateBounds11()
+    public void TestRecalculateFlags11()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 10,
@@ -160,31 +160,31 @@ public class PcfAcceleratorsTests
             maxBounds: new PcfMetric(
                 ascent: 10,
                 descent: 6));
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.False(accelerators.InkInside);
     }
 
     [Fact]
-    public void TestCalculateBounds12()
+    public void TestRecalculateFlags12()
     {
         var accelerators = new PcfAccelerators(
             fontAscent: 10,
             fontDescent: 5,
             minBounds: new PcfMetric(ascent: -6),
             maxBounds: new PcfMetric());
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.False(accelerators.InkInside);
     }
 
     [Fact]
-    public void TestCalculateBounds13()
+    public void TestRecalculateFlags13()
     {
         var accelerators = new PcfAccelerators(
             constantMetrics: true,
             terminalFont: true,
             minBounds: new PcfMetric(leftSideBearing: 1),
             maxBounds: new PcfMetric(leftSideBearing: 2));
-        accelerators.CalculateBounds();
+        accelerators.RecalculateFlags();
         Assert.False(accelerators.ConstantMetrics);
         Assert.False(accelerators.TerminalFont);
     }
