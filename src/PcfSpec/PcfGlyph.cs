@@ -79,22 +79,10 @@ public class PcfGlyph : ICopyable<PcfGlyph>, IEquatable<PcfGlyph>
             {
                 if (bitmapRow[x] != 0)
                 {
-                    if (y < firstRow)
-                    {
-                        firstRow = y;
-                    }
-                    if (y > lastRow)
-                    {
-                        lastRow = y;
-                    }
-                    if (x < firstCol)
-                    {
-                        firstCol = x;
-                    }
-                    if (x > lastCol)
-                    {
-                        lastCol = x;
-                    }
+                    firstRow = Math.Min(firstRow, y);
+                    lastRow = Math.Max(lastRow, y);
+                    firstCol = Math.Min(firstCol, x);
+                    lastCol = Math.Max(lastCol, x);
                 }
             }
         }
