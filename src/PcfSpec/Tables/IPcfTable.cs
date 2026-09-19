@@ -1,4 +1,4 @@
-namespace PcfSpec;
+namespace PcfSpec.Tables;
 
 public interface IPcfTable
 {

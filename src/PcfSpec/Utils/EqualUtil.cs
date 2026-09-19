@@ -1,3 +1,5 @@
+using PcfSpec.Tables;
+
 namespace PcfSpec.Utils;
 
 internal static class EqualUtil

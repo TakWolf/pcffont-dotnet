@@ -1,6 +1,4 @@
-using PcfSpec.Tables;
-
-namespace PcfSpec;
+namespace PcfSpec.Tables;
 
 public static class PcfTableFactory
 {
