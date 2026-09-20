@@ -28,10 +28,10 @@ public class PcfBdfEncodings : IDictionary<ushort, ushort>, IPcfTable, ICopyable
             throw new PcfParseException("Encoding range exceeds 0xFF.");
         }
 
-        var glyphsCount = (maxByte2 - minByte2 + 1) * (maxByte1 - minByte1 + 1);
-        var glyphIndices = stream.ReadUInt16Array(glyphsCount, tableFormat.MsByteFirst);
+        var glyphCount = (maxByte2 - minByte2 + 1) * (maxByte1 - minByte1 + 1);
+        var glyphIndices = stream.ReadUInt16Array(glyphCount, tableFormat.MsByteFirst);
 
-        var encodings = new PcfBdfEncodings(glyphsCount, tableFormat, defaultChar);
+        var encodings = new PcfBdfEncodings(glyphCount, tableFormat, defaultChar);
         if (minByte1 == 0 && maxByte1 == 0)
         {
             for (var encoding = (int)minByte2; encoding <= maxByte2; encoding++)

@@ -16,10 +16,10 @@ public class PcfHeader : IComparable<PcfHeader>, ICopyable<PcfHeader>, IEquatabl
             throw new PcfParseException("Not a valid PCF font.");
         }
 
-        var tablesCount = stream.ReadUInt32();
-        var tableTypes = new HashSet<PcfTableType>((int)tablesCount);
-        var headers = new List<PcfHeader>((int)tablesCount);
-        for (var i = 0; i < tablesCount; i++)
+        var tableCount = stream.ReadUInt32();
+        var tableTypes = new HashSet<PcfTableType>((int)tableCount);
+        var headers = new List<PcfHeader>((int)tableCount);
+        for (var i = 0; i < tableCount; i++)
         {
             var tableType = (PcfTableType)stream.ReadUInt32();
             if (!tableTypes.Add(tableType))

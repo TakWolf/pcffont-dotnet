@@ -76,7 +76,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         KeyCharsetEncoding
     };
 
-    private static readonly string[] XlfdKeysOrder = [
+    private static readonly string[] XlfdKeyOrder = [
         KeyFoundry,
         KeyFamilyName,
         KeyWeightName,
@@ -131,10 +131,10 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
-        var propsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
+        var propCount = stream.ReadUInt32(tableFormat.MsByteFirst);
 
-        var propInfos = new List<(uint, bool, long)>((int)propsCount);
-        for (var i = 0; i < propsCount; i++)
+        var propInfos = new List<(uint, bool, long)>((int)propCount);
+        for (var i = 0; i < propCount; i++)
         {
             var keyOffset = stream.ReadUInt32(tableFormat.MsByteFirst);
             var isStringProp = stream.ReadBool();
@@ -151,13 +151,13 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         }
 
         // Pad to next int32 boundary
-        var padding = 3 - ((4 + 1 + 4) * propsCount + 3) % 4;
+        var padding = 3 - ((4 + 1 + 4) * propCount + 3) % 4;
         stream.Seek(padding, SeekOrigin.Current);
 
         stream.Seek(4, SeekOrigin.Current);  // stringsSize
         var stringsStart = stream.Position;
 
-        var properties = new PcfProperties((int)propsCount, tableFormat);
+        var properties = new PcfProperties((int)propCount, tableFormat);
         foreach (var (keyOffset, isStringProp, valueOrOffset) in propInfos)
         {
             stream.Seek(stringsStart + keyOffset, SeekOrigin.Begin);
@@ -467,7 +467,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
     public void GenerateXlfd()
     {
         var xlfd = new StringBuilder();
-        foreach (var key in XlfdKeysOrder)
+        foreach (var key in XlfdKeyOrder)
         {
             var value = GetValue(key)?.ToString() ?? "";
             if (XlfdStringValueKeys.Contains(key))
@@ -493,14 +493,14 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
         }
 
         var parts = font[1..].Split('-');
-        if (parts.Length != XlfdKeysOrder.Length)
+        if (parts.Length != XlfdKeyOrder.Length)
         {
-            throw new PcfXlfdException($"Must contain {XlfdKeysOrder.Length} XLFD fields.");
+            throw new PcfXlfdException($"Must contain {XlfdKeyOrder.Length} XLFD fields.");
         }
 
-        for (var i = 0; i < XlfdKeysOrder.Length; i++)
+        for (var i = 0; i < XlfdKeyOrder.Length; i++)
         {
-            var key = XlfdKeysOrder[i];
+            var key = XlfdKeyOrder[i];
             var part = parts[i];
             PcfPropertyValue? value;
             if (part is "")
@@ -525,14 +525,14 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
-        var propsCount = (uint)Count;
+        var propCount = (uint)Count;
 
         // Pad to next int32 boundary
-        var padding = 3 - ((4 + 1 + 4) * propsCount + 3) % 4;
+        var padding = 3 - ((4 + 1 + 4) * propCount + 3) % 4;
 
-        var stringsStart = tableOffset + 4 + 4 + (4 + 1 + 4) * propsCount + padding + 4;
+        var stringsStart = tableOffset + 4 + 4 + (4 + 1 + 4) * propCount + padding + 4;
         var stringsSize = 0u;
-        var propInfos = new List<(uint, PcfPropertyValue, uint)>((int)propsCount);
+        var propInfos = new List<(uint, PcfPropertyValue, uint)>((int)propCount);
         stream.Seek(stringsStart, SeekOrigin.Begin);
         foreach (var (key, value) in this)
         {
@@ -548,7 +548,7 @@ public partial class PcfProperties : IDictionary<string, PcfPropertyValue>, ILis
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat);
-        stream.WriteUInt32(propsCount, TableFormat.MsByteFirst);
+        stream.WriteUInt32(propCount, TableFormat.MsByteFirst);
         foreach (var (keyOffset, value, valueOffset) in propInfos)
         {
             stream.WriteUInt32(keyOffset, TableFormat.MsByteFirst);

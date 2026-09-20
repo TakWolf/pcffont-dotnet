@@ -27,13 +27,13 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
-        var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
-        var bitmapOffsets = stream.ReadUInt32Array((int)glyphsCount, tableFormat.MsByteFirst);
+        var glyphCount = stream.ReadUInt32(tableFormat.MsByteFirst);
+        var bitmapOffsets = stream.ReadUInt32Array((int)glyphCount, tableFormat.MsByteFirst);
         stream.Seek(16, SeekOrigin.Current);  // bitmapsSizeConfigs
         var bitmapsStart = stream.Position;
 
-        var bitmaps = new PcfBitmaps((int)glyphsCount, tableFormat);
-        for (var glyphIndex = 0; glyphIndex < glyphsCount; glyphIndex++)
+        var bitmaps = new PcfBitmaps((int)glyphCount, tableFormat);
+        for (var glyphIndex = 0; glyphIndex < glyphCount; glyphIndex++)
         {
             var bitmapOffset = bitmapOffsets[glyphIndex];
             var metric = font.Metrics![glyphIndex];
@@ -101,14 +101,14 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
-        var glyphsCount = (uint)Count;
+        var glyphCount = (uint)Count;
 
-        var bitmapsStart = tableOffset + 4 + 4 + 4 * glyphsCount + 4 * 4;
+        var bitmapsStart = tableOffset + 4 + 4 + 4 * glyphCount + 4 * 4;
         var bitmapsSize = 0u;
-        var bitmapOffsets = new List<uint>((int)glyphsCount);
+        var bitmapOffsets = new List<uint>((int)glyphCount);
         var bitmapsSizeConfigs = new uint[4];
         stream.Seek(bitmapsStart, SeekOrigin.Begin);
-        for (var glyphIndex = 0; glyphIndex < glyphsCount; glyphIndex++)
+        for (var glyphIndex = 0; glyphIndex < glyphCount; glyphIndex++)
         {
             var bitmap = this[glyphIndex];
             var metric = font.Metrics![glyphIndex];
@@ -168,7 +168,7 @@ public class PcfBitmaps : List<List<List<byte>>>, IPcfTable, ICopyable<PcfBitmap
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat);
-        stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
+        stream.WriteUInt32(glyphCount, TableFormat.MsByteFirst);
         stream.WriteUInt32Array(CollectionsMarshal.AsSpan(bitmapOffsets), TableFormat.MsByteFirst);
         stream.WriteUInt32Array(bitmapsSizeConfigs, TableFormat.MsByteFirst);
         stream.Seek(bitmapsSize, SeekOrigin.Current);

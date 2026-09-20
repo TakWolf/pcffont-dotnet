@@ -9,8 +9,8 @@ public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidt
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
-        var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
-        var scalableWidths = stream.ReadInt32Array((int)glyphsCount, tableFormat.MsByteFirst);
+        var glyphCount = stream.ReadUInt32(tableFormat.MsByteFirst);
+        var scalableWidths = stream.ReadInt32Array((int)glyphCount, tableFormat.MsByteFirst);
 
         return new PcfScalableWidths(scalableWidths, tableFormat);
     }
@@ -35,11 +35,11 @@ public class PcfScalableWidths : List<int>, IPcfTable, ICopyable<PcfScalableWidt
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
-        var glyphsCount = (uint)Count;
+        var glyphCount = (uint)Count;
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat);
-        stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
+        stream.WriteUInt32(glyphCount, TableFormat.MsByteFirst);
         stream.WriteInt32Array(CollectionsMarshal.AsSpan(this), TableFormat.MsByteFirst);
         stream.AlignTo4Bytes();
 

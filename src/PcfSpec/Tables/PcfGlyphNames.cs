@@ -9,12 +9,12 @@ public class PcfGlyphNames : List<string>, IPcfTable, ICopyable<PcfGlyphNames>, 
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
-        var glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
-        var nameOffsets = stream.ReadUInt32Array((int)glyphsCount, tableFormat.MsByteFirst);
+        var glyphCount = stream.ReadUInt32(tableFormat.MsByteFirst);
+        var nameOffsets = stream.ReadUInt32Array((int)glyphCount, tableFormat.MsByteFirst);
         stream.Seek(4, SeekOrigin.Current);  // stringsSize
         var stringsStart = stream.Position;
 
-        var names = new PcfGlyphNames((int)glyphsCount, tableFormat);
+        var names = new PcfGlyphNames((int)glyphCount, tableFormat);
         foreach (var nameOffset in nameOffsets)
         {
             stream.Seek(stringsStart + nameOffset, SeekOrigin.Begin);
@@ -44,11 +44,11 @@ public class PcfGlyphNames : List<string>, IPcfTable, ICopyable<PcfGlyphNames>, 
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
-        var glyphsCount = (uint)Count;
+        var glyphCount = (uint)Count;
 
-        var stringsStart = tableOffset + 4 + 4 + 4 * glyphsCount + 4;
+        var stringsStart = tableOffset + 4 + 4 + 4 * glyphCount + 4;
         var stringsSize = 0;
-        var nameOffsets = new List<uint>((int)glyphsCount);
+        var nameOffsets = new List<uint>((int)glyphCount);
         stream.Seek(stringsStart, SeekOrigin.Begin);
         foreach (var name in this)
         {
@@ -58,7 +58,7 @@ public class PcfGlyphNames : List<string>, IPcfTable, ICopyable<PcfGlyphNames>, 
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat);
-        stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
+        stream.WriteUInt32(glyphCount, TableFormat.MsByteFirst);
         stream.WriteUInt32Array(CollectionsMarshal.AsSpan(nameOffsets), TableFormat.MsByteFirst);
         stream.WriteUInt32((uint)stringsSize, TableFormat.MsByteFirst);
         stream.Seek(stringsSize, SeekOrigin.Current);

@@ -8,18 +8,18 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
     {
         var tableFormat = header.ReadAndCheckTableFormat(stream);
 
-        uint glyphsCount;
+        uint glyphCount;
         if (tableFormat.CompressedMetrics)
         {
-            glyphsCount = stream.ReadUInt16(tableFormat.MsByteFirst);
+            glyphCount = stream.ReadUInt16(tableFormat.MsByteFirst);
         }
         else
         {
-            glyphsCount = stream.ReadUInt32(tableFormat.MsByteFirst);
+            glyphCount = stream.ReadUInt32(tableFormat.MsByteFirst);
         }
 
-        var metrics = new PcfMetrics((int)glyphsCount, tableFormat);
-        for (var i = 0; i < glyphsCount; i++)
+        var metrics = new PcfMetrics((int)glyphCount, tableFormat);
+        for (var i = 0; i < glyphCount; i++)
         {
             var metric = PcfMetric.Parse(stream, tableFormat.MsByteFirst, tableFormat.CompressedMetrics);
             metrics.Add(metric);
@@ -47,17 +47,17 @@ public class PcfMetrics : List<PcfMetric>, IPcfTable, ICopyable<PcfMetrics>, IEq
 
     public uint Dump(Stream stream, uint tableOffset, PcfFont font)
     {
-        var glyphsCount = (uint)Count;
+        var glyphCount = (uint)Count;
 
         stream.Seek(tableOffset, SeekOrigin.Begin);
         stream.WriteUInt32(TableFormat);
         if (TableFormat.CompressedMetrics)
         {
-            stream.WriteUInt16((ushort)glyphsCount, TableFormat.MsByteFirst);
+            stream.WriteUInt16((ushort)glyphCount, TableFormat.MsByteFirst);
         }
         else
         {
-            stream.WriteUInt32(glyphsCount, TableFormat.MsByteFirst);
+            stream.WriteUInt32(glyphCount, TableFormat.MsByteFirst);
         }
         foreach (var metric in this)
         {
