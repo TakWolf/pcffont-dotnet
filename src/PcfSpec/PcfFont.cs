@@ -11,7 +11,7 @@ public class PcfFont : IDictionary<PcfTableType, IPcfTable>, ICopyable<PcfFont>,
     {
         if (PcfTableFactory.GetClassType(tableType) != table.GetType())
         {
-            throw new ArgumentException($"Table type mismatch: '{PcfTableFactory.GetClassType(tableType)}' -> '{table.GetType()}'");
+            throw new ArgumentException($"Table type mismatch: '{PcfTableFactory.GetClassType(tableType)}' -> '{table.GetType()}'", nameof(table));
         }
     }
 
