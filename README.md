@@ -82,7 +82,7 @@ builder.Glyphs.Add(new PcfGlyph(
         [0, 0, 0, 0, 0, 0, 0, 0]
     ]));
 
-builder.Properties.Foundry = "Pixel Font Studio";
+builder.Properties.Foundry = "TakWolf";
 builder.Properties.FamilyName = "My Font";
 builder.Properties.WeightName = "Medium";
 builder.Properties.Slant = "R";
